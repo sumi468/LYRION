@@ -1,5 +1,7 @@
 # LYRION — Beyond the Stars · v0.2.0
 
+**[ブラウザで遊ぶ](https://lyrion-lilac.vercel.app)** · [GitHub](https://github.com/sumi468/LYRION)
+
 架空のリリオン星系を探検するブラウザ3Dゲーム。11天体をスキャンし、探査データで船を強化して、8段階のミッションを完成させます。TypeScript / Three.js / Vite。外部の画像・音声配信には依存しません。
 
 ## すぐ遊ぶ（Windows）

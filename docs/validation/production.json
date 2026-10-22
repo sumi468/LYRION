@@ -1,0 +1,55 @@
+{
+  "url": "https://lyrion-lilac.vercel.app",
+  "commit": "7bcc1902e27fd4bad219dbe0144ef68692fe036b",
+  "timestamp": "2026-10-22T13:05:48.839Z",
+  "results": [
+    {
+      "name": "正式な本番URLは認証なしでHTTP 200",
+      "ok": true
+    },
+    {
+      "name": "配信アセットが検証済みビルドと一致: ./favicon.svg",
+      "ok": true
+    },
+    {
+      "name": "配信アセットが検証済みビルドと一致: ./assets/index-CM8ecoA7.js",
+      "ok": true
+    },
+    {
+      "name": "配信アセットが検証済みビルドと一致: ./assets/three-CMSaELV5.js",
+      "ok": true
+    },
+    {
+      "name": "配信アセットが検証済みビルドと一致: ./assets/index-ClfYdlMA.css",
+      "ok": true
+    },
+    {
+      "name": "通常の公開URLではデバッグAPIを公開しない",
+      "ok": true
+    },
+    {
+      "name": "公開版をUIから開始し操縦・一時停止できる",
+      "ok": true
+    },
+    {
+      "name": "本番配信でスキャン報酬を取得",
+      "ok": true
+    },
+    {
+      "name": "公開サイトでセーブを復元",
+      "ok": true
+    },
+    {
+      "name": "コンソール・ページエラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  }
+}
