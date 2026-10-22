@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-22T12:49:58.041Z",
+  "timestamp": "2026-10-22T18:49:12.341Z",
   "results": [
     {
       "name": "配布用サーバーでHTMLを配信",
@@ -10,15 +10,19 @@
       "ok": true
     },
     {
-      "name": "配布アセット ./assets/index-CM8ecoA7.js",
+      "name": "配布アセット ./fonts/oxanium.woff2",
       "ok": true
     },
     {
-      "name": "配布アセット ./assets/three-CMSaELV5.js",
+      "name": "配布アセット ./assets/index-of-Zqvij.js",
       "ok": true
     },
     {
-      "name": "配布アセット ./assets/index-ClfYdlMA.css",
+      "name": "配布アセット ./assets/three-CrdF-3Rw.js",
+      "ok": true
+    },
+    {
+      "name": "配布アセット ./assets/index-CKaA7GOm.css",
       "ok": true
     },
     {

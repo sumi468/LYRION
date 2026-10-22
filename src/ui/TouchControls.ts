@@ -15,7 +15,7 @@ function capture(el: Element, id: number): void {
 }
 
 /**
- * タッチ操作UI。左: 仮想スティック(前後/左右)、画面の空き部分のドラッグ: 視点、右: ボタン。
+ * タッチ操作UI。左: 仮想スティック(前後/旋回)、画面の空き部分のドラッグ: 視点、右: ボタン。
  * 入力は Input.virtual / Input.addLook に書き込むだけで、ゲームロジックは知らない。
  * タッチ端末(detectMobile)か、最初のタッチを検出したときだけ有効になる。
  */
@@ -65,7 +65,7 @@ export class TouchControls {
       h(
         'div',
         { class: 'tc-right' },
-        h('div', { class: 'tc-col' }, hold('▲', 'small', () => (input.virtual.lift = 1), () => (input.virtual.lift = 0)), hold('▼', 'small', () => (input.virtual.lift = -1), () => (input.virtual.lift = 0))),
+        h('div', { class: 'tc-col' }, hold('▲', 'small', () => (input.virtual.pitch = 1), () => (input.virtual.pitch = 0)), hold('▼', 'small', () => (input.virtual.pitch = -1), () => (input.virtual.pitch = 0))),
         h(
           'div',
           { class: 'tc-cluster' },
@@ -123,14 +123,14 @@ export class TouchControls {
       const nx = dx / radius;
       const ny = dy / radius;
       const dz = (v: number) => (Math.abs(v) < DEADZONE ? 0 : (v - Math.sign(v) * DEADZONE) / (1 - DEADZONE));
-      input.virtual.strafe = dz(nx);
+      input.virtual.turn = dz(nx);
       input.virtual.thrust = -dz(ny);
     };
     const end = (e: PointerEvent) => {
       if (e.pointerId !== this.stickId) return;
       this.stickId = null;
       this.knob.style.transform = '';
-      input.virtual.strafe = 0;
+      input.virtual.turn = 0;
       input.virtual.thrust = 0;
     };
     this.stick.addEventListener('pointerdown', (e) => {

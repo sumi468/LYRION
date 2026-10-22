@@ -1,4 +1,5 @@
 import type { Settings } from '../systems/settings';
+import { MUSIC_BPM, MUSIC_CHORDS, MUSIC_MELODY, midiFrequency } from './score';
 
 /** 外部アセット不要の静かなシンセ音。ユーザー操作後にだけ AudioContext を作る。 */
 export class GameAudio {
@@ -11,6 +12,7 @@ export class GameAudio {
   private scan!: OscillatorNode;
   private scanGain!: GainNode;
   private analyser!: AnalyserNode;
+  private musicAnalyser!: AnalyserNode;
   private sources: AudioScheduledSourceNode[] = [];
   private pads: OscillatorNode[] = [];
   private transients = new Set<OscillatorNode>();
@@ -20,6 +22,9 @@ export class GameAudio {
   private chord = -1;
   private elapsed = 0;
   private damageAt = -Infinity;
+  private musicStep = 0;
+  private nextMusicAt = 0;
+  private musicNotesScheduled = 0;
 
   configure(settings: Settings): void {
     this.settings = settings;
@@ -58,7 +63,9 @@ export class GameAudio {
     this.effects = ctx.createGain();
     this.music = ctx.createGain();
     this.effects.connect(this.master);
-    this.music.connect(this.master);
+    this.musicAnalyser = ctx.createAnalyser();
+    this.musicAnalyser.fftSize = 256;
+    this.music.connect(this.musicAnalyser).connect(this.master);
     const limiter = ctx.createDynamicsCompressor();
     limiter.threshold.value = -12;
     limiter.ratio.value = 8;
@@ -72,7 +79,7 @@ export class GameAudio {
     [this.engine, this.engineGain] = this.oscillator('sawtooth', 42, 0, filter);
     [this.scan, this.scanGain] = this.oscillator('sine', 540, 0, this.effects);
     for (const frequency of [110, 164.81, 220]) {
-      const [pad] = this.oscillator('sine', frequency, 0.045, this.music);
+      const [pad] = this.oscillator('sine', frequency, 0.025, this.music);
       this.pads.push(pad);
     }
     this.applyGains();
@@ -107,19 +114,60 @@ export class GameAudio {
     const ctx = this.context;
     if (!ctx || ctx.state !== 'running' || !this.active || !this.settings?.audioEnabled) return;
     const at = ctx.currentTime;
+    this.scheduleMusic();
     this.elapsed += dt;
     this.engine.frequency.setTargetAtTime(42 + thrust * 42 + boost * 32, at, 0.08);
     this.engineGain.gain.setTargetAtTime(0.012 + thrust * 0.05 + boost * 0.035, at, 0.06);
     this.scan.frequency.setTargetAtTime(540 + Math.sin(this.elapsed * 8) * 100, at, 0.025);
     this.scanGain.gain.setTargetAtTime(scanning ? 0.035 : 0, at, 0.03);
-    const chord = Math.floor(this.elapsed / 12) % 4;
+    const chord = Math.floor(Math.max(0, this.musicStep - 1) / 16) % 4;
     if (chord !== this.chord) {
       this.chord = chord;
-      const root = [110, 130.81, 98, 87.31][chord];
+      const root = midiFrequency(MUSIC_CHORDS[chord][0] + 12);
       for (let i = 0; i < this.pads.length; i++) {
         this.pads[i].frequency.setTargetAtTime(root * [1, 1.5, 2][i], at, 2);
       }
     }
+  }
+
+  /** オーディオの時計に先行予約するため、低FPSでも音のタイミングを保つ。 */
+  private scheduleMusic(): void {
+    const ctx = this.context!;
+    if (this.nextMusicAt < ctx.currentTime - 0.2) this.nextMusicAt = ctx.currentTime + 0.03;
+    const halfBeat = 30 / MUSIC_BPM;
+    while (this.nextMusicAt < ctx.currentTime + 0.18) {
+      const step = this.musicStep % 64;
+      const chord = MUSIC_CHORDS[Math.floor(step / 16)];
+      const at = this.nextMusicAt;
+      // 柔らかい8分音符のアルペジオと、余白のある旋律。
+      const arp = chord[1 + (step % 3)] + 12;
+      this.musicNote(arp, at, halfBeat * 1.7, 0.045, 'sine');
+      if (step % 2 === 0) {
+        const melody = MUSIC_MELODY[step / 2];
+        if (melody) this.musicNote(melody, at, halfBeat * 3.5, 0.085, 'triangle');
+      }
+      if (step % 8 === 0) this.musicNote(chord[0] - 12, at, halfBeat * 7.5, 0.07, 'sine');
+      this.nextMusicAt += halfBeat;
+      this.musicStep++;
+    }
+  }
+
+  private musicNote(note: number, at: number, duration: number, gain: number, type: OscillatorType): void {
+    if (this.transients.size >= 32) return;
+    const ctx = this.context!;
+    const osc = ctx.createOscillator();
+    const amp = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = midiFrequency(note);
+    amp.gain.setValueAtTime(0, at);
+    amp.gain.linearRampToValueAtTime(gain, at + 0.04);
+    amp.gain.exponentialRampToValueAtTime(0.0001, at + duration);
+    osc.connect(amp).connect(this.music);
+    this.transients.add(osc);
+    this.musicNotesScheduled++;
+    osc.onended = () => { osc.disconnect(); amp.disconnect(); this.transients.delete(osc); };
+    osc.start(at);
+    osc.stop(at + duration + 0.02);
   }
 
   cue(kind: 'scan' | 'upgrade' | 'mission' | 'damage'): void {
@@ -151,11 +199,15 @@ export class GameAudio {
   diagnostics() {
     const data = new Float32Array(256);
     this.analyser?.getFloatTimeDomainData(data);
+    const musicData = new Float32Array(256);
+    this.musicAnalyser?.getFloatTimeDomainData(musicData);
     return {
       state: this.disposed ? 'closed' : this.context?.state ?? 'locked',
       active: this.active,
       rms: Math.sqrt(data.reduce((sum, value) => sum + value * value, 0) / data.length),
       sources: this.sources.length + this.transients.size,
+      musicNotesScheduled: this.musicNotesScheduled,
+      musicRms: Math.sqrt(musicData.reduce((sum, value) => sum + value * value, 0) / musicData.length),
     };
   }
 

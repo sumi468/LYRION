@@ -1,11 +1,10 @@
 import { Quaternion, Vector3 } from 'three';
 import type { ShipStats } from '../systems/upgrades';
+import { stepAttitude, type AttitudeState } from './attitude';
 
-/** 1フレーム分の操縦入力(すべて -1〜1、回転はそのフレームの角度[rad]) */
+/** 推力は-1〜1、姿勢入力は目標角速度[rad/s]。横・垂直の平行移動はない。 */
 export interface FlightInput {
   thrust: number;
-  strafe: number;
-  lift: number;
   roll: number;
   boost: boolean;
   brake: boolean;
@@ -26,13 +25,9 @@ export interface FlightResult {
 }
 
 export function emptyInput(): FlightInput {
-  return { thrust: 0, strafe: 0, lift: 0, roll: 0, boost: false, brake: false, yaw: 0, pitch: 0 };
+  return { thrust: 0, roll: 0, boost: false, brake: false, yaw: 0, pitch: 0 };
 }
 
-const AX_X = new Vector3(1, 0, 0);
-const AX_Y = new Vector3(0, 1, 0);
-const AX_Z = new Vector3(0, 0, 1);
-const _q = new Quaternion();
 const _qi = new Quaternion();
 const _a = new Vector3();
 const _v = new Vector3();
@@ -62,20 +57,17 @@ export function stepFlight(
   refVel: Vector3,
   boostAllowed: boolean,
   dt: number,
+  attitude: AttitudeState,
 ): FlightResult {
   // --- 姿勢(ローカル軸まわりに回す) ---
-  if (input.pitch !== 0) ship.quat.multiply(_q.setFromAxisAngle(AX_X, input.pitch));
-  if (input.yaw !== 0) ship.quat.multiply(_q.setFromAxisAngle(AX_Y, input.yaw));
-  if (input.roll !== 0) ship.quat.multiply(_q.setFromAxisAngle(AX_Z, input.roll * dt));
-  ship.quat.normalize();
+  stepAttitude(ship.quat, attitude, input.yaw, input.pitch, input.roll, dt);
 
   const boosting = input.boost && boostAllowed;
   const fwdIn = boosting ? 1 : input.thrust;
 
   // --- 推力 ---
-  const lateral = stats.thrust * 0.65;
   const fwdAccel = fwdIn >= 0 ? stats.thrust * (boosting ? stats.boostAccelMul : 1) : stats.thrust * 0.6;
-  _a.set(input.strafe * lateral, input.lift * lateral, -fwdIn * fwdAccel).applyQuaternion(ship.quat);
+  _a.set(0, 0, -fwdIn * fwdAccel).applyQuaternion(ship.quat);
 
   // 基準系に対する相対速度で計算する
   _v.copy(ship.vel).sub(refVel).addScaledVector(_a, dt);
@@ -86,8 +78,8 @@ export function stepFlight(
     _qi.copy(ship.quat).invert();
     _v.applyQuaternion(_qi);
     const rate = input.brake ? 4.5 : 0.9;
-    _v.x = assistDamp(_v.x, input.strafe, rate, dt);
-    _v.y = assistDamp(_v.y, input.lift, rate, dt);
+    _v.x = assistDamp(_v.x, 0, rate * 1.7, dt);
+    _v.y = assistDamp(_v.y, 0, rate * 1.7, dt);
     _v.z = assistDamp(_v.z, -fwdIn, rate, dt);
     _v.applyQuaternion(ship.quat);
 

@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-10-22T18:48:58.899Z",
+  "results": [
+    {
+      "name": "同梱した未来的フォントを日本語・英数字にロード",
+      "ok": true,
+      "data": {
+        "latin": true,
+        "japanese": true,
+        "family": "Oxanium, \"M PLUS 1\", \"Yu Gothic UI\", system-ui, sans-serif"
+      }
+    },
+    {
+      "name": "Aは停止位置で旋回し、横方向へ推進しない",
+      "ok": true,
+      "data": {
+        "bank": 0.6912354542913094,
+        "relativeBank": 0.5951170459404649,
+        "displacement": 0,
+        "yawRate": 1.0955045514176898
+      }
+    },
+    {
+      "name": "船体がバンクし、追尾カメラからも傾きが見える",
+      "ok": true,
+      "data": {
+        "bank": 0.6912354542913094,
+        "relativeBank": 0.5951170459404649,
+        "displacement": 0,
+        "yawRate": 1.0955045514176898
+      }
+    },
+    {
+      "name": "旋回をやめると自動バンクが水平へ戻る",
+      "ok": true
+    },
+    {
+      "name": "推進しながら右旋回し、右バンクする",
+      "ok": true,
+      "data": {
+        "distance": 66.0458628530793,
+        "bank": -0.7094173286915462
+      }
+    },
+    {
+      "name": "効果音0でもメロディー付きBGMの波形が出る",
+      "ok": true,
+      "data": {
+        "state": "running",
+        "active": true,
+        "rms": 0.008756321685116466,
+        "sources": 10,
+        "musicNotesScheduled": 16,
+        "musicRms": 0.01349464148475239
+      }
+    },
+    {
+      "name": "新しい船体をバッチ結合し描画負荷を抑える",
+      "ok": true,
+      "data": {
+        "meshes": 17,
+        "textures": 16,
+        "drawCalls": 21
+      }
+    },
+    {
+      "name": "コンソール・ページエラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  }
+}

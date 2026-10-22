@@ -9,7 +9,7 @@ if (!existsSync(resolve(root, 'index.html'))) {
   console.error('ビルドがありません。npm install と npm run build を実行してください。');
   process.exit(1);
 }
-const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.json':'application/json' };
+const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.svg':'image/svg+xml', '.png':'image/png', '.json':'application/json', '.woff2':'font/woff2' };
 const server = createServer((req,res) => {
   if (!['GET','HEAD'].includes(req.method)) { res.writeHead(405).end(); return; }
   let path;

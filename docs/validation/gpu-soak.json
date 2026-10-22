@@ -1,284 +1,284 @@
 {
-  "timestamp": "2026-10-22T12:44:46.137Z",
+  "timestamp": "2026-10-22T18:51:01.546Z",
   "durationSec": 120,
   "browser": "155.0.8059.85",
   "samples": [
     {
-      "elapsedSec": 6.034,
+      "elapsedSec": 6.032,
       "scene": "thalassa",
       "phase": "playing",
-      "fps": 199.88750298847154,
+      "fps": 172.37932855845298,
       "hull": 100,
-      "energy": 66.86320000000083,
+      "energy": 66.65240000000048,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 12.067,
+      "elapsedSec": 12.075,
       "scene": "aurelion",
       "phase": "playing",
-      "fps": 199.9629651682818,
+      "fps": 166.86146078458904,
       "hull": 100,
-      "energy": 97.01220000000761,
+      "energy": 96.87290000000249,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 18.109,
+      "elapsedSec": 18.114,
       "scene": "vesper",
       "phase": "playing",
-      "fps": 200.0698825306231,
+      "fps": 174.5001337207203,
       "hull": 100,
-      "energy": 63.71330000000776,
+      "energy": 63.4525000000027,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 24.136,
+      "elapsedSec": 24.161,
       "scene": "lumen",
       "phase": "playing",
-      "fps": 200.07291872477504,
+      "fps": 173.64938962635668,
       "hull": 100,
-      "energy": 93.83730000001174,
+      "energy": 93.69400000000405,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 30.152,
+      "elapsedSec": 30.216,
       "scene": "wayfarer",
       "phase": "playing",
-      "fps": 200.168636141147,
+      "fps": 175.71335085989472,
       "hull": 100,
-      "energy": 60.8063000000126,
+      "energy": 60.443700000004334,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 36.198,
+      "elapsedSec": 36.257,
       "scene": "cindra",
       "phase": "playing",
-      "fps": 199.9668235778649,
+      "fps": 170.4545202394176,
       "hull": 100,
-      "energy": 91.0558000000163,
+      "energy": 90.65570000000521,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 42.253,
+      "elapsedSec": 42.284,
       "scene": "thalassa",
       "phase": "playing",
-      "fps": 200.04992250004543,
+      "fps": 166.78300386226528,
       "hull": 100,
-      "energy": 57.701900000017126,
+      "energy": 57.47780000000551,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 48.302,
+      "elapsedSec": 48.324,
       "scene": "aurelion",
       "phase": "playing",
-      "fps": 200.1753567150446,
+      "fps": 170.424265504639,
       "hull": 100,
-      "energy": 87.92590000001985,
+      "energy": 87.65530000000626,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 54.347,
+      "elapsedSec": 54.355,
       "scene": "vesper",
       "phase": "playing",
-      "fps": 199.9003565125922,
+      "fps": 171.6642785041035,
       "hull": 100,
-      "energy": 54.86250000002042,
+      "energy": 54.70720000000662,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 60.38,
+      "elapsedSec": 60.407,
       "scene": "lumen",
       "phase": "playing",
-      "fps": 199.95133150763385,
+      "fps": 171.95167638604457,
       "hull": 100,
-      "energy": 85.01150000002274,
+      "energy": 84.97020000000732,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 66.42,
+      "elapsedSec": 66.451,
       "scene": "wayfarer",
       "phase": "playing",
-      "fps": 200.08300939668385,
+      "fps": 172.8011399359495,
       "hull": 100,
-      "energy": 51.79260000002242,
+      "energy": 51.752500000007764,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 72.453,
+      "elapsedSec": 72.497,
       "scene": "cindra",
       "phase": "playing",
-      "fps": 199.80264821121366,
+      "fps": 176.0158295234314,
       "hull": 100,
-      "energy": 81.9671000000245,
+      "energy": 81.99650000000834,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 78.486,
+      "elapsedSec": 78.543,
       "scene": "thalassa",
       "phase": "playing",
-      "fps": 199.912903221595,
+      "fps": 171.34695723223007,
       "hull": 100,
-      "energy": 48.82820000002526,
+      "energy": 48.70900000000877,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 84.546,
+      "elapsedSec": 84.594,
       "scene": "aurelion",
       "phase": "playing",
-      "fps": 199.96565430969358,
+      "fps": 169.8604982096399,
       "hull": 100,
-      "energy": 79.12720000002632,
+      "energy": 78.96700000000928,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 90.583,
+      "elapsedSec": 90.644,
       "scene": "vesper",
       "phase": "playing",
-      "fps": 200.19653070595936,
+      "fps": 175.27273514541338,
       "hull": 100,
-      "energy": 46.093300000025835,
+      "energy": 45.72370000000976,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 96.628,
+      "elapsedSec": 96.695,
       "scene": "lumen",
       "phase": "playing",
-      "fps": 200.20974345728962,
+      "fps": 173.4948485019485,
       "hull": 100,
-      "energy": 76.31730000002715,
+      "energy": 75.95420000001026,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 102.67,
+      "elapsedSec": 102.746,
       "scene": "wayfarer",
       "phase": "playing",
-      "fps": 199.97105795235774,
+      "fps": 173.13027871550742,
       "hull": 100,
-      "energy": 43.098900000027385,
+      "energy": 42.70730000001062,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 108.709,
+      "elapsedSec": 108.773,
       "scene": "cindra",
       "phase": "playing",
-      "fps": 199.9951521320209,
+      "fps": 172.0095932601253,
       "hull": 100,
-      "energy": 73.29790000002826,
+      "energy": 72.86230000001107,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 114.737,
+      "elapsedSec": 114.815,
       "scene": "thalassa",
       "phase": "playing",
-      "fps": 200.0960909926526,
+      "fps": 166.96893508567146,
       "hull": 100,
-      "energy": 40.344000000028096,
+      "energy": 39.610200000011865,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 120.786,
+      "elapsedSec": 120.849,
       "scene": "aurelion",
       "phase": "playing",
-      "fps": 200.20712780518573,
+      "fps": 170.80681501418465,
       "hull": 100,
-      "energy": 70.59300000002752,
+      "energy": 69.78620000001241,
       "memory": {
-        "geometries": 26,
-        "textures": 14
+        "geometries": 29,
+        "textures": 16
       },
       "finite": true,
       "fatal": false

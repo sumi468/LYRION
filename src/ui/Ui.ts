@@ -13,8 +13,8 @@ type Panel = 'none' | 'loading' | 'main' | 'pause' | 'log' | 'upgrades' | 'setti
 
 const CONTROLS: [string, string][] = [
   ['W / S', '前進 / 後退'],
-  ['A / D', '左 / 右へ平行移動'],
-  ['Space / Shift', '上昇 / 下降'],
+  ['A / D', '左 / 右へバンク旋回'],
+  ['Space / Shift', '機首を上げる / 下げる'],
   ['マウス', '機首の向き(矢印キーでも可)'],
   ['Q / E', 'ロール(左 / 右)'],
   ['F / 右クリック', 'ブースト(エネルギー消費)'],
@@ -430,7 +430,7 @@ export class Ui {
       h('div', { class: 'label' }, 'AUDIO'),
       toggle('サウンド', st.audioEnabled, (v) => set({ audioEnabled: v })),
       slider('全体音量', 0, 1, 0.05, st.masterVolume, 'masterVolume', (v) => `${Math.round(v * 100)}%`),
-      slider('環境音・BGM', 0, 1, 0.05, st.musicVolume, 'musicVolume', (v) => `${Math.round(v * 100)}%`),
+      slider('BGM 音量', 0, 1, 0.05, st.musicVolume, 'musicVolume', (v) => `${Math.round(v * 100)}%`),
       slider('効果音', 0, 1, 0.05, st.effectsVolume, 'effectsVolume', (v) => `${Math.round(v * 100)}%`),
     );
     const keys = h(

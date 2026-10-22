@@ -38,7 +38,7 @@ export class Hud {
   private flash = h('div', { class: 'flash' });
   private lockHint = h('div', { class: 'lock-hint' }, 'クリックして視点操作を有効化');
   private fpsEl = h('div', { class: 'hud-fps' });
-  private keys = h('div', { class: 'hud-keys' }, 'W/S 推進  A/D 横移動  Space/Shift 上昇/下降  F ブースト  R スキャン  Tab ターゲット  C 視点  Esc メニュー');
+  private keys = h('div', { class: 'hud-keys' }, 'W/S 推進  A/D 旋回  Space/Shift 機首上下  F ブースト  R スキャン  Tab ターゲット  C 視点  Esc メニュー');
   private reticle = h('div', { class: 'reticle' }, h('i'), h('i'), h('i'), h('i'));
 
   private flashLevel = 0;

@@ -10,6 +10,8 @@ const _off = new Vector3();
 const _q = new Quaternion();
 const _qp = new Quaternion();
 const _qi = new Quaternion();
+const _frame = new Quaternion();
+const _rollAxis = new Vector3(0, 0, 1);
 
 /**
  * 三人称(追従)/一人称(コックピット)カメラ。
@@ -48,6 +50,7 @@ export class ChaseCamera {
     speedFrac: number,
     boost01: number,
     outWorld: Vector3,
+    bank = 0,
   ): void {
     const wantFirst = mode === 'first' ? 1 : 0;
     if (!this.ready) this.blend = wantFirst;
@@ -58,7 +61,9 @@ export class ChaseCamera {
     _off.copy(THIRD_OFFSET);
     _off.z += Math.min(speedFrac, 3) * 3.5;
     _off.y += Math.min(speedFrac, 3) * 0.25;
-    _tgt.copy(_off).applyQuaternion(shipQuat);
+    // 自動バンクを85%取り除いた追尾姿勢で、船の傾きが常に画面に残る。
+    _frame.copy(shipQuat).multiply(_q.setFromAxisAngle(_rollAxis, -bank * 0.85));
+    _tgt.copy(_off).applyQuaternion(_frame);
     if (!this.ready) this.offWorld.copy(_tgt);
     else this.offWorld.lerp(_tgt, 1 - Math.exp(-dt * 8));
 
@@ -69,7 +74,7 @@ export class ChaseCamera {
     outWorld.copy(this.offWorld).lerp(_off, this.blend).add(shipPos);
 
     // 姿勢
-    _q.copy(shipQuat);
+    _q.copy(_frame).slerp(shipQuat, this.blend);
     if (this.blend < 1) _q.multiply(_qp.copy(THIRD_PITCH).slerp(_qi, this.blend));
     if (!this.ready) this.quat.copy(_q);
     else this.quat.slerp(_q, 1 - Math.exp(-dt * (this.blend > 0.5 ? 30 : 10)));

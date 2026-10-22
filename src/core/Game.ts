@@ -3,6 +3,7 @@ import {
   AmbientLight,
   Color,
   DirectionalLight,
+  Quaternion,
   Scene,
   SRGBColorSpace,
   Vector3,
@@ -15,6 +16,7 @@ import type { BodyDef, UpgradeId } from '../data/types';
 import { UPGRADE_BY_ID } from '../data/upgrades';
 import { createPositionTable, updateBodyPositions, updateBodyVelocities } from '../physics/orbits';
 import { emptyInput, maybeRebaseOrigin, stepFlight } from '../physics/flight';
+import { bankedQuaternion, createAttitude, resetAttitude } from '../physics/attitude';
 import { Input, type ActionName } from '../input/Input';
 import { AsteroidBelt } from '../render/AsteroidBelt';
 import { BodyView, pruneSphereGeos, sunIntensity, type ViewContext } from '../render/BodyView';
@@ -122,6 +124,8 @@ export class Game {
   private refVel = new Vector3();
   private camWorld = new Vector3();
   private flightInput = emptyInput();
+  private attitude = createAttitude();
+  private displayQuat = new Quaternion();
 
   private targetId: string | null = null;
   private scan = createScanState();
@@ -325,6 +329,7 @@ export class Game {
 
   /** メインメニュー: セーブ(なければ新規)の状態を背景に表示する */
   enterMenu(): void {
+    resetAttitude(this.attitude);
     this.input.releaseLock();
     cancelScan(this.scan);
     const saved = this.saves.load();
@@ -350,6 +355,7 @@ export class Game {
   }
 
   private begin(s: GameState): void {
+    resetAttitude(this.attitude);
     this.state = s;
     this.stats = computeShipStats(s.upgrades);
     s.energy = Math.min(s.energy, this.stats.energyMax);
@@ -622,13 +628,13 @@ export class Game {
     else if (s.energy > this.stats.energyMax * 0.15) this.boostLocked = false;
     const wantBoost = input.boost && !this.boostLocked && s.energy > 0;
     input.boost = wantBoost;
-    const res = stepFlight(s, input, this.stats, s.assist, this.refVel, wantBoost, dt);
+    const res = stepFlight(s, input, this.stats, s.assist, this.refVel, wantBoost, dt, this.attitude);
 
     if (res.boosting) s.energy = Math.max(0, s.energy - this.stats.boostDrain * dt);
     else s.energy = Math.min(this.stats.energyMax, s.energy + this.stats.energyRegen * dt);
     this.boost01 += ((res.boosting ? 1 : 0) - this.boost01) * (1 - Math.exp(-dt * 4));
     this.relSpeed = res.relSpeed;
-    const thrustTarget = res.boosting ? 1 : Math.max(0, input.thrust) * 0.7 + Math.abs(input.strafe) * 0.2 + Math.abs(input.lift) * 0.2;
+    const thrustTarget = res.boosting ? 1 : Math.abs(input.thrust) * 0.7;
     this.thrustLevel += (Math.min(1, thrustTarget) - this.thrustLevel) * (1 - Math.exp(-dt * 8));
     this.audio.update(dt, this.thrustLevel, this.boost01, this.scan.id !== null);
 
@@ -777,6 +783,7 @@ export class Game {
       s.vel.set(0, 0, 0);
     }
     s.hull = 60;
+    resetAttitude(this.attitude);
     s.energy = this.stats.energyMax;
     this.chase.snap();
     this.origin.copy(s.pos);
@@ -844,6 +851,7 @@ export class Game {
   private render(dt: number): void {
     const s = this.state;
     const camera = this.chase.camera;
+    bankedQuaternion(s.quat, this.attitude.bank, this.displayQuat);
     const playing = this.phase === 'playing';
     const visualTime = s.time + (this.phase === 'menu' ? this.menuClock * 6 : 0);
 
@@ -862,15 +870,16 @@ export class Game {
       camera.lookAt(_v2);
     } else {
       const speedFrac = this.relSpeed / this.stats.maxSpeed;
-      this.chase.update(dt, s.pos, s.quat, s.cameraMode, speedFrac, this.boost01, this.camWorld);
+      this.chase.update(dt, s.pos, this.displayQuat, s.cameraMode, speedFrac, this.boost01, this.camWorld, this.attitude.bank);
       camera.position.copy(this.camWorld).sub(this.origin);
     }
     camera.updateMatrixWorld();
 
     // 船
     this.shipModel.group.position.copy(s.pos).sub(this.origin);
-    this.shipModel.group.quaternion.copy(s.quat);
+    this.shipModel.group.quaternion.copy(this.displayQuat);
     this.shipModel.setThrust(this.thrustLevel, this.boost01 > 0.5);
+    this.shipModel.setSteering(this.attitude.yawRate, this.attitude.pitchRate);
     this.shipModel.setHullVisible(this.phase === 'menu' || this.chase.firstPersonAmount < 0.85);
 
     // 恒星
@@ -1062,6 +1071,7 @@ export class Game {
 
   /** デバッグ・検証用: 天体の近くへ移動する(通常プレイでは使わない) */
   debugTeleport(id: string, surfaceDistance: number): void {
+    resetAttitude(this.attitude);
     const d = BODY_BY_ID[id];
     if (!d) return;
     this.updateBodies(this.state.time);

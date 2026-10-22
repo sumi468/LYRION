@@ -39,15 +39,13 @@ export class Input {
   onLockChange: (locked: boolean) => void = () => {};
   settings: InputSettings = { sensitivity: 1, invertY: false };
   /** タッチUI(画面上のスティック/ボタン)からの入力。キーボード入力と合成される */
-  readonly virtual = { thrust: 0, strafe: 0, lift: 0, boost: false, brake: false };
+  readonly virtual = { thrust: 0, turn: 0, pitch: 0, boost: false, brake: false };
   /** true の間は Pointer Lock を使わず、視点はタッチドラッグで操作する */
   touchMode = false;
 
   private dx = 0;
   private dy = 0;
   private rightDown = false;
-  private smYaw = 0;
-  private smPitch = 0;
   private cleanup: (() => void)[] = [];
 
   attach(canvas: HTMLCanvasElement): void {
@@ -109,14 +107,14 @@ export class Input {
   /** タッチUIの押下状態を全て解除する(画面遷移・中断時の押しっぱなし防止) */
   resetVirtual(): void {
     const v = this.virtual;
-    v.thrust = v.strafe = v.lift = 0;
+    v.thrust = v.turn = v.pitch = 0;
     v.boost = v.brake = false;
   }
 
   reset(): void {
     this.keys.clear();
     this.rightDown = false;
-    this.dx = this.dy = this.smYaw = this.smPitch = 0;
+    this.dx = this.dy = 0;
     this.resetVirtual();
   }
 
@@ -138,7 +136,7 @@ export class Input {
     }
   }
 
-  /** 1フレーム分の操縦入力を作る。yaw/pitch はこのフレームの回転量[rad]、roll は角速度[rad/s] */
+  /** 旋回・ピッチの目標角速度を作る。慣性とバンクは姿勢制御側が扱う。 */
   poll(dt: number, out: FlightInput = emptyInput()): FlightInput {
     const k = this.keys;
     const has = (c: string) => k.has(c);
@@ -149,28 +147,22 @@ export class Input {
     const v = this.virtual;
     const clamp1 = (x: number) => Math.max(-1, Math.min(1, x));
     out.thrust = clamp1((has('KeyW') ? 1 : 0) - (has('KeyS') ? 1 : 0) + v.thrust);
-    out.strafe = clamp1((has('KeyD') ? 1 : 0) - (has('KeyA') ? 1 : 0) + v.strafe);
-    out.lift = clamp1((has('Space') ? 1 : 0) - (has('ShiftLeft') || has('ShiftRight') ? 1 : 0) + v.lift);
     out.roll = ((has('KeyQ') ? 1 : 0) - (has('KeyE') ? 1 : 0)) * 1.6;
     out.boost = has('KeyF') || this.rightDown || v.boost;
     out.brake = has('KeyX') || v.brake;
 
     const sens = 0.0021 * this.settings.sensitivity;
     const ySign = this.settings.invertY ? -1 : 1;
-    let yaw = -this.dx * sens;
-    let pitch = -this.dy * sens * ySign;
+    const frameSec = Math.max(dt, 1 / 240);
+    let yaw = -this.dx * sens / frameSec;
+    let pitch = -this.dy * sens * ySign / frameSec;
     this.dx = this.dy = 0;
-    const keyLook = 1.5 * dt * this.settings.sensitivity;
-    yaw += ((has('ArrowLeft') ? 1 : 0) - (has('ArrowRight') ? 1 : 0)) * keyLook;
-    pitch += ((has('ArrowUp') ? 1 : 0) - (has('ArrowDown') ? 1 : 0)) * keyLook * ySign;
+    yaw += clamp1((has('KeyA') || has('ArrowLeft') ? 1 : 0) - (has('KeyD') || has('ArrowRight') ? 1 : 0) - v.turn) * 1.1;
+    pitch += clamp1((has('Space') || has('ArrowUp') ? 1 : 0) - (has('ShiftLeft') || has('ShiftRight') || has('ArrowDown') ? 1 : 0) + v.pitch) * 0.9 * ySign;
 
     // 軽い平滑化で機体の「重さ」を出す(入力遅れは 40ms 程度)
-    const a = 1 - Math.exp(-dt * 28);
-    this.smYaw += (yaw - this.smYaw) * a;
-    this.smPitch += (pitch - this.smPitch) * a;
-    const lim = 0.2;
-    out.yaw = Math.max(-lim, Math.min(lim, this.smYaw));
-    out.pitch = Math.max(-lim, Math.min(lim, this.smPitch));
+    out.yaw = Math.max(-1.1, Math.min(1.1, yaw));
+    out.pitch = Math.max(-0.9, Math.min(0.9, pitch));
     return out;
   }
 

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-22T12:49:52.384Z",
+  "timestamp": "2026-10-22T18:48:57.527Z",
   "browser": "155.0.8059.85",
   "graphics": {
     "vendor": "Google Inc. (NVIDIA)",
@@ -18,8 +18,10 @@
       "data": {
         "state": "running",
         "active": true,
-        "rms": 0.008770091253826528,
-        "sources": 5
+        "rms": 0.010026460566654863,
+        "sources": 9,
+        "musicNotesScheduled": 4,
+        "musicRms": 0.013245509527676851
       }
     },
     {
@@ -104,12 +106,12 @@
       "ok": true,
       "data": {
         "before": {
-          "geometries": 21,
-          "textures": 13
+          "geometries": 18,
+          "textures": 15
         },
         "after": {
-          "geometries": 21,
-          "textures": 13
+          "geometries": 18,
+          "textures": 15
         }
       }
     },

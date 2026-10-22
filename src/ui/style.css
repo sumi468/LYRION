@@ -1,3 +1,5 @@
+@font-face { font-family: 'Oxanium'; src: url('/fonts/oxanium.woff2') format('woff2'); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: 'M PLUS 1'; src: url('/fonts/mplus1.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
 :root {
   --bg: #04060b;
   --ink: #e9f2ff;
@@ -10,12 +12,18 @@
   --danger: #ff6b6b;
   --ok: #8bf0c8;
   --panel: rgba(6, 10, 20, 0.84);
-  --font: 'Segoe UI', 'Hiragino Sans', 'Yu Gothic UI', 'Noto Sans JP', system-ui, sans-serif;
-  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  --font: 'Oxanium', 'M PLUS 1', 'Yu Gothic UI', system-ui, sans-serif;
+  --mono: 'Oxanium', 'M PLUS 1', monospace;
 }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: var(--font); overflow: hidden; -webkit-font-smoothing: antialiased; }
+body { font-weight: 450; font-feature-settings: 'tnum' 1; }
+button, input { font-family: var(--font); }
+.label, .logo, .logo-sub, .panel-title, .upg-en, .seg, .speed-val { font-family: 'Oxanium', 'M PLUS 1', sans-serif; }
+.logo { font-weight: 500 !important; }
+.mission-title, .t-name, .upg-name, .detail-name, .btn-label { font-weight: 550; }
+.load-label { line-height: 1.6; }
 #game-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; outline: none; touch-action: none; }
 #ui-root { position: fixed; inset: 0; pointer-events: none; }
 #ui-root > * { pointer-events: none; }

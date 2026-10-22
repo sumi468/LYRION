@@ -47,7 +47,7 @@ try {
   const speed = await page.evaluate(() => window.__lyrion.state.vel.length());
   await ptr('.tc-stick', 'pointerup', c.x, c.y - 45, 1);
   check('スティックで船が加速する', speed > 1, `speed=${speed.toFixed(1)} moved=${Number(moved).toFixed(1)}`);
-  check('スティックを離すと入力が0に戻る', await page.evaluate(() => window.__lyrion.input.virtual.thrust === 0 && window.__lyrion.input.virtual.strafe === 0));
+  check('スティックを離すと入力が0に戻る', await page.evaluate(() => window.__lyrion.input.virtual.thrust === 0 && window.__lyrion.input.virtual.turn === 0));
 
   // 視点ドラッグ
   const q0 = await page.evaluate(() => window.__lyrion.state.quat.toArray());
