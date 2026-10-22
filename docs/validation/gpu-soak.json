@@ -1,0 +1,296 @@
+{
+  "timestamp": "2026-10-22T12:44:46.137Z",
+  "durationSec": 120,
+  "browser": "155.0.8059.85",
+  "samples": [
+    {
+      "elapsedSec": 6.034,
+      "scene": "thalassa",
+      "phase": "playing",
+      "fps": 199.88750298847154,
+      "hull": 100,
+      "energy": 66.86320000000083,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 12.067,
+      "scene": "aurelion",
+      "phase": "playing",
+      "fps": 199.9629651682818,
+      "hull": 100,
+      "energy": 97.01220000000761,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 18.109,
+      "scene": "vesper",
+      "phase": "playing",
+      "fps": 200.0698825306231,
+      "hull": 100,
+      "energy": 63.71330000000776,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 24.136,
+      "scene": "lumen",
+      "phase": "playing",
+      "fps": 200.07291872477504,
+      "hull": 100,
+      "energy": 93.83730000001174,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 30.152,
+      "scene": "wayfarer",
+      "phase": "playing",
+      "fps": 200.168636141147,
+      "hull": 100,
+      "energy": 60.8063000000126,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 36.198,
+      "scene": "cindra",
+      "phase": "playing",
+      "fps": 199.9668235778649,
+      "hull": 100,
+      "energy": 91.0558000000163,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 42.253,
+      "scene": "thalassa",
+      "phase": "playing",
+      "fps": 200.04992250004543,
+      "hull": 100,
+      "energy": 57.701900000017126,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 48.302,
+      "scene": "aurelion",
+      "phase": "playing",
+      "fps": 200.1753567150446,
+      "hull": 100,
+      "energy": 87.92590000001985,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 54.347,
+      "scene": "vesper",
+      "phase": "playing",
+      "fps": 199.9003565125922,
+      "hull": 100,
+      "energy": 54.86250000002042,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 60.38,
+      "scene": "lumen",
+      "phase": "playing",
+      "fps": 199.95133150763385,
+      "hull": 100,
+      "energy": 85.01150000002274,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 66.42,
+      "scene": "wayfarer",
+      "phase": "playing",
+      "fps": 200.08300939668385,
+      "hull": 100,
+      "energy": 51.79260000002242,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 72.453,
+      "scene": "cindra",
+      "phase": "playing",
+      "fps": 199.80264821121366,
+      "hull": 100,
+      "energy": 81.9671000000245,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 78.486,
+      "scene": "thalassa",
+      "phase": "playing",
+      "fps": 199.912903221595,
+      "hull": 100,
+      "energy": 48.82820000002526,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 84.546,
+      "scene": "aurelion",
+      "phase": "playing",
+      "fps": 199.96565430969358,
+      "hull": 100,
+      "energy": 79.12720000002632,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 90.583,
+      "scene": "vesper",
+      "phase": "playing",
+      "fps": 200.19653070595936,
+      "hull": 100,
+      "energy": 46.093300000025835,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 96.628,
+      "scene": "lumen",
+      "phase": "playing",
+      "fps": 200.20974345728962,
+      "hull": 100,
+      "energy": 76.31730000002715,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 102.67,
+      "scene": "wayfarer",
+      "phase": "playing",
+      "fps": 199.97105795235774,
+      "hull": 100,
+      "energy": 43.098900000027385,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 108.709,
+      "scene": "cindra",
+      "phase": "playing",
+      "fps": 199.9951521320209,
+      "hull": 100,
+      "energy": 73.29790000002826,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 114.737,
+      "scene": "thalassa",
+      "phase": "playing",
+      "fps": 200.0960909926526,
+      "hull": 100,
+      "energy": 40.344000000028096,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 120.786,
+      "scene": "aurelion",
+      "phase": "playing",
+      "fps": 200.20712780518573,
+      "hull": 100,
+      "energy": 70.59300000002752,
+      "memory": {
+        "geometries": 26,
+        "textures": 14
+      },
+      "finite": true,
+      "fatal": false
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "resourcePlateau": true,
+  "pass": true
+}

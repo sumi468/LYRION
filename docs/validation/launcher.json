@@ -1,0 +1,41 @@
+{
+  "timestamp": "2026-10-22T12:49:58.041Z",
+  "results": [
+    {
+      "name": "配布用サーバーでHTMLを配信",
+      "ok": true
+    },
+    {
+      "name": "配布アセット ./favicon.svg",
+      "ok": true
+    },
+    {
+      "name": "配布アセット ./assets/index-CM8ecoA7.js",
+      "ok": true
+    },
+    {
+      "name": "配布アセット ./assets/three-CMSaELV5.js",
+      "ok": true
+    },
+    {
+      "name": "配布アセット ./assets/index-ClfYdlMA.css",
+      "ok": true
+    },
+    {
+      "name": "不明なファイルは404",
+      "ok": true
+    },
+    {
+      "name": "書込みメソッドを受け付けない",
+      "ok": true
+    },
+    {
+      "name": "デバッグなしの配布版が起動",
+      "ok": true
+    },
+    {
+      "name": "ブラウザエラーなし",
+      "ok": true
+    }
+  ]
+}

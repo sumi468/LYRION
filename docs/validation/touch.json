@@ -1,0 +1,85 @@
+{
+  "timestamp": "2026-10-22T12:49:27.132Z",
+  "results": [
+    {
+      "name": "メニュー中はタッチUIが隠れている",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "プレイ中にタッチUIが表示される",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "Pointer Lock を使わず「クリックして視点操作」を出さない",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "スティック上で virtual.thrust > 0",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "スティックで船が加速する",
+      "ok": true,
+      "extra": "speed=90.0 moved=47.3"
+    },
+    {
+      "name": "スティックを離すと入力が0に戻る",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "キャンバスのドラッグで向きが変わる",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "BOOST を押している間だけ有効",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "SCAN ボタンでスキャンが始まる",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "タッチ操作だけでスキャンが完了する",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "II ボタンで一時停止し、タッチUIが隠れて押下状態が解除される",
+      "ok": true,
+      "extra": "{\"phase\":\"paused\",\"hidden\":true,\"boost\":false}"
+    },
+    {
+      "name": "縦画面390pxでも主要タッチ操作とHUDが重ならない",
+      "ok": true,
+      "extra": "{\"stick\":{\"x\":12,\"y\":728,\"width\":104,\"height\":104},\"cluster\":{\"x\":208,\"y\":742,\"width\":170,\"height\":90},\"top\":{\"x\":282.90625,\"y\":110,\"width\":95.09375,\"height\":36},\"status\":{\"x\":230,\"y\":8,\"width\":150,\"height\":58},\"mission\":{\"x\":10,\"y\":8,\"width\":156,\"height\":75.6875}}"
+    },
+    {
+      "name": "2本指で前進とBOOSTを同時操作",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "指を離すと2本分の入力が解除される",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "フォーカス喪失時にタッチ入力を解除",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "コンソール/ページエラーなし",
+      "ok": true,
+      "extra": ""
+    }
+  ]
+}

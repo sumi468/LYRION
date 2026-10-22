@@ -1,0 +1,136 @@
+{
+  "timestamp": "2026-10-22T12:49:52.384Z",
+  "browser": "155.0.8059.85",
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "results": [
+    {
+      "name": "操作前は音声デバイスを作らない",
+      "ok": true
+    },
+    {
+      "name": "開始操作で音声が有効になり波形が出る",
+      "ok": true,
+      "data": {
+        "state": "running",
+        "active": true,
+        "rms": 0.008770091253826528,
+        "sources": 5
+      }
+    },
+    {
+      "name": "一時停止中は音声処理を停止",
+      "ok": true
+    },
+    {
+      "name": "サウンドOFFで音声処理を停止",
+      "ok": true
+    },
+    {
+      "name": "音量0でミュート",
+      "ok": true
+    },
+    {
+      "name": "停止・再開時に古いキー入力を解除",
+      "ok": true
+    },
+    {
+      "name": "全調査: cindra",
+      "ok": true
+    },
+    {
+      "name": "全調査: thalassa",
+      "ok": true
+    },
+    {
+      "name": "獲得報酬でミッションに必要な強化を購入",
+      "ok": true
+    },
+    {
+      "name": "全調査: halcyon",
+      "ok": true
+    },
+    {
+      "name": "全調査: aurelion",
+      "ok": true
+    },
+    {
+      "name": "全調査: ember",
+      "ok": true
+    },
+    {
+      "name": "全調査: glacia",
+      "ok": true
+    },
+    {
+      "name": "全調査: vesper",
+      "ok": true
+    },
+    {
+      "name": "全調査: lumen",
+      "ok": true
+    },
+    {
+      "name": "全調査: mira",
+      "ok": true
+    },
+    {
+      "name": "全調査: wayfarer",
+      "ok": true
+    },
+    {
+      "name": "全調査: lyrion",
+      "ok": true
+    },
+    {
+      "name": "8ミッション完了とクリア画面",
+      "ok": true
+    },
+    {
+      "name": "クリア後の記録をセーブ復元",
+      "ok": true,
+      "data": {
+        "data": 1010,
+        "scanned": 11,
+        "missions": 8
+      }
+    },
+    {
+      "name": "画質切替12回でGPUリソースが増え続けない",
+      "ok": true,
+      "data": {
+        "before": {
+          "geometries": 21,
+          "textures": 13
+        },
+        "after": {
+          "geometries": 21,
+          "textures": 13
+        }
+      }
+    },
+    {
+      "name": "WebGLコンテキスト喪失・復帰後も描画",
+      "ok": true
+    },
+    {
+      "name": "低FPSが続くと実ループでAuto画質が降下",
+      "ok": true,
+      "data": "L0"
+    },
+    {
+      "name": "コンソール・ページエラーなし",
+      "ok": true,
+      "data": []
+    },
+    {
+      "name": "終了時に音声リソースを破棄",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

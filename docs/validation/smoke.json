@@ -1,0 +1,75 @@
+{
+  "timestamp": "2026-10-22T12:49:18.708Z",
+  "results": [
+    {
+      "name": "起動してメニューが表示される",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "ゲーム開始 (playing)",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "W で推進し速度が増える",
+      "ok": true,
+      "extra": "speed=90.0"
+    },
+    {
+      "name": "C でカメラ切替",
+      "ok": true,
+      "extra": "third→first"
+    },
+    {
+      "name": "スキャン完了: cindra",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "スキャン完了: thalassa",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "スキャン完了: lumen",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "スキャン完了: aurelion",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "スキャン報酬でデータ獲得",
+      "ok": true,
+      "extra": "data=335"
+    },
+    {
+      "name": "アップグレード購入",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "セーブ/ロードで進行が復元される",
+      "ok": true,
+      "extra": "{\"before\":{\"s\":4,\"u\":1},\"after\":{\"s\":4,\"u\":1}}"
+    },
+    {
+      "name": "画質設定が解像度・星数・小惑星数・分割数に反映される",
+      "ok": true,
+      "extra": "{\"low\":{\"px\":54600,\"stars\":2500,\"belt\":900,\"segs\":32},\"medium\":{\"px\":104976,\"stars\":5000,\"belt\":2000,\"segs\":56},\"high\":{\"px\":129600,\"stars\":9000,\"belt\":3600,\"segs\":96}}"
+    },
+    {
+      "name": "一時停止と再開",
+      "ok": true,
+      "extra": ""
+    },
+    {
+      "name": "コンソール/ページエラーなし",
+      "ok": true,
+      "extra": ""
+    }
+  ]
+}

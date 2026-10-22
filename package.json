@@ -1,0 +1,30 @@
+{
+  "name": "lyrion-beyond-the-stars",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.12.0" },
+  "description": "LYRION — Beyond the Stars: a browser-based 3D space exploration game (TypeScript + Three.js + Vite)",
+  "scripts": {
+    "dev": "vite",
+    "start": "node scripts/serve.mjs --open",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "node tests/e2e/smoke.mjs && node tests/e2e/touch.mjs && node tests/e2e/regression.mjs",
+    "test:gpu": "node tests/e2e/gpu.mjs",
+    "test:soak": "node tests/e2e/soak.mjs",
+    "test:launcher": "node tests/e2e/launcher.mjs"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.170.0",
+    "playwright": "^1.64.1",
+    "typescript": "^5.6.3",
+    "vite": "^7.3.7",
+    "vitest": "^4.1.12"
+  }
+}
