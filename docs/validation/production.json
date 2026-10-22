@@ -1,7 +1,7 @@
 {
   "url": "https://lyrion-lilac.vercel.app",
-  "commit": "7bcc1902e27fd4bad219dbe0144ef68692fe036b",
-  "timestamp": "2026-10-22T13:05:48.839Z",
+  "commit": "d9b315e4c8441931793f7161b758f2723f6003d5",
+  "timestamp": "2026-10-22T18:58:25.825Z",
   "results": [
     {
       "name": "正式な本番URLは認証なしでHTTP 200",
@@ -9,19 +9,43 @@
     },
     {
       "name": "配信アセットが検証済みビルドと一致: ./favicon.svg",
-      "ok": true
+      "ok": true,
+      "data": {
+        "exact": false,
+        "lineEndingsNormalized": true
+      }
     },
     {
-      "name": "配信アセットが検証済みビルドと一致: ./assets/index-CM8ecoA7.js",
-      "ok": true
+      "name": "配信アセットが検証済みビルドと一致: ./fonts/oxanium.woff2",
+      "ok": true,
+      "data": {
+        "exact": true,
+        "lineEndingsNormalized": false
+      }
     },
     {
-      "name": "配信アセットが検証済みビルドと一致: ./assets/three-CMSaELV5.js",
-      "ok": true
+      "name": "配信アセットが検証済みビルドと一致: ./assets/index-of-Zqvij.js",
+      "ok": true,
+      "data": {
+        "exact": true,
+        "lineEndingsNormalized": false
+      }
     },
     {
-      "name": "配信アセットが検証済みビルドと一致: ./assets/index-ClfYdlMA.css",
-      "ok": true
+      "name": "配信アセットが検証済みビルドと一致: ./assets/three-CrdF-3Rw.js",
+      "ok": true,
+      "data": {
+        "exact": true,
+        "lineEndingsNormalized": false
+      }
+    },
+    {
+      "name": "配信アセットが検証済みビルドと一致: ./assets/index-CKaA7GOm.css",
+      "ok": true,
+      "data": {
+        "exact": true,
+        "lineEndingsNormalized": false
+      }
     },
     {
       "name": "通常の公開URLではデバッグAPIを公開しない",
@@ -30,6 +54,37 @@
     {
       "name": "公開版をUIから開始し操縦・一時停止できる",
       "ok": true
+    },
+    {
+      "name": "本番で未来的フォントを英数字・日本語ともロード",
+      "ok": true,
+      "data": {
+        "latin": true,
+        "japanese": true,
+        "family": "Oxanium, \"M PLUS 1\", \"Yu Gothic UI\", system-ui, sans-serif"
+      }
+    },
+    {
+      "name": "本番でBGM単独の波形を出力",
+      "ok": true,
+      "data": {
+        "state": "running",
+        "active": true,
+        "rms": 0.007353350018506915,
+        "sources": 10,
+        "musicNotesScheduled": 12,
+        "musicRms": 0.010781224737960723
+      }
+    },
+    {
+      "name": "本番でも横移動せずバンクし、新船体を描画",
+      "ok": true,
+      "data": {
+        "bank": 0.6912354542913094,
+        "relativeBank": 0.5951170459404649,
+        "distance": 0,
+        "meshes": 17
+      }
     },
     {
       "name": "本番配信でスキャン報酬を取得",
