@@ -1,0 +1,138 @@
+{
+  "timestamp": "2026-10-23T15:27:39.987Z",
+  "url": "https://lyrion-lilac.vercel.app/?debug",
+  "results": [
+    {
+      "name": "Normalは3種類3機で出現し、後方からも追跡する",
+      "ok": true,
+      "data": {
+        "count": 3,
+        "roles": [
+          "hunter",
+          "interceptor",
+          "gunship"
+        ],
+        "rear": 1,
+        "shields": [
+          50,
+          50,
+          50
+        ]
+      }
+    },
+    {
+      "name": "6秒の棒立ち連射で一掃できず、敵が回避と再接近を行う",
+      "ok": true,
+      "data": {
+        "evades": 1,
+        "warned": true,
+        "breakaway": true,
+        "hostile": 4,
+        "kills": 0,
+        "remaining": 3,
+        "hull": 90,
+        "shield": 0
+      }
+    },
+    {
+      "name": "敵の射撃予告から複数の実弾が飛来する",
+      "ok": true,
+      "data": {
+        "evades": 1,
+        "warned": true,
+        "breakaway": true,
+        "hostile": 4,
+        "kills": 0,
+        "remaining": 3,
+        "hull": 90,
+        "shield": 0
+      }
+    },
+    {
+      "name": "Vでエネルギーを消費し、描画姿勢も回避ロールする",
+      "ok": true,
+      "data": {
+        "time": 0.6999999999999998,
+        "cooldown": 5.800000000000001,
+        "energy": 83,
+        "roll": 0.7929397095480425
+      }
+    },
+    {
+      "name": "冷却中のV連打で二重にコストを取らない",
+      "ok": true
+    },
+    {
+      "name": "一時停止中は回避の時間と冷却も停止",
+      "ok": true
+    },
+    {
+      "name": "ブースト逃走後も追撃機が消えず、高速の自機へ追いつく",
+      "ok": true,
+      "data": {
+        "speed": 354.03303206183193,
+        "count": 3,
+        "rear": 1,
+        "minDistance": 197.4601679707043
+      }
+    },
+    {
+      "name": "交戦が続くと後方から増援が加わる",
+      "ok": true
+    },
+    {
+      "name": "追撃戦を実GPU・1080pの通常ループで描画",
+      "ok": true,
+      "data": {
+        "fps": 200.48997550152376,
+        "p95Ms": 5.100000000000364,
+        "minimumEnemies": 4
+      }
+    },
+    {
+      "name": "狙って撃てば撃破でき、爆発と報酬が出る",
+      "ok": true,
+      "data": {
+        "killed": true,
+        "explosion": true,
+        "data": 20
+      }
+    },
+    {
+      "name": "敵なしでは追跡と敵弾を解除する",
+      "ok": true
+    },
+    {
+      "name": "敵編隊を20回再生成してもGPUリソースが増えない",
+      "ok": true,
+      "data": {
+        "before": {
+          "geometries": 27,
+          "textures": 15
+        },
+        "after": {
+          "geometries": 27,
+          "textures": 15
+        }
+      }
+    },
+    {
+      "name": "コンソール・ページエラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "frames": {
+    "fps": 200.48997550152376,
+    "p95Ms": 5.100000000000364,
+    "minimumEnemies": 4
+  },
+  "commit": "26fe5e68aa8a2160c0a3ca0468799dd227b91ccc"
+}
