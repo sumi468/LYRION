@@ -65,7 +65,7 @@ export class TouchControls {
       h(
         'div',
         { class: 'tc-right' },
-        h('div', { class: 'tc-col' }, hold('▲', 'small', () => (input.virtual.pitch = 1), () => (input.virtual.pitch = 0)), hold('▼', 'small', () => (input.virtual.pitch = -1), () => (input.virtual.pitch = 0))),
+        h('div', { class: 'tc-col' }, tap('EVADE','small evade','dodge'), hold('▲', 'small', () => (input.virtual.pitch = 1), () => (input.virtual.pitch = 0)), hold('▼', 'small', () => (input.virtual.pitch = -1), () => (input.virtual.pitch = 0))),
         h(
           'div',
           { class: 'tc-cluster' },

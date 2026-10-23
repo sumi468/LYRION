@@ -1,4 +1,5 @@
 import type { HudSnapshot, MarkerInfo, Toast } from '../core/hud';
+import { MAX_ENEMIES } from '../data/combat';
 import { fmtDist, fmtNum, h, setText } from './dom';
 
 /** プレイ中の HUD。DOM は一度だけ構築し、毎フレームは変化した値だけを書き換える。 */
@@ -19,9 +20,11 @@ export class Hud {
   private heatBar = h('div', { class: 'weapon-heat-fill' });
   private combatLabel = h('div', { class: 'combat-label' });
   private weaponLabel = h('div', { class: 'weapon-label' });
+  private dodgeLabel = h('div', { class:'dodge-label' });
+  private leadMarker = h('div',{class:'lead-marker',hidden:true},h('i'),h('span',{},'LEAD'));
   private landingLabel = h('div', { class: 'landing-label' });
   private enemyLayer = h('div', { class: 'enemy-layer' });
-  private enemyLabels = Array.from({length:3},()=>h('div',{class:'enemy-marker',hidden:true},h('span',{class:'enemy-name'}),h('div',{class:'enemy-health'},h('i'))));
+  private enemyLabels = Array.from({length:MAX_ENEMIES},()=>h('div',{class:'enemy-marker',hidden:true},h('span',{class:'enemy-name'}),h('div',{class:'enemy-health'},h('i')),h('div',{class:'enemy-shield'},h('i')),h('span',{class:'enemy-bearing'},'▲')));
   private cockpit = h('div', { class:'cockpit-frame' },h('span',{},'LX-07 / FLIGHT SYSTEMS'),h('i'),h('b'));
   private energyBar = h('div', { class: 'bar-fill' });
   private energyVal = h('span', { class: 'bar-val' });
@@ -47,7 +50,7 @@ export class Hud {
   private flash = h('div', { class: 'flash' });
   private lockHint = h('div', { class: 'lock-hint' }, 'クリックして視点操作を有効化');
   private fpsEl = h('div', { class: 'hud-fps' });
-  private keys = h('div', { class: 'hud-keys' }, 'W/S 推進  A/D 旋回  Space/Shift 機首上下  左クリック/J 射撃  G 着陸/離陸  R スキャン  Esc メニュー');
+  private keys = h('div', { class: 'hud-keys' }, 'W/S 推進  A/D 旋回  F ブースト  左クリック/J 射撃  V 回避ロール  G 着陸/離陸  R スキャン  Esc メニュー');
   private reticle = h('div', { class: 'reticle' }, h('i'), h('i'), h('i'), h('i'));
 
   private flashLevel = 0;
@@ -98,7 +101,8 @@ export class Hud {
       this.reticle,
       this.enemyLayer,
       this.cockpit,
-      h('div',{class:'hud-combat'},this.combatLabel,this.weaponLabel,h('div',{class:'weapon-heat'},this.heatBar)),
+      h('div',{class:'hud-combat'},this.combatLabel,this.weaponLabel,h('div',{class:'weapon-heat'},this.heatBar),this.dodgeLabel),
+      this.leadMarker,
       this.landingLabel,
       this.mission,
       status,
@@ -143,7 +147,11 @@ export class Hud {
     this.shieldBar.style.transform=`scaleX(${Math.max(0,Math.min(1,s.shield/s.shieldMax))})`;
     setText(this.shieldVal,`${Math.round(s.shield)}/${s.shieldMax}`);
     setText(this.hullVal,`${Math.ceil(s.hull)}/${s.hullMax}`);
-    setText(this.combatLabel,`${s.difficulty} · 敵 ${s.enemies.length} · 撃破 ${s.kills}`);
+    setText(this.combatLabel,`${s.difficulty} · WAVE ${s.wave} · 敵 ${s.enemies.length} · 撃破 ${s.kills}`);
+    setText(this.dodgeLabel,s.dodgeActive?'EVASIVE ROLL':s.dodgeCooldown>0?`V / EVADE · ${s.dodgeCooldown.toFixed(1)}s`:'V / EVADE READY · 18 ENERGY');
+    this.dodgeLabel.classList.toggle('ready',s.dodgeCooldown===0);
+    this.leadMarker.hidden=!s.lead;
+    if(s.lead)this.leadMarker.style.transform=`translate(${s.lead.x.toFixed(1)}px,${s.lead.y.toFixed(1)}px)`;
     setText(this.weaponLabel,s.overheated?'砲身冷却中':`TWIN PULSE · 左クリック / J · ${Math.round(s.weaponHeat*100)}%`);
     this.heatBar.style.transform=`scaleX(${s.weaponHeat})`;
     this.heatBar.classList.toggle('hot',s.overheated);
@@ -155,8 +163,12 @@ export class Hud {
       const el=this.enemyLabels[i],enemy=s.enemies.find(e=>e.id===i);el.hidden=!enemy;if(!enemy)continue;
       el.style.transform=`translate(${enemy.x.toFixed(1)}px,${enemy.y.toFixed(1)}px)`;
       el.classList.toggle('offscreen',!enemy.onScreen);
-      setText(el.firstElementChild as HTMLElement,`${enemy.onScreen?'HOSTILE':'HOSTILE · 圏外'} ${Math.ceil(enemy.hp)} / ${enemy.maxHp} · ${Math.round(enemy.distance)}u`);
-      (el.lastElementChild!.firstElementChild as HTMLElement).style.transform=`scaleX(${enemy.hp/enemy.maxHp})`;
+      el.classList.toggle('firing',enemy.windup>0);
+      const state=enemy.windup>0?'射撃予告':enemy.mode==='evade'?'回避中':enemy.mode==='break'?'再接近':enemy.onScreen?'交戦中':'画面外';
+      setText(el.firstElementChild as HTMLElement,`${enemy.role} · ${state} · ${Math.ceil(enemy.hp)} HP · ${Math.round(enemy.distance)}u`);
+      (el.children[1].firstElementChild as HTMLElement).style.transform=`scaleX(${enemy.hp/enemy.maxHp})`;
+      (el.children[2].firstElementChild as HTMLElement).style.transform=`scaleX(${enemy.maxShield?enemy.shield/enemy.maxShield:0})`;
+      (el.children[3] as HTMLElement).style.transform=`rotate(${enemy.angle+Math.PI/2}rad)`;
     }
     // ミッション
     if (s.mission) {

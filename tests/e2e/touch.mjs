@@ -70,6 +70,11 @@ try {
   check('FIREの長押しで実際にパルス弾を発射',await page.evaluate(()=>window.__lyrion.input.firing&&window.__lyrion.combat.bolts.some(b=>b.active&&!b.hostile)));
   await ptr('.tc-btn.fire','pointerup',650,300,21);
   check('FIREを離すと射撃入力が解除される',await page.evaluate(()=>!window.__lyrion.input.firing));
+  await ptr('.tc-btn.evade','pointerdown',600,300,24);await ptr('.tc-btn.evade','pointerup',600,300,24);await step(2);
+  check('EVADEで回避ロールを開始',await page.evaluate(()=>window.__lyrion.combat.dodgeTime>0&&window.__lyrion.combat.dodgeCooldown>5));
+  const dodgeEnergy=await page.evaluate(()=>window.__lyrion.state.energy);
+  await ptr('.tc-btn.evade','pointerdown',600,300,25);await ptr('.tc-btn.evade','pointerup',600,300,25);
+  check('冷却中のEVADE連打でエネルギーを重ねて消費しない',await page.evaluate(energy=>window.__lyrion.state.energy===energy,dodgeEnergy));
   await page.evaluate(()=>window.__lyrion.debugTeleport('cindra',80));
   await ptr('.tc-btn.land','pointerdown',700,300,22);await ptr('.tc-btn.land','pointerup',700,300,22);
   check('LANDで自動着陸を開始',await page.evaluate(()=>window.__lyrion.landing.mode==='approach'));

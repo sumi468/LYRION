@@ -35,7 +35,14 @@ export interface HudSnapshot {
   shieldMax: number;
   kills: number;
   difficulty: string;
-  enemies: {id:number;x:number;y:number;onScreen:boolean;hp:number;maxHp:number;distance:number}[];
+  enemies: {id:number;x:number;y:number;onScreen:boolean;hp:number;maxHp:number;shield:number;maxShield:number;distance:number;role:string;mode:string;windup:number;angle:number}[];
+  wave: number;
+  pursuers: number;
+  incoming: number;
+  dodgeCooldown: number;
+  dodgeActive: boolean;
+  reinforcementsIn: number;
+  lead: {x:number;y:number}|null;
   weaponHeat: number;
   overheated: boolean;
   hit: number;

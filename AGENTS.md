@@ -58,4 +58,8 @@ v0.2でテクスチャの段階生成・進捗表示、雲・大気の調整、W
 
 ## v0.4の機体システム
 
-`systems/combat.ts` は敵3機・弾96発の固定プール。描画は `render/CombatView.ts` のInstancedMesh。`systems/landing.ts` は接地位置を公転・自転に追従させる。着陸時は衝突反発と戦闘を止め、再離陸時に通常飛行へ戻す。セーブv2はv1を読み込める。`npm run test:combat`、`SOAK_COMBAT=1 npm run test:soak` で新機能を検証できる。
+`systems/combat.ts` は敵6機・弾160発の固定プール。描画は `render/CombatView.ts` のInstancedMesh。`systems/landing.ts` は接地位置を公転・自転に追従させる。着陸時は衝突反発と戦闘を止め、再離陸時に通常飛行へ戻す。セーブv2はv1を読み込める。`npm run test:combat`、`SOAK_COMBAT=1 npm run test:soak` で新機能を検証できる。
+
+## v0.5の追撃戦
+
+敵の役割・予告・連射・回避・増援は `systems/combat.ts`。変更時は `npm run test:dogfight` を実施。V / EVADEは描画ロールと敵の照準誤差を変え、無敵や横移動は加えない。予測射撃は双方の相対速度で計算し、固定プールとdisposeを維持する。

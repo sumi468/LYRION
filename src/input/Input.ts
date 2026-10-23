@@ -1,11 +1,12 @@
 import { emptyInput, type FlightInput } from '../physics/flight';
 
 /** 1回押すごとに発火する操作 */
-export type ActionName = 'scan' | 'target' | 'camera' | 'assist' | 'upgrades' | 'log' | 'pause' | 'land';
+export type ActionName = 'scan' | 'target' | 'camera' | 'assist' | 'upgrades' | 'log' | 'pause' | 'land' | 'dodge';
 
 const ACTION_KEYS: Record<string, ActionName> = {
   KeyR: 'scan',
   KeyG: 'land',
+  KeyV: 'dodge',
   Tab: 'target',
   KeyC: 'camera',
   KeyZ: 'assist',
@@ -19,7 +20,7 @@ const ACTION_KEYS: Record<string, ActionName> = {
 const PREVENT = new Set([
   'Space', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
   'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyQ', 'KeyE', 'KeyF', 'KeyX', 'KeyR', 'KeyC', 'KeyZ',
-  'ShiftLeft', 'ShiftRight', 'KeyJ', 'KeyG',
+  'ShiftLeft', 'ShiftRight', 'KeyJ', 'KeyG', 'KeyV',
 ]);
 
 export interface InputSettings {

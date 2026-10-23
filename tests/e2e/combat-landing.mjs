@@ -20,12 +20,12 @@ try {
  await page.evaluate(()=>{const g=window.__lyrion;g.input.requestLock=()=>{};g.input.locked=true;});
  await page.getByRole('button',{name:'新しい探査を開始',exact:true}).click();await sleep(150);await page.evaluate(()=>window.__lyrion.stop());
  await step(page,245);
- check('Hardで耐久100の敵3機が自然に出現',await page.evaluate(()=>window.__lyrion.combat.count===3&&window.__lyrion.combat.enemies.every(e=>e.hp===100)));
+ check('Hardで役割の異なるシールド付き敵5機が自然に出現',await page.evaluate(()=>{const enemies=window.__lyrion.combat.enemies.filter(e=>e.active);return enemies.length===5&&enemies.every(e=>e.hp>=189&&e.shield===75)&&new Set(enemies.map(e=>e.role)).size===3;}));
  const frozen=await page.evaluate(()=>{const g=window.__lyrion;g.pause();return g.combat.enemies[0].pos.toArray();});await step(page,20);
  check('一時停止中に敵と戦闘が進まない',await page.evaluate(p=>window.__lyrion.combat.enemies[0].pos.toArray().every((v,i)=>v===p[i]),frozen));
  await page.evaluate(()=>{const g=window.__lyrion;g.resume();g.stop();});
  await step(page,150);
- check('敵弾でシールドと船体耐久が減る',await page.evaluate(()=>{const s=window.__lyrion.state;return s.shield<60||s.hull<100;}),await page.evaluate(()=>({hull:window.__lyrion.state.hull,shield:window.__lyrion.state.shield})));
+ check('敵弾が命中し、自機の防御値が減る',await page.evaluate(()=>{const s=window.__lyrion.state;return s.shield<60||s.hull<100;}),await page.evaluate(()=>({hull:window.__lyrion.state.hull,shield:window.__lyrion.state.shield})));
  await screenshot(page,'51-combat-flight.png');
  // The normal frame loop, with all hard-mode enemies present, is measured separately from deterministic ticks.
  await page.evaluate(()=>window.__lyrion.start());
@@ -33,6 +33,7 @@ try {
  await page.evaluate(()=>window.__lyrion.stop());
  check('実GPUの1080pで戦闘を描画し通常ループが進む',report.graphics.hardware&&report.combatFrames.fps>25,report.combatFrames);
  await page.evaluate(()=>{const g=window.__lyrion;g.applySettings({...g.settings,difficulty:'easy'});g.state.vel.set(0,0,0);});await step(page,245);
+ await page.evaluate(()=>{const g=window.__lyrion;g.state.hull=100;g.state.shield=60;g.state.quat.setFromUnitVectors(g.state.vel.clone().set(0,0,-1),g.combat.enemies[0].pos.clone().sub(g.state.pos).normalize());});
  const before=await page.evaluate(()=>({kills:window.__lyrion.state.kills,data:window.__lyrion.state.data}));
  await page.keyboard.down('KeyJ');await step(page,65);await page.keyboard.up('KeyJ');
  const after=await page.evaluate(()=>({kills:window.__lyrion.state.kills,data:window.__lyrion.state.data}));

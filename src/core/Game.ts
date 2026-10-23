@@ -10,8 +10,8 @@ import {
   WebGLRenderer,
 } from 'three';
 import { BODY_BY_ID, BODY_DEFS, STAR_ID } from '../data/starSystem';
-import { DIFFICULTIES, SHIELD_MAX } from '../data/combat';
-import { CombatSystem } from '../systems/combat';
+import { DIFFICULTIES, ENEMY_ROLE_LABELS, SHIELD_MAX } from '../data/combat';
+import { CombatSystem, interceptTime } from '../systems/combat';
 import { LandingSystem } from '../systems/landing';
 import { CombatView } from '../render/CombatView';
 import { LandingView } from '../render/LandingView';
@@ -415,6 +415,9 @@ export class Game {
     // pause / upgrades / log は UI が処理する。ここではプレイ中の操作のみ扱う
     if (this.phase !== 'playing') return;
     switch (a) {
+      case 'dodge':
+        if(this.landing.mode==='flight'&&!this.combat.tryDodge(this.state))this.ev.emit('toast',{kind:'info',title:'回避ロールは冷却とエネルギー18が必要です'});
+        break;
       case 'land':
         this.toggleLanding();
         break;
@@ -737,6 +740,8 @@ export class Game {
     if (sunSd < HEAT_ZONE) this.warning = '恒星に接近しすぎています — 船体が高温になっています';
     else if (s.hull < 30) this.warning = '船体の損傷が深刻です';
     else if (this.boostLocked && s.energy < 1) this.warning = 'エネルギー枯渇 — ブースト不可';
+    else if(this.combat.incoming>0)this.warning='敵が射撃準備中 — V / EVADE で回避';
+    else if(this.combat.pursuers>0)this.warning=`後方から ${this.combat.pursuers} 機が追跡中`;
     else this.warning = null;
   }
 
@@ -892,7 +897,7 @@ export class Game {
   private render(dt: number): void {
     const s = this.state;
     const camera = this.chase.camera;
-    bankedQuaternion(s.quat, this.attitude.bank, this.displayQuat);
+    bankedQuaternion(s.quat, this.attitude.bank+this.combat.rollAngle, this.displayQuat);
     const playing = this.phase === 'playing';
     const visualTime = s.time + (this.phase === 'menu' ? this.menuClock * 6 : 0);
 
@@ -911,7 +916,7 @@ export class Game {
       camera.lookAt(_v2);
     } else {
       const speedFrac = this.relSpeed / this.stats.maxSpeed;
-      this.chase.update(dt, s.pos, this.displayQuat, s.cameraMode, speedFrac, this.boost01, this.camWorld, this.attitude.bank);
+      this.chase.update(dt, s.pos, this.displayQuat, s.cameraMode, speedFrac, this.boost01, this.camWorld, this.attitude.bank+this.combat.rollAngle);
       if(this.landing.anchor){
         const def=BODY_BY_ID[this.landing.anchor.bodyId];_v1.copy(this.camWorld).sub(this.positions[def.id]);
         if(_v1.length()<def.radius+2)this.camWorld.copy(this.positions[def.id]).addScaledVector(_v1.normalize(),def.radius+2);
@@ -1090,11 +1095,20 @@ export class Game {
     const pitch = (Math.asin(Math.max(-1, Math.min(1, _fwd.y))) * 180) / Math.PI;
 
     const enemies:HudSnapshot['enemies']=[];
+    let lead:HudSnapshot['lead']=null,leadScore=0;
     for(let i=0;i<this.combat.enemies.length;i++){
       const enemy=this.combat.enemies[i];if(!enemy.active)continue;
       const projected={x:0,y:0,behind:false};this.project(enemy.pos,projected);
       const w=window.innerWidth,h=window.innerHeight;
-      enemies.push({id:i,x:Math.max(110,Math.min(w-110,projected.x)),y:Math.max(150,Math.min(h-140,projected.y)),onScreen:!projected.behind&&projected.x>25&&projected.x<w-25&&projected.y>50&&projected.y<h-80,hp:enemy.hp,maxHp:enemy.maxHp,distance:enemy.pos.distanceTo(s.pos)});
+      enemies.push({id:i,x:Math.max(110,Math.min(w-110,projected.x)),y:Math.max(150,Math.min(h-140,projected.y)),onScreen:!projected.behind&&projected.x>25&&projected.x<w-25&&projected.y>50&&projected.y<h-80,hp:enemy.hp,maxHp:enemy.maxHp,shield:enemy.shield,maxShield:enemy.maxShield,distance:enemy.pos.distanceTo(s.pos),role:ENEMY_ROLE_LABELS[enemy.role],mode:enemy.mode,windup:enemy.windup,angle:Math.atan2(projected.y-h/2,projected.x-w/2)});
+      const marker=enemies[enemies.length-1];
+      if(!marker.onScreen)marker.y=Math.max(Math.min(320,h-110),Math.min(h-100,marker.y));
+      _v1.copy(enemy.pos).sub(s.pos);_v2.copy(enemy.vel).sub(s.vel);
+      const flightTime=interceptTime(_v1,_v2,1150);
+      _v1.copy(enemy.pos).addScaledVector(_v2,flightTime);this.project(_v1,projected);
+      const score=projected.behind?0:1/(1+Math.hypot(projected.x-w/2,projected.y-h/2));
+      const overPanel=projected.y<300&&(projected.x<350||projected.x>w-280);
+      if(score>leadScore&&!overPanel&&enemy.pos.distanceTo(s.pos)<1300&&projected.x>20&&projected.x<w-20&&projected.y>30&&projected.y<h-80){leadScore=score;lead={x:projected.x,y:projected.y};}
     }
     const landable=this.landing.nearest(s,this.positions);
     const landAltitude=landable?this.surfaceDistance(landable):Infinity;
@@ -1103,6 +1117,7 @@ export class Game {
       shield:s.shield,shieldMax:SHIELD_MAX,kills:s.kills,enemies,difficulty:DIFFICULTIES[this.settings.difficulty].label,
       weaponHeat:this.combat.heat,overheated:this.combat.overheated,hit:this.combat.hitFlash,
       landingText,landingMode:this.landing.mode,
+      wave:this.combat.wave,pursuers:this.combat.pursuers,incoming:this.combat.incoming,dodgeCooldown:this.combat.dodgeCooldown,dodgeActive:this.combat.dodgeTime>0,reinforcementsIn:this.combat.reinforcementsIn,lead,
       speed: this.relSpeed,
       speedFrac: this.relSpeed / this.stats.maxSpeed,
       boosting: this.boost01 > 0.5,

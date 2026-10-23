@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Quaternion, Vector3 } from 'three';
-import { CombatSystem, segmentHitsSphere } from '../src/systems/combat';
+import { CombatSystem, interceptTime, segmentHitsSphere } from '../src/systems/combat';
+import { MAX_BOLTS } from '../src/data/combat';
 import { LandingSystem, canLand } from '../src/systems/landing';
 import { createNewState } from '../src/core/state';
 import { deserialize, serialize } from '../src/systems/save';
@@ -15,7 +16,7 @@ describe('戦闘',()=>{
     expect(segmentHitsSphere(new Vector3(10,0,20),new Vector3(10,0,-20),new Vector3(),3)).toBe(false);
   });
   it('難易度で敵数・耐久が変わり、敵なしでは出現しない',()=>{
-    for(const [difficulty,count,hp] of [['off',0,0],['easy',1,45],['normal',2,70],['hard',3,100]] as const){
+    for(const [difficulty,count,hp] of [['off',0,0],['easy',1,65],['normal',3,160],['hard',5,210]] as const){
       const combat=new CombatSystem();combat.spawn(pilot(),difficulty,[]);expect(combat.count).toBe(count);
       if(count)expect(combat.enemies[0].hp).toBe(hp);
     }
@@ -24,7 +25,7 @@ describe('戦闘',()=>{
   it('通常の射撃・命中処理で敵を撃破し報酬を得られる',()=>{
     const combat=new CombatSystem(),ship=pilot();combat.spawn(ship,'easy',[]);let kills=0,reward=0;
     for(let i=0;i<360;i++){const result=combat.step(1/60,ship,i/60,true,'easy',[]);kills+=result.kills;reward+=result.reward;}
-    expect(kills).toBe(1);expect(reward).toBe(15);expect(ship.energy).toBeLessThan(100);
+    expect(kills).toBe(1);expect(reward).toBe(20);expect(ship.energy).toBeLessThan(100);
   });
   it('敵弾がパイロットへ届き、停止領域では弾と敵を解除',()=>{
     const combat=new CombatSystem(),ship=pilot();combat.spawn(ship,'hard',[]);let damage=0;
@@ -35,8 +36,62 @@ describe('戦闘',()=>{
   it('長い連射でもプール上限を超えず、冷却すると射撃が復帰',()=>{
     const combat=new CombatSystem(),ship=pilot();let overheated=false;
     for(let i=0;i<600;i++){ship.energy=100;combat.step(1/60,ship,i/60,true,'easy',[]);overheated ||= combat.overheated;}
-    expect(overheated).toBe(true);expect(combat.bolts.filter(b=>b.active).length).toBeLessThanOrEqual(96);
+    expect(overheated).toBe(true);expect(combat.bolts.filter(b=>b.active).length).toBeLessThanOrEqual(MAX_BOLTS);
     combat.step(5,ship,16,false,'easy',[]);expect(combat.overheated).toBe(false);
+  });
+});
+
+describe('追撃と回避アクション',()=>{
+  it('Normalは棒立ち連射で短時間に全滅せず、敵が回避と離脱を行う',()=>{
+    const combat=new CombatSystem(),ship=pilot();combat.spawn(ship,'normal',[]);let kills=0,evaded=false,breakaway=false;
+    for(let i=0;i<600;i++){
+      kills+=combat.step(1/60,ship,i/60,true,'normal',[]).kills;
+      evaded ||= combat.enemies.some(e=>e.evades>0);breakaway ||= combat.enemies.some(e=>e.mode==='break');
+    }
+    expect(kills).toBeLessThan(3);expect(combat.count).toBeGreaterThan(0);expect(evaded).toBe(true);expect(breakaway).toBe(true);
+  });
+  it('高速で逃げる機体を後方から追い続け、すぐ消滅しない',()=>{
+    const combat=new CombatSystem(),ship=pilot();combat.spawn(ship,'normal',[]);let chased=false,boosted=false;
+    for(let i=0;i<1200;i++){
+      ship.vel.set(0,0,-Math.min(950,i*2));ship.pos.addScaledVector(ship.vel,1/60);
+      combat.step(1/60,ship,i/60,false,'normal',[]);chased ||= combat.pursuers>0;boosted ||= combat.enemies.some(e=>e.boosting);
+    }
+    expect(chased).toBe(true);expect(boosted).toBe(true);expect(combat.count).toBe(3);
+    expect(Math.min(...combat.enemies.filter(e=>e.active).map(e=>e.pos.distanceTo(ship.pos)))).toBeLessThan(1800);
+  });
+  it('射撃予告の後に連射し、戦闘が続くと後方から増援が来る',()=>{
+    const combat=new CombatSystem(),ship=pilot();combat.spawn(ship,'normal',[]);let warned=false,shots=0,damage=0;
+    for(let i=0;i<1440;i++){
+      damage+=combat.step(1/60,ship,i/60,false,'normal',[]).damage;
+      warned ||= combat.incoming>0;shots=Math.max(shots,combat.bolts.filter(b=>b.active&&b.hostile).length);
+    }
+    expect(warned).toBe(true);expect(shots).toBeGreaterThan(3);expect(damage).toBeGreaterThan(60);expect(combat.count).toBe(4);
+  });
+  it('回避ロールはコストと冷却があり、機体を横移動させない',()=>{
+    const combat=new CombatSystem(),ship=pilot();
+    expect(combat.tryDodge(ship)).toBe(true);expect(ship.energy).toBe(82);expect(combat.tryDodge(ship)).toBe(false);
+    combat.step(.45,ship,0,true,'off',[]);expect(combat.rollAngle).toBeCloseTo(Math.PI);expect(ship.pos.length()).toBe(0);
+    expect(combat.bolts.some(b=>b.active&&!b.hostile)).toBe(false);
+    combat.step(6,ship,7,false,'off',[]);expect(combat.tryDodge(ship)).toBe(true);
+    combat.reset();ship.energy=17;expect(combat.tryDodge(ship)).toBe(false);
+  });
+  it('相対速度を含む予測射撃で、横に動く標的へ正しい到達時間を求める',()=>{
+    const relative=new Vector3(0,0,-500),velocity=new Vector3(100,0,0),t=interceptTime(relative,velocity,620);
+    expect(relative.addScaledVector(velocity,t).length()).toBeCloseTo(620*t,5);
+    expect(interceptTime(new Vector3(0,0,1),new Vector3(0,0,620),620)).toBeGreaterThan(0);
+  });
+  it('射撃予告に合わせた回避ロールは棒立ちより被弾を減らす',()=>{
+    const run=(evade:boolean)=>{
+      const combat=new CombatSystem(),ship=pilot();combat.spawn(ship,'normal',[]);let damage=0;
+      for(let i=0;i<1200;i++){
+        ship.energy=Math.min(100,ship.energy+5/60);
+        if(evade&&combat.incoming>0)combat.tryDodge(ship);
+        damage+=combat.step(1/60,ship,i/60,false,'normal',[]).damage;
+      }
+      return damage;
+    };
+    const stationary=run(false),evasive=run(true);
+    expect(stationary).toBeGreaterThan(0);expect(evasive).toBeLessThan(stationary);
   });
 });
 

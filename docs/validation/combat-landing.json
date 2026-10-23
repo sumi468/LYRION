@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-23T14:40:29.509Z",
+  "timestamp": "2026-10-23T15:18:05.214Z",
   "url": "http://127.0.0.1:4186/?debug",
   "results": [
     {
@@ -7,7 +7,7 @@
       "ok": true
     },
     {
-      "name": "Hardで耐久100の敵3機が自然に出現",
+      "name": "Hardで役割の異なるシールド付き敵5機が自然に出現",
       "ok": true
     },
     {
@@ -15,18 +15,18 @@
       "ok": true
     },
     {
-      "name": "敵弾でシールドと船体耐久が減る",
+      "name": "敵弾が命中し、自機の防御値が減る",
       "ok": true,
       "data": {
-        "hull": 100,
-        "shield": 32
+        "hull": 60,
+        "shield": 60
       }
     },
     {
       "name": "実GPUの1080pで戦闘を描画し通常ループが進む",
       "ok": true,
       "data": {
-        "fps": 200.61882423335877,
+        "fps": 200.1597284613175,
         "p95Ms": 5.100000000000364
       }
     },
@@ -40,7 +40,7 @@
         },
         "after": {
           "kills": 1,
-          "data": 15
+          "data": 20
         }
       }
     },
@@ -77,11 +77,11 @@
       "ok": true,
       "data": {
         "before": {
-          "geometries": 38,
+          "geometries": 39,
           "textures": 15
         },
         "after": {
-          "geometries": 38,
+          "geometries": 39,
           "textures": 15
         }
       }
@@ -100,7 +100,7 @@
     "hardware": true
   },
   "combatFrames": {
-    "fps": 200.61882423335877,
+    "fps": 200.1597284613175,
     "p95Ms": 5.100000000000364
   }
 }

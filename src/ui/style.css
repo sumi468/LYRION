@@ -308,6 +308,15 @@ input[type='checkbox'] { width: 18px; height: 18px; accent-color: var(--accent);
 .cockpit-frame.on { display:block; }.cockpit-frame span { position:absolute; left:22px; top:46%; writing-mode:vertical-rl; font-size:9px; color:#688d9d; letter-spacing:.2em; }
 .cockpit-frame i,.cockpit-frame b { position:absolute; bottom:-20px; width:24vw; height:18vh; border:12px solid #243542bb; transform:skewX(30deg); }.cockpit-frame i { left:-10vw; }.cockpit-frame b { right:-10vw; transform:skewX(-30deg); }
 .tc-btn.fire { border-color:#ef8c78; color:#ffb29e; }.tc-btn.land { border-color:#bfaf76; color:#eadba4; }
+.dodge-label { margin-top:10px; color:#b39c8d; font-size:10px; }.dodge-label.ready { color:#94e4e5; }
+.lead-marker { position:absolute; left:0; top:0; width:20px; height:20px; margin:-10px; color:#a2eff0; }
+.lead-marker i { display:block; width:20px; height:20px; border:1px dashed currentColor; border-radius:50%; }
+.lead-marker span { position:absolute; top:25px; left:-3px; font-size:8px; letter-spacing:.15em; }
+.enemy-shield { position:absolute; width:100%; bottom:-12px; height:2px; background:#203c4b; }.enemy-shield i { display:block; height:100%; background:#65d9eb; transform-origin:left; }
+.enemy-bearing { display:none; position:absolute; top:-2px; left:4px; font-size:14px; }.enemy-marker.offscreen .enemy-bearing { display:block; }
+.enemy-marker.firing { border-color:#ffe2aa; box-shadow:0 0 12px #ff694d80; }.enemy-marker.firing .enemy-name { color:#ffe2aa; }
+.tc-btn.evade { font-size:9px; color:#a5edee; border-color:#68bdcc; }
+@media(max-height:520px) { .dodge-label { font-size:9px; margin-top:6px; } }
 @media(max-height:520px) { .difficulty-select { margin-bottom:8px; gap:4px; }.difficulty-select .small { display:none; }.difficulty-select .seg { padding:6px 0; }.hud-combat { top:95px; right:10px; width:150px; font-size:9px; }.weapon-label { font-size:8px; }.landing-label { bottom:90px; font-size:9px; padding:4px 8px; }.combat-label { margin-bottom:4px; } }
 @media(max-width:560px) and (orientation:portrait) { .hud-combat { top:145px; right:10px; width:150px; }.landing-label { bottom:182px; width:70vw; }.hud-mission { max-width:48vw; }.main-menu .difficulty-select { max-width:330px; } }
 @media (max-width: 560px) and (orientation: portrait) {
