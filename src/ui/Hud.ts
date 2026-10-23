@@ -49,7 +49,10 @@ export class Hud {
   private glare = h('div', { class: 'glare' });
   private flash = h('div', { class: 'flash' });
   private lockHint = h('div', { class: 'lock-hint' }, 'クリックして視点操作を有効化');
-  private fpsEl = h('div', { class: 'hud-fps' });
+  private fpsValue = h('span', { class: 'fps-value' });
+  private frameValue = h('span', { class: 'frame-value' });
+  private fpsQuality = h('span', { class: 'fps-quality' });
+  private fpsEl = h('div', { class: 'hud-fps', title: '描画フレーム数 / 平均フレーム時間 / 画質。設定で表示を切り替えられます。' }, this.fpsValue, this.frameValue, this.fpsQuality);
   private keys = h('div', { class: 'hud-keys' }, 'W/S 推進  A/D 旋回  F ブースト  左クリック/J 射撃  V 回避ロール  G 着陸/離陸  R スキャン  Esc メニュー');
   private reticle = h('div', { class: 'reticle' }, h('i'), h('i'), h('i'), h('i'));
 
@@ -147,7 +150,7 @@ export class Hud {
     this.shieldBar.style.transform=`scaleX(${Math.max(0,Math.min(1,s.shield/s.shieldMax))})`;
     setText(this.shieldVal,`${Math.round(s.shield)}/${s.shieldMax}`);
     setText(this.hullVal,`${Math.ceil(s.hull)}/${s.hullMax}`);
-    setText(this.combatLabel,`${s.difficulty} · WAVE ${s.wave} · 敵 ${s.enemies.length} · 撃破 ${s.kills}`);
+    setText(this.combatLabel,s.difficulty==='敵なし'?`敵なし · 撃破 ${s.kills}`:`${s.difficulty} · WAVE ${s.wave} · 敵 ${s.enemies.length} · 撃破 ${s.kills}`);
     setText(this.dodgeLabel,s.dodgeActive?'EVASIVE ROLL':s.dodgeCooldown>0?`V / EVADE · ${s.dodgeCooldown.toFixed(1)}s`:'V / EVADE READY · 18 ENERGY');
     this.dodgeLabel.classList.toggle('ready',s.dodgeCooldown===0);
     this.leadMarker.hidden=!s.lead;
@@ -237,7 +240,12 @@ export class Hud {
     }
 
     this.lockHint.classList.toggle('on', !s.locked);
-    if (this.showFps) setText(this.fpsEl, `${Math.round(s.fps)} FPS · ${s.qualityLabel}`);
+    if (this.showFps) {
+      setText(this.fpsValue, s.fps > 0 ? `${Math.round(s.fps)} FPS` : '— FPS');
+      setText(this.frameValue, s.frameMs > 0 ? `${s.frameMs.toFixed(1)} ms` : '');
+      setText(this.fpsQuality, s.qualityLabel);
+      this.fpsEl.classList.toggle('slow', s.fps > 0 && s.fps < 45);
+    }
 
     // ダメージフラッシュ
     if (this.flashLevel > 0.005) {

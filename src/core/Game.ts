@@ -43,6 +43,7 @@ import { advanceMissions, currentMission, missionTarget } from '../systems/missi
 import { beginScan, cancelScan, createScanState, scanRangeFor, stepScan } from '../systems/scan';
 import { SaveManager, safeLocalStorage } from '../systems/save';
 import { DEFAULT_SETTINGS, loadSettings, saveSettings, type Settings } from '../systems/settings';
+import { FrameStats } from '../systems/frameStats';
 import { computeShipStats, purchaseUpgrade, upgradeCost, type ShipStats } from '../systems/upgrades';
 import { Emitter } from './events';
 import { createNewState, HULL_MAX, type CameraMode, type GameState } from './state';
@@ -151,7 +152,7 @@ export class Game {
   private profile: QualityProfile = QUALITY_LADDER[3];
   private auto: AutoQuality | null = null;
   private bakeWidth = 1024;
-  private fps = 60;
+  private frameStats = new FrameStats();
 
   private raf = 0;
   private lastT = 0;
@@ -319,7 +320,7 @@ export class Game {
   /** 1 フレーム。dt はシミュレーション用に上限を設ける(タブ復帰などでの大ジャンプ防止) */
   tick(rawDt: number): void {
     const dt = Math.min(rawDt, 0.05);
-    if (rawDt > 0) this.fps += (1 / Math.max(rawDt, 1e-3) - this.fps) * 0.08;
+    this.frameStats.sample(rawDt);
 
     if (this.phase === 'playing') this.simulate(dt);
     else if (this.phase === 'menu' || this.phase === 'paused') this.idle(dt);
@@ -933,7 +934,7 @@ export class Game {
     this.shipModel.setLandingGear(this.landing.mode!=='flight',dt);
     this.combatView.group.visible=this.phase!=='menu';this.combatView.update(this.combat,this.origin);
     this.landingView.group.visible=!!this.landing.anchor;
-    if(this.landing.anchor){this.landingView.group.position.copy(this.landing.surface).sub(this.origin);this.landingView.group.quaternion.copy(this.landing.quaternion);}
+    if(this.landing.anchor){this.landingView.fitSurface(BODY_BY_ID[this.landing.anchor.bodyId].radius);this.landingView.group.position.copy(this.landing.surface).sub(this.origin);this.landingView.group.quaternion.copy(this.landing.quaternion);}
     this.shipModel.setHullVisible(this.phase === 'menu' || this.chase.firstPersonAmount < 0.85);
 
     // 恒星
@@ -1137,7 +1138,8 @@ export class Game {
       sun: this.phase === 'playing' ? this.sunGlare() : null,
       heading,
       pitch,
-      fps: this.fps,
+      fps: this.frameStats.fps,
+      frameMs: this.frameStats.frameMs,
       qualityLabel: this.qualityLabel,
       nearest: this.nearest,
       warning: this.warning,

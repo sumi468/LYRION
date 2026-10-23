@@ -89,7 +89,8 @@ button, input, label, .screen.on, .panel, .menu-list { pointer-events: auto; }
 .t-scan-fill { position: absolute; inset: 0; transform-origin: left; background: linear-gradient(90deg, var(--accent), #fff); }
 
 .hud-keys { right: 24px; bottom: 22px; max-width: 34vw; text-align: right; font-size: 10.5px; line-height: 1.7; color: rgba(138, 160, 187, 0.7); letter-spacing: 0.04em; }
-.hud-fps { right: 24px; top: 128px; font-family: var(--mono); font-size: 11px; color: var(--dim); display: none; }
+.hud-fps { right:24px; top:136px; display:none; font-family:var(--mono); font-size:10px; font-variant-numeric:tabular-nums; letter-spacing:.04em; padding:5px 8px; color:var(--dim); background:#07101bb8; border-left:2px solid #7bcab2; white-space:nowrap; }
+.hud-fps span + span { margin-left:9px; }.fps-value { color:#b7e9d7; }.hud-fps.slow { border-color:var(--warn); }.hud-fps.slow .fps-value { color:var(--warn); }
 
 .hud-warning { left: 50%; top: 18%; transform: translateX(-50%); padding: 8px 18px; border: 1px solid rgba(255, 190, 115, 0.6); color: var(--warn); background: rgba(40, 24, 8, 0.55); letter-spacing: 0.08em; opacity: 0; transition: opacity 0.25s; }
 .hud-warning.on { opacity: 1; animation: blink 1.1s infinite; }
@@ -267,6 +268,7 @@ input[type='checkbox'] { width: 18px; height: 18px; accent-color: var(--accent);
   .data-row { padding-bottom: 2px; }
   .data-row .num { font-size: 16px; }
   .bar-row { grid-template-columns: 40px 1fr 30px; gap: 5px; }
+  .bar-row .label { font-size:9px; letter-spacing:.12em; }
   .hud-target { left: 10px; bottom: 10px; width: min(220px, 38vw); padding: 6px 8px 6px 10px; }
   .t-name { font-size: 14px; margin-top: 2px; }
   .t-class { display: none; }
@@ -319,6 +321,8 @@ input[type='checkbox'] { width: 18px; height: 18px; accent-color: var(--accent);
 @media(max-height:520px) { .dodge-label { font-size:9px; margin-top:6px; } }
 @media(max-height:520px) { .difficulty-select { margin-bottom:8px; gap:4px; }.difficulty-select .small { display:none; }.difficulty-select .seg { padding:6px 0; }.hud-combat { top:95px; right:10px; width:150px; font-size:9px; }.weapon-label { font-size:8px; }.landing-label { bottom:90px; font-size:9px; padding:4px 8px; }.combat-label { margin-bottom:4px; } }
 @media(max-width:560px) and (orientation:portrait) { .hud-combat { top:145px; right:10px; width:150px; }.landing-label { bottom:182px; width:70vw; }.hud-mission { max-width:48vw; }.main-menu .difficulty-select { max-width:330px; } }
+@media(max-height:520px), (max-width:560px) { .hud-fps { right:10px; top:90px; padding:2px 5px; font-size:9px; }.hud-fps .frame-value { display:none; }.hud-fps span + span { margin-left:6px; } }
+@media(max-height:520px) { .hud-combat { top:108px; } }
 @media (max-width: 560px) and (orientation: portrait) {
   .tc-stick { width: 104px; height: 104px; left: max(12px, env(safe-area-inset-left)); }
   .tc-right { right: max(12px, env(safe-area-inset-right)); gap: 6px; }
@@ -326,6 +330,7 @@ input[type='checkbox'] { width: 18px; height: 18px; accent-color: var(--accent);
   .tc-btn { min-width: 56px; padding: 0 8px; font-size: 11px; }
   .tc-btn.small { min-width: 42px; }
   .tc-top { right: max(12px, env(safe-area-inset-right)); top: max(110px, env(safe-area-inset-top)); }
-  body.touch .hud-speed { bottom: 150px; width: 150px; }
+  body.touch .hud-speed { bottom:205px; width:150px; left:auto; right:12px; transform:none; }
   body.touch .hud-target { bottom: 205px; }
+  body.touch .landing-label { bottom:170px; width:calc(100vw - 24px); max-width:none; padding:5px 8px; font-size:10px; }
 }

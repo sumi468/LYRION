@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-23T15:17:55.629Z",
+  "timestamp": "2026-10-23T16:08:29.609Z",
   "results": [
     {
       "name": "同梱した未来的フォントを日本語・英数字にロード",
@@ -48,10 +48,10 @@
       "data": {
         "state": "running",
         "active": true,
-        "rms": 0.007489852830738208,
-        "sources": 10,
-        "musicNotesScheduled": 16,
-        "musicRms": 0.013956708664765283
+        "rms": 0.0088696620175839,
+        "sources": 11,
+        "musicNotesScheduled": 17,
+        "musicRms": 0.012439666344410004
       }
     },
     {
@@ -59,7 +59,7 @@
       "ok": true,
       "data": {
         "meshes": 20,
-        "textures": 16,
+        "textures": 17,
         "drawCalls": 21
       }
     },

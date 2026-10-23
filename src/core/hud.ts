@@ -66,6 +66,7 @@ export interface HudSnapshot {
   heading: number;
   pitch: number;
   fps: number;
+  frameMs: number;
   qualityLabel: string;
   nearest: { name: string; altitude: number } | null;
   warning: string | null;

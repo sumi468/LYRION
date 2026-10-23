@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-23T15:18:05.214Z",
+  "timestamp": "2026-10-23T16:08:39.556Z",
   "url": "http://127.0.0.1:4186/?debug",
   "results": [
     {
@@ -26,8 +26,8 @@
       "name": "実GPUの1080pで戦闘を描画し通常ループが進む",
       "ok": true,
       "data": {
-        "fps": 200.1597284613175,
-        "p95Ms": 5.100000000000364
+        "fps": 170.987038883604,
+        "p95Ms": 6.100000000000364
       }
     },
     {
@@ -77,12 +77,12 @@
       "ok": true,
       "data": {
         "before": {
-          "geometries": 39,
-          "textures": 15
+          "geometries": 43,
+          "textures": 16
         },
         "after": {
-          "geometries": 39,
-          "textures": 15
+          "geometries": 43,
+          "textures": 16
         }
       }
     },
@@ -100,7 +100,7 @@
     "hardware": true
   },
   "combatFrames": {
-    "fps": 200.1597284613175,
-    "p95Ms": 5.100000000000364
+    "fps": 170.987038883604,
+    "p95Ms": 6.100000000000364
   }
 }

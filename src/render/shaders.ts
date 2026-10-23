@@ -156,8 +156,9 @@ vec4 progRocky(vec3 d){
   float plains = smoothstep(0.38, 0.5, base);
   vec3 col = mix(uC0, uC1, smoothstep(0.30, 0.62, h));
   col = mix(col, uC2, smoothstep(0.58, 0.88, h) * plains);
-  float fine = snoise(d * 60.0) * 0.5 + 0.5;
-  col *= 0.82 + 0.3 * fine;
+  float fine = fbm(d * 60.0, 3) * 0.5 + 0.5;
+  col *= 0.76 + 0.38 * fine;
+  h += (fine - .5) * .028;
   col *= 1.0 + cr * 0.12;
   return vec4(col, clamp(h, 0.0, 1.0));
 }
@@ -165,23 +166,29 @@ vec4 progRocky(vec3 d){
 // ---- 1: 海洋惑星 ----
 vec4 progTerran(vec3 d){
   vec3 p = d * 1.7 + uSeed * 1.3;
-  float h = fbm(p, 6) * 0.5 + 0.5 + 0.10 * snoise(d * 6.0 + 1.0);
+  vec3 warp = vec3(snoise(p + 4.0), snoise(p + 12.0), snoise(p - 7.0));
+  float h = fbm(p + warp * .16, 6) * 0.5 + 0.5 + 0.10 * snoise(d * 6.0 + 1.0);
+  h += fbm(d * 48.0 + uSeed, 3) * .018;
   h = clamp(h, 0.0, 1.0);
   float lat = abs(d.y);
   float land = smoothstep(uSea - 0.012, uSea + 0.012, h);
   float elev = max(h - uSea, 0.0) / (1.0 - uSea);
   float depth = clamp((uSea - h) / uSea, 0.0, 1.0);
-  vec3 ocean = mix(uC0 * 2.6, uC0 * 0.45, smoothstep(0.0, 0.55, depth));
+  vec3 ocean = mix(uC0 * 2.0, uC0 * 0.55, smoothstep(0.0, 0.55, depth));
+  ocean = mix(ocean, vec3(.018, .075, .085), (1.0 - smoothstep(.0, .025, depth)) * .35);
   float moist = fbm(d * 3.0 + uSeed * 7.0, 4) * 0.5 + 0.5;
   float arid = smoothstep(0.1, 0.45, 1.0 - abs(d.y - 0.18) * 2.6) * 0.5 + (1.0 - moist) * 0.7;
   vec3 landCol = mix(uC1, uC2, smoothstep(0.45, 0.8, arid));
-  landCol *= 0.8 + 0.4 * (snoise(d * 30.0) * 0.5 + 0.5);
+  landCol *= 0.72 + 0.5 * (fbm(d * 32.0, 4) * 0.5 + 0.5);
+  float mountain = pow(1.0 - abs(snoise(d * 22.0 + warp)), 3.0) * smoothstep(.025, .2, elev);
+  landCol = mix(landCol, vec3(.16, .15, .12), mountain * .36);
+  landCol = mix(vec3(.23, .21, .15), landCol, smoothstep(.0, .012, h - uSea));
   landCol = mix(landCol, vec3(0.30, 0.27, 0.24), smoothstep(0.5, 0.85, elev));
   float snow = smoothstep(0.80, 0.9, lat + 0.07 * snoise(d * 9.0));
   snow = max(snow, smoothstep(0.62, 0.95, elev) * smoothstep(0.35, 0.7, lat + 0.15));
   vec3 col = mix(ocean, landCol, land);
   col = mix(col, vec3(0.86, 0.9, 0.95), clamp(snow, 0.0, 1.0));
-  float outH = max(mix(uSea, h, land), uSea + 0.05 * snow);
+  float outH = max(mix(uSea, h + mountain * .025, land), uSea + 0.05 * snow);
   return vec4(col, outH);
 }
 
@@ -199,8 +206,9 @@ vec4 progIce(vec3 d){
   crack *= step(uSeed, 30.0);
   col = mix(col, uC2 * 0.45, crack * 0.6);
   float cr = craters(d * 6.0, uSeed) * 0.5;
-  col *= 1.0 + cr * 0.1;
-  float h = base * 0.5 + cr * 0.15 - crack * 0.2 + 0.25;
+  float frost = fbm(d * 55.0 + uSeed, 3);
+  col *= 1.0 + cr * 0.1 + frost * .1;
+  float h = base * 0.5 + cr * 0.15 - crack * 0.2 + frost * .015 + 0.25;
   return vec4(col, clamp(h, 0.0, 1.0));
 }
 
@@ -208,12 +216,13 @@ vec4 progIce(vec3 d){
 vec4 progGas(vec3 d){
   float warp = fbm(vec3(d.x * 2.5, d.y * 0.9, d.z * 2.5) + uSeed, 5) * 0.14;
   float y = d.y + warp;
-  float bands = sin(y * 24.0 + 0.9 * sin(y * 7.3)) * 0.5 + 0.5;
-  float fine = snoise(vec3(d.x * 5.0, y * 52.0, d.z * 5.0) + uSeed) * 0.5 + 0.5;
+  float bands = sin(y * 36.0 + 0.9 * sin(y * 7.3)) * 0.5 + 0.5;
+  float fine = fbm(vec3(d.x * 9.0, y * 85.0, d.z * 9.0) + uSeed, 4) * 0.5 + 0.5;
   float turb = fbm(d * vec3(5.0, 15.0, 5.0) + uSeed, 5) * 0.5 + 0.5;
-  float v = mix(bands, fine, 0.22) + (turb - 0.5) * 0.30;
-  vec3 col = mix(uC1, uC0, smoothstep(0.28, 0.72, v));
-  col = mix(col, uC2, smoothstep(0.58, 1.0, turb * 0.85 + (1.0 - bands) * 0.2) * 0.6);
+  float v = mix(bands, fine, 0.42) + (turb - 0.5) * 0.30;
+  vec3 col = mix(uC1, uC0, smoothstep(0.05, 0.95, v));
+  col = mix(col, uC2, smoothstep(0.58, 1.0, turb * 0.85 + (1.0 - bands) * 0.2) * 0.45);
+  col *= .88 + .22 * (fbm(d * vec3(30.0, 95.0, 30.0) + uSeed, 3) * .5 + .5);
   // 巨大な嵐(南半球)
   float lon = atan(d.z, d.x);
   float dl = lon - 2.2;
@@ -221,7 +230,7 @@ vec4 progGas(vec3 d){
   float dla = asin(clamp(d.y, -1.0, 1.0)) + 0.36;
   float st = exp(-(pow(dl / 0.26, 2.0) + pow(dla / 0.12, 2.0)));
   float swirl = snoise(vec3(dl * 9.0 + dla * 14.0, dla * 12.0 - dl * 7.0, uSeed)) * 0.5 + 0.5;
-  col = mix(col, mix(vec3(0.62, 0.27, 0.16), vec3(0.88, 0.62, 0.4), swirl), clamp(st * 1.15, 0.0, 1.0));
+  col = mix(col, mix(uC2 * .7, uC1 * 1.1, swirl), clamp(st * 1.15, 0.0, 1.0));
   col *= mix(1.0, 0.68, smoothstep(0.72, 1.0, abs(d.y)));
   return vec4(col, v);
 }
@@ -259,15 +268,13 @@ vec4 progLava(vec3 d){
 
 // ---- 6: 雲(アルファに密度) ----
 vec4 progCloud(vec3 d){
-  float lat = d.y;
-  float ang = sin(lat * 6.0) * 0.8 + lat * 0.6;
-  float c = cos(ang);
-  float s = sin(ang);
-  vec3 p = vec3(c * d.x - s * d.z, d.y, s * d.x + c * d.z);
-  float n = fbm(p * vec3(2.4, 4.6, 2.4) + uSeed, 6) * 0.5 + 0.5;
-  float sw = fbm(p * 5.5 + uSeed * 2.0, 5) * 0.5 + 0.5;
-  float v = n * 0.72 + sw * 0.36;
-  float dens = smoothstep(1.0 - uSea - 0.12, 1.0 - uSea + 0.22, v);
+  // Isotropic weather cells avoid the former stretched latitude streaks.
+  vec3 warp = vec3(fbm(d * 2.2 + uSeed, 3), fbm(d * 2.2 + 9.0, 3), fbm(d * 2.2 - uSeed, 3));
+  vec3 p = d * 5.0 + warp * .8;
+  float n = fbm(p + uSeed, 5) * .5 + .5;
+  float wisps = fbm(p * 2.6 + uSeed * 2.0, 4) * .5 + .5;
+  float v = n * .78 + wisps * .22;
+  float dens = smoothstep(1.0 - uSea - .14, 1.0 - uSea + .08, v);
   return vec4(1.0, 1.0, 1.0, dens);
 }
 
@@ -288,8 +295,8 @@ vec4 progSky(vec3 d){
   vec3 a = normalize(vec3(-0.55, 0.25, 0.8));
   float na = smoothstep(0.55, 0.97, dot(d, a));
   float fa = fbm(d * 5.0 + 9.0, 6) * 0.5 + 0.5;
-  col += vec3(0.65, 0.12, 0.30) * na * smoothstep(0.35, 0.8, fa) * 0.38;
-  col += vec3(0.12, 0.25, 0.7) * na * smoothstep(0.5, 0.9, fbm(d * 8.0 + 4.0, 5) * 0.5 + 0.5) * 0.25;
+  col += vec3(0.42, 0.14, 0.25) * na * smoothstep(0.35, 0.8, fa) * 0.22;
+  col += vec3(0.12, 0.25, 0.7) * na * smoothstep(0.5, 0.9, fbm(d * 8.0 + 4.0, 5) * 0.5 + 0.5) * 0.18;
 
   vec3 b = normalize(vec3(0.6, -0.45, -0.6));
   float nb = smoothstep(0.7, 0.98, dot(d, b));
@@ -645,7 +652,7 @@ void main(){
   col *= 1.0 - spots * 0.55;
   float mu = clamp(dot(normalize(vNormalV), normalize(-vViewPos)), 0.0, 1.0);
   col *= 0.32 + 0.68 * pow(mu, 0.6);
-  gl_FragColor = vec4(col * 1.75, 1.0);
+  gl_FragColor = vec4(col * 1.45, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>
 }

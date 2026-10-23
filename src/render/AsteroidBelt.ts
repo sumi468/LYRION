@@ -1,5 +1,6 @@
 import {
   Color,
+  CanvasTexture,
   Group,
   IcosahedronGeometry,
   InstancedMesh,
@@ -7,6 +8,7 @@ import {
   MeshStandardMaterial,
   Object3D,
   Quaternion,
+  SRGBColorSpace,
   Vector3,
   type BufferAttribute,
 } from 'three';
@@ -42,6 +44,8 @@ export class AsteroidBelt {
   readonly rocks: Rock[] = [];
   private mesh: InstancedMesh;
   private geo: IcosahedronGeometry;
+  private detailedGeo: IcosahedronGeometry;
+  private surface: CanvasTexture;
   private mat: MeshStandardMaterial;
   private angle = 0;
 
@@ -64,8 +68,34 @@ export class AsteroidBelt {
       p.setXYZ(i, v.x, v.y, v.z);
     }
     this.geo.computeVertexNormals();
-
-    this.mat = new MeshStandardMaterial({ color: 0xffffff, roughness: 0.96, metalness: 0.04, flatShading: true });
+    this.detailedGeo = new IcosahedronGeometry(1, 2);
+    const detailed = this.detailedGeo.getAttribute('position') as BufferAttribute;
+    for (let i = 0; i < detailed.count; i++) {
+      v.fromBufferAttribute(detailed, i).normalize();
+      const k = .94 + .14 * Math.sin(v.x * 8 + v.y * 3) * Math.sin(v.z * 7 - v.y * 4) + .09 * Math.cos(v.y * 11 + v.x * 5);
+      v.multiplyScalar(k); detailed.setXYZ(i, v.x, v.y, v.z);
+    }
+    this.detailedGeo.computeVertexNormals();
+    // One tiny shared map adds mineral grain without per-rock draw calls or shaders.
+    const canvas = document.createElement('canvas'); canvas.width = canvas.height = 256;
+    const paint = canvas.getContext('2d');
+    if (paint) {
+      const grain = rng(1927);
+      paint.fillStyle = '#b9b5ae'; paint.fillRect(0, 0, 256, 256);
+      for (let i = 0; i < 70; i++) {
+        const x = grain() * 256, y = grain() * 256, radius = 2 + grain() * 18;
+        const gradient = paint.createRadialGradient(x, y, 0, x, y, radius);
+        gradient.addColorStop(0, 'rgba(54,47,43,.22)'); gradient.addColorStop(.8, 'rgba(92,83,72,.09)'); gradient.addColorStop(1, 'rgba(120,110,96,0)');
+        paint.fillStyle = gradient; paint.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+      }
+      for (let i = 0; i < 6500; i++) {
+        const shade = 105 + Math.floor(grain() * 100);
+        paint.fillStyle = `rgba(${shade},${shade},${shade},.22)`;
+        paint.fillRect(grain() * 256, grain() * 256, 1, 1 + grain() * 2);
+      }
+    }
+    this.surface = new CanvasTexture(canvas); this.surface.colorSpace = SRGBColorSpace;
+    this.mat = new MeshStandardMaterial({ color: 0xffffff, map: this.surface, bumpMap: this.surface, bumpScale: .035, roughness: .96, metalness: .04, flatShading: true });
     this.mesh = new InstancedMesh(this.geo, this.mat, maxCount);
     this.mesh.frustumCulled = false;
 
@@ -104,6 +134,7 @@ export class AsteroidBelt {
   /** 画質に応じた表示数(先頭 n 個のみ描画)。衝突判定も同じ数に揃える */
   setCount(n: number): void {
     this.mesh.count = Math.min(n, this.rocks.length);
+    this.mesh.geometry = n >= 2000 ? this.detailedGeo : this.geo;
   }
 
   get count(): number {
@@ -130,6 +161,8 @@ export class AsteroidBelt {
   dispose(): void {
     this.mesh.dispose();
     this.geo.dispose();
+    this.detailedGeo.dispose();
+    this.surface.dispose();
     this.mat.dispose();
     this.group.removeFromParent();
   }

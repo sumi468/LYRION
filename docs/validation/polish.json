@@ -1,0 +1,143 @@
+{
+  "timestamp": "2026-10-23T16:09:00.226Z",
+  "url": "http://127.0.0.1:4188/?debug",
+  "results": [
+    {
+      "name": "旧設定からもFPS・フレーム時間・画質を初期表示",
+      "ok": true,
+      "data": {
+        "enabled": true,
+        "visible": true,
+        "text": "173 FPS5.8 msHIGH",
+        "fps": 173.22834645669292,
+        "frameMs": 5.7727272727272725
+      }
+    },
+    {
+      "name": "細部を材質別に結合し機体・基地・探査機とFXの上限を維持",
+      "ok": true,
+      "data": {
+        "ship": 20,
+        "outpost": 7,
+        "probe": 4,
+        "enemyHullTriangles": 244,
+        "enemyTrimTriangles": 780,
+        "enemyCapacity": 6,
+        "sparkCapacity": 120
+      }
+    },
+    {
+      "name": "小さな衛星でも基地の基礎が球面の地面まで届く",
+      "ok": true
+    },
+    {
+      "name": "全11天体を再生成したテクスチャで描画",
+      "ok": true
+    },
+    {
+      "name": "完成した基地へ着陸し機体・着陸脚・基地を同時描画",
+      "ok": true
+    },
+    {
+      "name": "最大同時爆発を固定プール内で処理",
+      "ok": true,
+      "data": {
+        "enemies": 5,
+        "flashes": 12,
+        "sparks": 120
+      }
+    },
+    {
+      "name": "FPSを設定で消す選択は再読込み後も保持",
+      "ok": true
+    },
+    {
+      "name": "設定からFPS表示を再度有効にできる",
+      "ok": true
+    },
+    {
+      "name": "390x844でFPSが体力・戦闘HUD・タッチボタンと重ならない",
+      "ok": true,
+      "data": {
+        "fps": {
+          "left": 305.109375,
+          "top": 90,
+          "right": 380,
+          "bottom": 105
+        },
+        "others": [
+          {
+            "left": 230,
+            "top": 8,
+            "right": 380,
+            "bottom": 85
+          },
+          {
+            "left": 230,
+            "top": 145,
+            "right": 380,
+            "bottom": 257
+          },
+          {
+            "left": 283.421875,
+            "top": 110,
+            "right": 378,
+            "bottom": 146
+          }
+        ],
+        "overlaps": false,
+        "visible": true
+      }
+    },
+    {
+      "name": "縦画面の目標・速度・着陸案内を独立した位置に表示",
+      "ok": true
+    },
+    {
+      "name": "800x360でFPSが体力・戦闘HUD・タッチボタンと重ならない",
+      "ok": true,
+      "data": {
+        "fps": {
+          "left": 715.109375,
+          "top": 90,
+          "right": 790,
+          "bottom": 105
+        },
+        "others": [
+          {
+            "left": 640,
+            "top": 8,
+            "right": 790,
+            "bottom": 85
+          },
+          {
+            "left": 640,
+            "top": 108,
+            "right": 790,
+            "bottom": 176
+          },
+          {
+            "left": 529.421875,
+            "top": 6,
+            "right": 630,
+            "bottom": 42
+          }
+        ],
+        "overlaps": false,
+        "visible": true
+      }
+    },
+    {
+      "name": "コンソール・ページエラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  }
+}

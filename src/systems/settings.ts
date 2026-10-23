@@ -23,7 +23,7 @@ export const DEFAULT_SETTINGS: Settings = {
   sensitivity: 1,
   invertY: false,
   fov: 70,
-  showFps: false,
+  showFps: true,
   audioEnabled: true,
   masterVolume: 0.6,
   musicVolume: 0.35,
@@ -53,7 +53,12 @@ export function sanitizeSettings(raw: unknown): Settings {
 export function loadSettings(storage: StorageLike | null): Settings {
   try {
     const txt = storage?.getItem(SETTINGS_KEY);
-    return sanitizeSettings(txt ? JSON.parse(txt) : null);
+    const raw: unknown = txt ? JSON.parse(txt) : null;
+    const settings = sanitizeSettings(raw);
+    // Show the new performance display once for existing installations too.
+    // Subsequent choices to hide it remain saved.
+    if (!raw || typeof raw !== 'object' || (raw as Record<string, unknown>).fpsDisplayVersion !== 1) settings.showFps = true;
+    return settings;
   } catch {
     return { ...DEFAULT_SETTINGS };
   }
@@ -61,7 +66,7 @@ export function loadSettings(storage: StorageLike | null): Settings {
 
 export function saveSettings(storage: StorageLike | null, s: Settings): void {
   try {
-    storage?.setItem(SETTINGS_KEY, JSON.stringify(s));
+    storage?.setItem(SETTINGS_KEY, JSON.stringify({ ...s, fpsDisplayVersion: 1 }));
   } catch {
     /* noop */
   }

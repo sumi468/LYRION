@@ -42,9 +42,14 @@ export class SunView {
     this.mesh.scale.setScalar(def.radius);
     this.group.add(this.mesh);
 
-    this.glowTexA = createGlowTexture(256);
+    // An annular corona preserves photosphere detail instead of washing out its centre.
+    this.glowTexA = createGlowTexture(256, [
+      [0, 'rgba(255,224,164,0)'], [.30, 'rgba(255,214,142,0)'],
+      [.38, 'rgba(255,193,105,.27)'], [.46, 'rgba(255,165,75,.08)'],
+      [1, 'rgba(255,120,40,0)'],
+    ]);
     this.glowTexB = createGlowTexture(256, [
-      [0, 'rgba(255,200,130,0.35)'],
+      [0, 'rgba(255,200,130,0.05)'],
       [0.2, 'rgba(255,170,90,0.14)'],
       [0.6, 'rgba(255,140,60,0.03)'],
       [1, 'rgba(255,120,40,0)'],
@@ -55,7 +60,7 @@ export class SunView {
       );
     this.glowA = mk(this.glowTexA);
     this.glowB = mk(this.glowTexB);
-    this.glowA.scale.setScalar(def.radius * 5.2);
+    this.glowA.scale.setScalar(def.radius * 2.8);
     this.glowB.scale.setScalar(def.radius * 16);
     this.glowA.renderOrder = -5;
     this.glowB.renderOrder = -6;

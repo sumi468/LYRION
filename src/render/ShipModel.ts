@@ -103,6 +103,11 @@ export class ShipModel {
       // 放熱グリル、ラッチ、翼端の航法灯。
       const vent=new BoxGeometry(.5,.055,.065);
       for(let i=0;i<6;i++)add(vent,heat,side*2.06,.41,1.85+i*.27);
+      // Flush fasteners and radiator vanes stay in existing material batches.
+      const fastener=new CylinderGeometry(.035,.035,.018,6);
+      for(const z of [-1.2,.4,2.0,3.6])add(fastener,copper,side*1.32,.935,z);
+      for(let i=0;i<7;i++)add(new BoxGeometry(.72,.04,.075),titanium,side*3.3,-.035,1.8+i*.2).rotation.y=side*.3;
+      add(new BoxGeometry(.07,.04,2.5),heat,side*3.4,.01,2.7).rotation.y=side*.3;
       add(new BoxGeometry(.36,.055,.11),copper,side*1.5,.85,-.5);
       add(new BoxGeometry(.65,.055,.1),strip,side*4.7,.015,3.8).rotation.y=-side*.3;
       const lamp=new MeshBasicMaterial({color:side<0?0xe5574f:0x76b7a1});this.mats.push(lamp);
@@ -140,7 +145,7 @@ export class ShipModel {
     // Three retractable landing struts; one mesh per strut.
     for(const [x,z] of [[0,-4.4],[-2,3.5],[2,3.5]]) {
       const leg=new Group();leg.position.set(x,-.75,z);
-      const sources=[new CylinderGeometry(.10,.16,2.0,8).translate(0,-1,0),new BoxGeometry(.65,.18,1.1).translate(0,-2.1,0)];
+      const sources=[new CylinderGeometry(.10,.16,2.0,8).translate(0,-1,0),new CylinderGeometry(.19,.19,.65,8).translate(0,-.6,0),new BoxGeometry(.8,.18,1.25).translate(0,-2.1,0)];
       const pieces=sources.map(g=>g.toNonIndexed());
       const geometry=mergeGeometries(pieces)!;for(const piece of [...sources,...pieces])piece.dispose();
       this.geos.add(geometry);leg.add(new Mesh(geometry,titanium));this.gear.push(leg);this.hull.add(leg);leg.visible=false;

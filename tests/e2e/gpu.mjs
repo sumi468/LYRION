@@ -7,6 +7,7 @@ const server = await serve(4181);
 const browser = await chromium.launch(launchOptions());
 const errors = [];
 const report = { timestamp: new Date().toISOString(), browser: browser.version(), platform: process.platform,
+  headless: launchOptions().headless,
   viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1, samples: [], errors };
 const reportDir = fileURLToPath(new URL('../../docs/validation/', import.meta.url));
 mkdirSync(reportDir, { recursive: true });
@@ -117,7 +118,7 @@ try {
   report.failure = failure;
   console.error(error);
 } finally {
-  writeFileSync(join(reportDir, 'gpu-benchmark.json'), JSON.stringify(report, null, 2));
+  writeFileSync(join(reportDir, process.env.HEADED === '1' ? 'display-benchmark.json' : 'gpu-benchmark.json'), JSON.stringify(report, null, 2));
   await browser.close();
   server.close();
 }

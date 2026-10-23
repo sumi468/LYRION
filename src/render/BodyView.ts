@@ -10,10 +10,6 @@ import {
   Matrix3,
   Matrix4,
   Mesh,
-  MeshStandardMaterial,
-  OctahedronGeometry,
-  BoxGeometry,
-  CylinderGeometry,
   RingGeometry,
   ShaderMaterial,
   SphereGeometry,
@@ -36,6 +32,7 @@ import {
 } from './shaders';
 import { PROGRAM_CLOUD, PROGRAM_ID, createGlowTexture, createRingTexture, type BakedTexture, type TextureBaker } from './bake';
 import type { QualityProfile } from './quality';
+import { ProbeModel } from './ProbeModel';
 
 export interface ViewContext {
   /** Floating Origin(倍精度のワールド座標)。描画座標 = ワールド座標 - origin */
@@ -311,28 +308,15 @@ export class BodyView {
       this.cloudMesh.visible = p.clouds;
     }
     if (this.planetMat && d.surface) {
-      this.planetMat.uniforms.uBump.value = p.bump ? d.radius * 0.03 * d.surface.bump : 0;
+      // Keep relief below the 8-bit height map's quantisation scale on screen.
+      this.planetMat.uniforms.uBump.value = p.bump ? d.radius * 0.008 * d.surface.bump : 0;
     }
-    if (this.cloudMat) this.cloudMat.uniforms.uBump.value = p.bump ? d.radius * 0.012 : 0;
+    if (this.cloudMat) this.cloudMat.uniforms.uBump.value = p.bump ? d.radius * 0.0015 : 0;
   }
 
   private buildProbe(): void {
-    const body = new MeshStandardMaterial({ color: 0x9aa3ad, metalness: 0.7, roughness: 0.5 });
-    const panel = new MeshStandardMaterial({ color: 0x1d2b4a, metalness: 0.4, roughness: 0.35, emissive: 0x0a1428 });
-    const core = new Mesh(new BoxGeometry(1.6, 1.2, 2.4), body);
-    const dish = new Mesh(new CylinderGeometry(0.1, 1.3, 0.5, 14, 1, true), body);
-    dish.rotation.x = Math.PI / 2;
-    dish.position.set(0, 0.7, -1.6);
-    const wingL = new Mesh(new BoxGeometry(3.6, 0.08, 1.4), panel);
-    wingL.position.set(-2.8, 0, 0);
-    const wingR = wingL.clone();
-    wingR.position.x = 2.8;
-    wingR.rotation.z = 0.35;
-    wingL.rotation.z = -0.15;
-    const mast = new Mesh(new OctahedronGeometry(0.4), body);
-    mast.position.set(0, 1.2, 0.8);
-    this.probe = new Group();
-    this.probe.add(core, dish, wingL, wingR, mast);
+    const model = new ProbeModel();
+    this.probe = model.group;
     this.probe.scale.setScalar(2.2);
     this.spin.add(this.probe);
 
@@ -355,12 +339,7 @@ export class BodyView {
     this.disposables.push(
       glow,
       sm,
-      core.geometry,
-      dish.geometry,
-      wingL.geometry,
-      mast.geometry,
-      body,
-      panel,
+      model,
     );
   }
 
@@ -380,8 +359,9 @@ export class BodyView {
 
     if (this.probeBeacon) {
       const s = 0.5 + 0.5 * Math.sin(ctx.time * 3.2);
-      (this.probeBeacon.material as SpriteMaterial).opacity = 0.25 + 0.75 * s * s;
-      this.probeBeacon.scale.setScalar(Math.max(40, this.distance * 0.03));
+      const distant = Math.min(1, Math.max(0, (this.distance - 45) / 200));
+      (this.probeBeacon.material as SpriteMaterial).opacity = (.25 + .6 * s * s) * distant;
+      this.probeBeacon.scale.setScalar(Math.max(8, this.distance * .025));
     }
     if (!this.planetMat) return;
 

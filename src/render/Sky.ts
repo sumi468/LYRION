@@ -59,7 +59,7 @@ export class Sky {
       depthTest: false,
       depthWrite: false,
       toneMapped: false,
-      uniforms: { uSky: { value: null }, uBright: { value: 0.3 } },
+      uniforms: { uSky: { value: null }, uBright: { value: 0.18 } },
     });
     this.skyMesh = new Mesh(new SphereGeometry(8000, 48, 24), this.skyMat);
     this.skyMesh.renderOrder = -10;

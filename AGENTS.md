@@ -63,3 +63,7 @@ v0.2でテクスチャの段階生成・進捗表示、雲・大気の調整、W
 ## v0.5の追撃戦
 
 敵の役割・予告・連射・回避・増援は `systems/combat.ts`。変更時は `npm run test:dogfight` を実施。V / EVADEは描画ロールと敵の照準誤差を変え、無敵や横移動は加えない。予測射撃は双方の相対速度で計算し、固定プールとdisposeを維持する。
+
+## v0.6の描画とFPS
+
+`render/modelParts.ts` は静的部品を消費して結合する。`ProbeModel` は4材質、`LandingView` は6材質と1基礎インスタンス、機体は20メッシュ。基地の基礎は天体の半径が変わったときだけ球面へ合わせる。小惑星の細分形状は表示数2000以上（L3以上）で使用する。`systems/frameStats.ts` は経過時間からFPSを計算。設定の `fpsDisplayVersion` で旧版からの一度だけの表示ON移行を管理する。変更時は `npm run test:polish`。`HEADED=1 npm run test:gpu` は通常Chromeウィンドウの測定を `display-benchmark.json` に分けて記録する。
