@@ -1,0 +1,106 @@
+{
+  "timestamp": "2026-10-23T14:48:30.942Z",
+  "url": "https://lyrion-lilac.vercel.app/?debug",
+  "results": [
+    {
+      "name": "開始前に敵レベルを選び、設定を保存",
+      "ok": true
+    },
+    {
+      "name": "Hardで耐久100の敵3機が自然に出現",
+      "ok": true
+    },
+    {
+      "name": "一時停止中に敵と戦闘が進まない",
+      "ok": true
+    },
+    {
+      "name": "敵弾でシールドと船体耐久が減る",
+      "ok": true,
+      "data": {
+        "hull": 100,
+        "shield": 32
+      }
+    },
+    {
+      "name": "実GPUの1080pで戦闘を描画し通常ループが進む",
+      "ok": true,
+      "data": {
+        "fps": 199.26088693538063,
+        "p95Ms": 5.100000000000364
+      }
+    },
+    {
+      "name": "Jの連装砲で敵を撃破しデータ報酬を獲得",
+      "ok": true,
+      "data": {
+        "before": {
+          "kills": 0,
+          "data": 0
+        },
+        "after": {
+          "kills": 1,
+          "data": 15
+        }
+      }
+    },
+    {
+      "name": "敵なしへ変更すると敵と飛行中の弾が消える",
+      "ok": true
+    },
+    {
+      "name": "Gの着陸支援で降下に入る",
+      "ok": true
+    },
+    {
+      "name": "実際に接地し着陸装置を展開、修理・補給する",
+      "ok": true
+    },
+    {
+      "name": "公転・自転が進んでも接地高度を維持",
+      "ok": true
+    },
+    {
+      "name": "着陸状態と撃破数を保存・復元",
+      "ok": true
+    },
+    {
+      "name": "Gで離陸し、地面を離れて手動操縦へ戻る",
+      "ok": true
+    },
+    {
+      "name": "降下を中止しても機体は地表の外に留まる",
+      "ok": true
+    },
+    {
+      "name": "敵20回再生成でもGPUリソース数が増えない",
+      "ok": true,
+      "data": {
+        "before": {
+          "geometries": 38,
+          "textures": 15
+        },
+        "after": {
+          "geometries": 38,
+          "textures": 15
+        }
+      }
+    },
+    {
+      "name": "コンソール・ページエラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "combatFrames": {
+    "fps": 199.26088693538063,
+    "p95Ms": 5.100000000000364
+  }
+}

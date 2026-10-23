@@ -1,7 +1,7 @@
 {
   "url": "https://lyrion-lilac.vercel.app",
-  "commit": "d9b315e4c8441931793f7161b758f2723f6003d5",
-  "timestamp": "2026-10-22T18:58:25.825Z",
+  "commit": "bba7fea36648362dc1bb0a0280867563bd10771d",
+  "timestamp": "2026-10-23T14:48:40.456Z",
   "results": [
     {
       "name": "正式な本番URLは認証なしでHTTP 200",
@@ -24,7 +24,7 @@
       }
     },
     {
-      "name": "配信アセットが検証済みビルドと一致: ./assets/index-of-Zqvij.js",
+      "name": "配信アセットが検証済みビルドと一致: ./assets/index-Bo0hyFX4.js",
       "ok": true,
       "data": {
         "exact": true,
@@ -32,7 +32,7 @@
       }
     },
     {
-      "name": "配信アセットが検証済みビルドと一致: ./assets/three-CrdF-3Rw.js",
+      "name": "配信アセットが検証済みビルドと一致: ./assets/three-Bx6x0MS7.js",
       "ok": true,
       "data": {
         "exact": true,
@@ -40,7 +40,7 @@
       }
     },
     {
-      "name": "配信アセットが検証済みビルドと一致: ./assets/index-CKaA7GOm.css",
+      "name": "配信アセットが検証済みビルドと一致: ./assets/index-B16am86E.css",
       "ok": true,
       "data": {
         "exact": true,
@@ -70,10 +70,10 @@
       "data": {
         "state": "running",
         "active": true,
-        "rms": 0.007353350018506915,
+        "rms": 0.007485622288181867,
         "sources": 10,
         "musicNotesScheduled": 12,
-        "musicRms": 0.010781224737960723
+        "musicRms": 0.011443957744823215
       }
     },
     {
@@ -81,9 +81,9 @@
       "ok": true,
       "data": {
         "bank": 0.6912354542913094,
-        "relativeBank": 0.5951170459404649,
+        "relativeBank": 0.595117045940465,
         "distance": 0,
-        "meshes": 17
+        "meshes": 20
       }
     },
     {
