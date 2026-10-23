@@ -1,7 +1,7 @@
 {
   "url": "https://lyrion-lilac.vercel.app",
-  "commit": "26fe5e68aa8a2160c0a3ca0468799dd227b91ccc",
-  "timestamp": "2026-10-23T15:27:51.449Z",
+  "commit": "23bf255f1e282904f7fdbb160a70b48e2e79e1a9",
+  "timestamp": "2026-10-23T16:20:26.705Z",
   "results": [
     {
       "name": "正式な本番URLは認証なしでHTTP 200",
@@ -24,7 +24,7 @@
       }
     },
     {
-      "name": "配信アセットが検証済みビルドと一致: ./assets/index-Ca6PLSBQ.js",
+      "name": "配信アセットが検証済みビルドと一致: ./assets/index-Rw2L1_xq.js",
       "ok": true,
       "data": {
         "exact": true,
@@ -32,7 +32,7 @@
       }
     },
     {
-      "name": "配信アセットが検証済みビルドと一致: ./assets/three-CuosUdYD.js",
+      "name": "配信アセットが検証済みビルドと一致: ./assets/three-k-MrtNJN.js",
       "ok": true,
       "data": {
         "exact": true,
@@ -40,7 +40,15 @@
       }
     },
     {
-      "name": "配信アセットが検証済みビルドと一致: ./assets/index-5PmD9HEy.css",
+      "name": "配信アセットが検証済みビルドと一致: ./assets/index-6TyaPhFP.css",
+      "ok": true,
+      "data": {
+        "exact": true,
+        "lineEndingsNormalized": false
+      }
+    },
+    {
+      "name": "配信アセットが検証済みビルドと一致: ./fonts/mplus1.woff2",
       "ok": true,
       "data": {
         "exact": true,
@@ -70,10 +78,10 @@
       "data": {
         "state": "running",
         "active": true,
-        "rms": 0.008017505358721054,
+        "rms": 0.00676200440435839,
         "sources": 10,
         "musicNotesScheduled": 12,
-        "musicRms": 0.010667289861182585
+        "musicRms": 0.011668744074722966
       }
     },
     {
@@ -81,7 +89,7 @@
       "ok": true,
       "data": {
         "bank": 0.6912354542913094,
-        "relativeBank": 0.5951170459404649,
+        "relativeBank": 0.595117045940465,
         "distance": 0,
         "meshes": 20
       }

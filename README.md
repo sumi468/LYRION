@@ -79,7 +79,7 @@ v0.3の変更は [操縦の更新記録](docs/FLIGHT-UPDATE.md) にあります�
 | WebGL喪失・復帰と画質切替12回 | 通過。Geometry 25→25 / Texture 16→16 |
 | 敵20回再生成 | Geometry 43→43 / Texture 16→16 |
 | 通常Chrome・1080p・Highの3場面平均 | 167.4〜170.6 FPS |
-| 5分の1080p・High連続戦闘 | 通過。Geometry [35] / Texture [17]で安定 |
+| 5分の1080p・High連続戦闘 | 通過。Geometry 35 / Texture 17で安定 |
 | 配布用サーバーと通常URL起動 | 10 / 10 |
 
 測定方法・生ログ・未検証項目は **[検証レポート](docs/VALIDATION.md)** を参照してください。FPSはブラウザのフレーム頻度。ヘッドレスの値は通常ウィンドウのデータと分けています。端末と画面の更新頻度によって値は変わります。

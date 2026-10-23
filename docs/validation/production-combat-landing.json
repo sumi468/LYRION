@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-23T14:48:30.942Z",
+  "timestamp": "2026-10-23T16:20:54.777Z",
   "url": "https://lyrion-lilac.vercel.app/?debug",
   "results": [
     {
@@ -7,7 +7,7 @@
       "ok": true
     },
     {
-      "name": "Hardで耐久100の敵3機が自然に出現",
+      "name": "Hardで役割の異なるシールド付き敵5機が自然に出現",
       "ok": true
     },
     {
@@ -15,19 +15,19 @@
       "ok": true
     },
     {
-      "name": "敵弾でシールドと船体耐久が減る",
+      "name": "敵弾が命中し、自機の防御値が減る",
       "ok": true,
       "data": {
-        "hull": 100,
-        "shield": 32
+        "hull": 60,
+        "shield": 60
       }
     },
     {
       "name": "実GPUの1080pで戦闘を描画し通常ループが進む",
       "ok": true,
       "data": {
-        "fps": 199.26088693538063,
-        "p95Ms": 5.100000000000364
+        "fps": 170.25313295670537,
+        "p95Ms": 6.100000000000364
       }
     },
     {
@@ -40,7 +40,7 @@
         },
         "after": {
           "kills": 1,
-          "data": 15
+          "data": 20
         }
       }
     },
@@ -77,12 +77,12 @@
       "ok": true,
       "data": {
         "before": {
-          "geometries": 38,
-          "textures": 15
+          "geometries": 43,
+          "textures": 16
         },
         "after": {
-          "geometries": 38,
-          "textures": 15
+          "geometries": 43,
+          "textures": 16
         }
       }
     },
@@ -100,7 +100,8 @@
     "hardware": true
   },
   "combatFrames": {
-    "fps": 199.26088693538063,
-    "p95Ms": 5.100000000000364
-  }
+    "fps": 170.25313295670537,
+    "p95Ms": 6.100000000000364
+  },
+  "commit": "23bf255f1e282904f7fdbb160a70b48e2e79e1a9"
 }
