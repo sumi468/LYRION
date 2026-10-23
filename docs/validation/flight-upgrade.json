@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-22T18:48:58.899Z",
+  "timestamp": "2026-10-23T14:40:20.219Z",
   "results": [
     {
       "name": "同梱した未来的フォントを日本語・英数字にロード",
@@ -48,17 +48,17 @@
       "data": {
         "state": "running",
         "active": true,
-        "rms": 0.008756321685116466,
+        "rms": 0.009005589944268665,
         "sources": 10,
         "musicNotesScheduled": 16,
-        "musicRms": 0.01349464148475239
+        "musicRms": 0.009929225978800898
       }
     },
     {
       "name": "新しい船体をバッチ結合し描画負荷を抑える",
       "ok": true,
       "data": {
-        "meshes": 17,
+        "meshes": 20,
         "textures": 16,
         "drawCalls": 21
       }

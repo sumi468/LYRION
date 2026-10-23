@@ -66,6 +66,16 @@ try {
   const b2 = await page.evaluate(() => window.__lyrion.input.virtual.boost);
   check('BOOST を押している間だけ有効', b1 === true && b2 === false);
 
+  await ptr('.tc-btn.fire','pointerdown',650,300,21);await step(2);
+  check('FIREの長押しで実際にパルス弾を発射',await page.evaluate(()=>window.__lyrion.input.firing&&window.__lyrion.combat.bolts.some(b=>b.active&&!b.hostile)));
+  await ptr('.tc-btn.fire','pointerup',650,300,21);
+  check('FIREを離すと射撃入力が解除される',await page.evaluate(()=>!window.__lyrion.input.firing));
+  await page.evaluate(()=>window.__lyrion.debugTeleport('cindra',80));
+  await ptr('.tc-btn.land','pointerdown',700,300,22);await ptr('.tc-btn.land','pointerup',700,300,22);
+  check('LANDで自動着陸を開始',await page.evaluate(()=>window.__lyrion.landing.mode==='approach'));
+  await ptr('.tc-btn.land','pointerdown',700,300,23);await ptr('.tc-btn.land','pointerup',700,300,23);
+  check('再度LANDで降下を安全に中止',await page.evaluate(()=>window.__lyrion.landing.mode==='flight'));
+
   // スキャンボタン
   await page.evaluate(() => { const g = window.__lyrion; g.debugTeleport('cindra', 120); g.state.vel.set(0, 0, 0); g.setTarget('cindra'); });
   await step(3);

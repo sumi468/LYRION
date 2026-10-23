@@ -1,4 +1,5 @@
 import type { Game } from '../core/Game';
+import { DIFFICULTIES, type Difficulty } from '../data/combat';
 import type { ActionName } from '../input/Input';
 import { BODY_DEFS } from '../data/starSystem';
 import { UPGRADE_DEFS } from '../data/upgrades';
@@ -23,6 +24,8 @@ const CONTROLS: [string, string][] = [
   ['C', '視点切替(三人称 / コックピット)'],
   ['Tab', 'ターゲット切替'],
   ['R', 'スキャン開始 / 中断'],
+  ['左クリック / J', '連装パルス砲（押し続けて連射）'],
+  ['G', '自動着陸 / 離陸 / 降下中止'],
   ['U / L', 'アップグレード / 探査記録'],
   ['Esc / P', '一時停止'],
 ];
@@ -197,13 +200,21 @@ export class Ui {
       this.btn('設定', () => this.show('settings')),
     );
     el.append(
-      h('div', { class: 'main-menu' }, h('div', { class: 'logo' }, 'LYRION'), h('div', { class: 'logo-sub' }, 'BEYOND THE STARS'), list),
+      h('div', { class: 'main-menu' }, h('div', { class: 'logo' }, 'LYRION'), h('div', { class: 'logo-sub' }, 'BEYOND THE STARS'), this.difficultySelector(()=>this.renderMain()), list),
       h('div', { class: 'main-foot' }, 'WASD で操縦  ·  マウスで視点  ·  F でブースト  ·  R でスキャン'),
     );
   }
 
   private confirmNew(): void {
     if (!this.game.menuHasSave || confirm('既存のセーブデータを削除して、最初から始めますか?')) this.game.startNew();
+  }
+
+  private difficultySelector(refresh:()=>void):HTMLElement {
+    const selected=this.game.settings.difficulty;
+    return h('div',{class:'difficulty-select'},h('div',{class:'label'},'ENEMY LEVEL / 敵の難易度'),
+      h('div',{class:'segs'},...(Object.keys(DIFFICULTIES) as Difficulty[]).map(level=>
+        h('button',{class:`seg${selected===level?' on':''}`,'aria-pressed':selected===level,onclick:()=>{this.game.applySettings({...this.game.settings,difficulty:level});refresh();}},DIFFICULTIES[level].label))),
+      h('div',{class:'dim small'},DIFFICULTIES[selected].hint));
   }
 
   private renderPause(): void {
@@ -450,7 +461,7 @@ export class Ui {
         }
       }),
     );
-    el.append(this.panelShell('設定  SETTINGS', h('div', { class: 'set-grid' }, h('div', {}, gfx, ctl, audio, danger), keys)));
+    el.append(this.panelShell('設定  SETTINGS', h('div', { class: 'set-grid' }, h('div', {}, this.difficultySelector(()=>this.renderSettings()), gfx, ctl, audio, danger), keys)));
   }
 
   // --- クリア ---

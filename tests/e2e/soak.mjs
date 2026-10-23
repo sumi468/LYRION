@@ -8,7 +8,8 @@ const browser = await chromium.launch(launchOptions());
 const errors = [];
 const samples = [];
 const durationSec = Number(process.env.SOAK_SECONDS || 120);
-const report = { timestamp:new Date().toISOString(), durationSec, browser:browser.version(), samples, errors };
+const combatMode=process.env.SOAK_COMBAT==='1';
+const report = { timestamp:new Date().toISOString(), durationSec, combatMode, browser:browser.version(), samples, errors };
 try {
   const page = await browser.newPage({ viewport:{width:1920,height:1080} });
   page.on('pageerror',(error)=>errors.push(String(error)));
@@ -19,6 +20,7 @@ try {
   report.graphics=await graphicsInfo(page);
   if(report.graphics.hardware!==true)throw new Error('Hardware GPU required');
   await page.evaluate(()=>{const g=window.__lyrion;g.input.requestLock=()=>{};g.input.locked=true;g.startNew();});
+  if(combatMode)await page.evaluate(()=>window.__lyrion.applySettings({...window.__lyrion.settings,difficulty:'hard'}));
   const ids=['thalassa','aurelion','vesper','lumen','wayfarer','cindra'];
   // 初回表示で作られるGPUリソースを先にウォームアップする。
   for(const id of ids){await page.evaluate((id)=>window.__lyrion.debugTeleport(id,600),id);await sleep(300);}
@@ -26,6 +28,7 @@ try {
   let index=0;
   while(Date.now()-started<durationSec*1000){
     await page.evaluate((id)=>{const g=window.__lyrion;g.debugTeleport(id,600);g.setTarget(id);},ids[index%ids.length]);
+    if(combatMode){await page.evaluate(()=>{const g=window.__lyrion;g.combat.spawn(g.state,'hard',g.worlds);});await page.keyboard.down('KeyJ');}
     await page.keyboard.down(index%2?'KeyW':'KeyF');
     await page.keyboard.down('ArrowLeft');
     await sleep(1200);
@@ -34,7 +37,8 @@ try {
     await page.keyboard.up(index%2?'KeyW':'KeyF');
     await page.keyboard.down('KeyX');await sleep(1000);await page.keyboard.up('KeyX');
     await sleep(2000);
-    const data=await page.evaluate(()=>{const g=window.__lyrion;return {phase:g.phase,fps:g.snapshot().fps,hull:g.state.hull,energy:g.state.energy,memory:{...g.rendererInfo.memory},finite:g.state.pos.toArray().every(Number.isFinite),fatal:!document.getElementById('fatal').hidden};});
+    if(combatMode)await page.keyboard.up('KeyJ');
+    const data=await page.evaluate(()=>{const g=window.__lyrion;return {phase:g.phase,fps:g.snapshot().fps,hull:g.state.hull,shield:g.state.shield,enemies:g.combat.count,bolts:g.combat.bolts.filter(b=>b.active).length,energy:g.state.energy,memory:{...g.rendererInfo.memory},finite:g.state.pos.toArray().every(Number.isFinite),fatal:!document.getElementById('fatal').hidden};});
     samples.push({elapsedSec:(Date.now()-started)/1000,scene:ids[index%ids.length],...data});
     if(data.fatal||!data.finite||data.phase!=='playing')throw new Error('Flight became unstable');
     console.log(`soak ${samples.at(-1).elapsedSec.toFixed(0)}s / ${ids[index%ids.length]} / ${data.fps.toFixed(1)}fps / ${JSON.stringify(data.memory)}`);

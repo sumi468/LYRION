@@ -1,10 +1,11 @@
 import { emptyInput, type FlightInput } from '../physics/flight';
 
 /** 1回押すごとに発火する操作 */
-export type ActionName = 'scan' | 'target' | 'camera' | 'assist' | 'upgrades' | 'log' | 'pause';
+export type ActionName = 'scan' | 'target' | 'camera' | 'assist' | 'upgrades' | 'log' | 'pause' | 'land';
 
 const ACTION_KEYS: Record<string, ActionName> = {
   KeyR: 'scan',
+  KeyG: 'land',
   Tab: 'target',
   KeyC: 'camera',
   KeyZ: 'assist',
@@ -18,7 +19,7 @@ const ACTION_KEYS: Record<string, ActionName> = {
 const PREVENT = new Set([
   'Space', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
   'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyQ', 'KeyE', 'KeyF', 'KeyX', 'KeyR', 'KeyC', 'KeyZ',
-  'ShiftLeft', 'ShiftRight',
+  'ShiftLeft', 'ShiftRight', 'KeyJ', 'KeyG',
 ]);
 
 export interface InputSettings {
@@ -39,13 +40,15 @@ export class Input {
   onLockChange: (locked: boolean) => void = () => {};
   settings: InputSettings = { sensitivity: 1, invertY: false };
   /** タッチUI(画面上のスティック/ボタン)からの入力。キーボード入力と合成される */
-  readonly virtual = { thrust: 0, turn: 0, pitch: 0, boost: false, brake: false };
+  readonly virtual = { thrust: 0, turn: 0, pitch: 0, boost: false, brake: false, fire: false };
   /** true の間は Pointer Lock を使わず、視点はタッチドラッグで操作する */
   touchMode = false;
 
   private dx = 0;
   private dy = 0;
   private rightDown = false;
+  private leftDown = false;
+  get firing(): boolean {return this.enabled&&(this.keys.has('KeyJ')||this.leftDown||this.virtual.fire);}
   private cleanup: (() => void)[] = [];
 
   attach(canvas: HTMLCanvasElement): void {
@@ -73,10 +76,12 @@ export class Input {
       this.dy += e.movementY;
     });
     on('mousedown', (e) => {
+      if(e.button===0&&this.enabled&&this.locked&&e.target===canvas)this.leftDown=true;
       if (e.button === 2 && this.enabled) this.rightDown = true;
     });
     on('mouseup', (e) => {
       if (e.button === 2) this.rightDown = false;
+      if(e.button===0)this.leftDown=false;
     });
     const ctx = (e: Event) => e.preventDefault();
     canvas.addEventListener('contextmenu', ctx);
@@ -108,12 +113,12 @@ export class Input {
   resetVirtual(): void {
     const v = this.virtual;
     v.thrust = v.turn = v.pitch = 0;
-    v.boost = v.brake = false;
+    v.boost = v.brake = v.fire = false;
   }
 
   reset(): void {
     this.keys.clear();
-    this.rightDown = false;
+    this.rightDown = this.leftDown = false;
     this.dx = this.dy = 0;
     this.resetVirtual();
   }

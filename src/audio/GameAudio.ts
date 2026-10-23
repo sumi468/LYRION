@@ -170,20 +170,22 @@ export class GameAudio {
     osc.stop(at + duration + 0.02);
   }
 
-  cue(kind: 'scan' | 'upgrade' | 'mission' | 'damage'): void {
+  cue(kind: 'scan' | 'upgrade' | 'mission' | 'damage' | 'weapon'): void {
     const ctx = this.context;
     if (!ctx || ctx.state !== 'running' || !this.active || !this.settings?.audioEnabled) return;
+    if(this.transients.size>=32)return;
     if (kind === 'damage') {
       if (ctx.currentTime - this.damageAt < 0.6) return;
       this.damageAt = ctx.currentTime;
     }
-    const notes = kind === 'damage' ? [90, 65] : kind === 'mission' ? [440, 554.37, 659.25, 880] : kind === 'upgrade' ? [330, 440, 660] : [523.25, 659.25, 783.99];
+    const notes = kind==='weapon'?[230]:kind === 'damage' ? [90, 65] : kind === 'mission' ? [440, 554.37, 659.25, 880] : kind === 'upgrade' ? [330, 440, 660] : [523.25, 659.25, 783.99];
     notes.forEach((frequency, i) => {
       const osc = ctx.createOscillator();
       const amp = ctx.createGain();
       const start = ctx.currentTime + i * 0.12;
       osc.type = kind === 'damage' ? 'triangle' : 'sine';
       osc.frequency.value = frequency;
+      if(kind==='weapon')osc.frequency.exponentialRampToValueAtTime(70,start+.14);
       amp.gain.setValueAtTime(0, start);
       amp.gain.linearRampToValueAtTime(0.07, start + 0.015);
       amp.gain.exponentialRampToValueAtTime(0.0001, start + 0.35);

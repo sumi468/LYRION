@@ -31,6 +31,16 @@ export interface TargetInfo {
 
 /** Game → HUD へ毎フレーム渡す読み取り専用スナップショット */
 export interface HudSnapshot {
+  shield: number;
+  shieldMax: number;
+  kills: number;
+  difficulty: string;
+  enemies: {id:number;x:number;y:number;onScreen:boolean;hp:number;maxHp:number;distance:number}[];
+  weaponHeat: number;
+  overheated: boolean;
+  hit: number;
+  landingText: string;
+  landingMode: 'flight'|'approach'|'landed';
   speed: number;
   speedFrac: number;
   boosting: boolean;

@@ -46,6 +46,8 @@ export class ShipModel {
   private geos=new Set<BufferGeometry>();
   private mats: Material[]=[];
   private textures: Texture[]=[];
+  private gear: Group[]=[];
+  private gearAmount=0;
 
   constructor() {
     const ceramic=new MeshStandardMaterial({color:0x9da5ad,metalness:.3,roughness:.6,flatShading:true});
@@ -127,6 +129,23 @@ export class ShipModel {
     const aftVent=new BoxGeometry(1.9,.035,.035);for(let i=0;i<5;i++)add(aftVent,titanium,0,-.38+i*.1,5.94);
     this.addMarkings(add);
 
+    // Recessed twin pulse cannons, armoured breeches and sensor fairing.
+    for(const side of [-1,1]) {
+      add(new BoxGeometry(.65,.55,2.2),titanium,side*2.8,-.35,-1.8);
+      add(new CylinderGeometry(.17,.23,3.8,10).rotateX(Math.PI/2),heat,side*2.8,-.35,-4.1);
+      add(new TorusGeometry(.18,.045,6,12),copper,side*2.8,-.35,-6.02);
+      add(new BoxGeometry(.4,.2,.6),strip,side*.7,.95,-1.2);
+    }
+    add(new SphereGeometry(.32,12,8),glass,0,.28,-7.4);
+    // Three retractable landing struts; one mesh per strut.
+    for(const [x,z] of [[0,-4.4],[-2,3.5],[2,3.5]]) {
+      const leg=new Group();leg.position.set(x,-.75,z);
+      const sources=[new CylinderGeometry(.10,.16,2.0,8).translate(0,-1,0),new BoxGeometry(.65,.18,1.1).translate(0,-2.1,0)];
+      const pieces=sources.map(g=>g.toNonIndexed());
+      const geometry=mergeGeometries(pieces)!;for(const piece of [...sources,...pieces])piece.dispose();
+      this.geos.add(geometry);leg.add(new Mesh(geometry,titanium));this.gear.push(leg);this.hull.add(leg);leg.visible=false;
+    }
+
     // 静的部品を材質ごとに結合。ディテールを増やしても描画呼出しを抑える。
     for(const material of new Set(parts.map((part)=>part.material as Material))) {
       const geometries=parts.filter((part)=>part.material===material).map((part)=>{
@@ -183,6 +202,10 @@ export class ShipModel {
   }
 
   setHullVisible(visible:boolean): void {this.hull.visible=visible;}
+  setLandingGear(deployed:boolean,dt:number):void {
+    this.gearAmount+=(Number(deployed)-this.gearAmount)*(1-Math.exp(-dt*4));
+    for(const leg of this.gear){leg.visible=this.gearAmount>.01;leg.scale.y=Math.max(.01,this.gearAmount);}
+  }
   dispose(): void {
     for(const geometry of this.geos)geometry.dispose();for(const material of this.mats)material.dispose();for(const texture of this.textures)texture.dispose();this.group.removeFromParent();
   }

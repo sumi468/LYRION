@@ -3,6 +3,8 @@ import { BODY_DEFS, INITIAL_DETECTED } from '../data/starSystem';
 import { createPositionTable, updateBodyPositions } from '../physics/orbits';
 import { createUpgradeLevels, type UpgradeLevels } from '../systems/upgrades';
 
+import type { LandingRecord } from '../systems/landing';
+
 export type CameraMode = 'third' | 'first';
 
 /** 実行中のゲーム状態(セーブ対象を含む) */
@@ -14,6 +16,10 @@ export interface GameState {
   vel: Vector3;
   quat: Quaternion;
   hull: number;
+  shield: number;
+  kills: number;
+  landed: LandingRecord | null;
+  landings: Set<string>;
   energy: number;
   data: number;
   totalData: number;
@@ -56,6 +62,10 @@ export function createNewState(): GameState {
     vel: new Vector3(),
     quat: start.quat,
     hull: HULL_MAX,
+    shield: 60,
+    kills: 0,
+    landed: null,
+    landings: new Set(),
     energy: 100,
     data: 0,
     totalData: 0,

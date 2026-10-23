@@ -1,11 +1,13 @@
 import { Quaternion, Vector3 } from 'three';
-import { CATALOG_IDS, INITIAL_DETECTED } from '../data/starSystem';
+import { SHIELD_MAX } from '../data/combat';
+import { canLand, type LandingRecord } from './landing';
+import { BODY_BY_ID, CATALOG_IDS, INITIAL_DETECTED } from '../data/starSystem';
 import { MISSIONS } from '../data/missions';
 import { UPGRADE_BY_ID, UPGRADE_IDS } from '../data/upgrades';
 import { createNewState, HULL_MAX, type GameState } from '../core/state';
 
 export const SAVE_KEY = 'lyrion.save.v1';
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 
 /** localStorage 互換の最小インターフェース(テストで差し替え可能) */
 export interface StorageLike {
@@ -23,6 +25,10 @@ export interface SaveData {
   vel: [number, number, number];
   quat: [number, number, number, number];
   hull: number;
+  shield: number;
+  kills: number;
+  landed: LandingRecord | null;
+  landings: string[];
   energy: number;
   data: number;
   totalData: number;
@@ -45,6 +51,10 @@ export function serialize(s: GameState, now = Date.now()): SaveData {
     vel: [s.vel.x, s.vel.y, s.vel.z],
     quat: [s.quat.x, s.quat.y, s.quat.z, s.quat.w],
     hull: s.hull,
+    shield: s.shield,
+    kills: s.kills,
+    landed: s.landed,
+    landings: [...s.landings],
     energy: s.energy,
     data: s.data,
     totalData: s.totalData,
@@ -82,6 +92,16 @@ export function deserialize(raw: unknown): GameState | null {
   if (s.quat.lengthSq() < 1e-6) return null;
   s.quat.normalize();
   s.hull = isNum(d.hull) ? clamp(d.hull, 1, HULL_MAX) : HULL_MAX;
+  s.shield = isNum(d.shield) ? clamp(d.shield,0,SHIELD_MAX) : SHIELD_MAX;
+  s.kills = isNum(d.kills) ? Math.max(0,Math.floor(d.kills)) : 0;
+  s.landings = new Set(Array.isArray(d.landings) ? d.landings.filter(id=>typeof id==='string'&&BODY_BY_ID[id]&&canLand(BODY_BY_ID[id])) : []);
+  if(d.landed&&typeof d.landed==='object') {
+    const record=d.landed;
+    if(typeof record.bodyId==='string'&&BODY_BY_ID[record.bodyId]&&canLand(BODY_BY_ID[record.bodyId])&&isVec(record.normal,3)) {
+      const length=Math.hypot(...record.normal);
+      if(length>.5&&length<2)s.landed={bodyId:record.bodyId,normal:record.normal.map(n=>n/length) as [number,number,number]};
+    }
+  }
   s.energy = isNum(d.energy) ? Math.max(0, d.energy) : 100;
   s.data = isNum(d.data) ? Math.max(0, Math.floor(d.data)) : 0;
   s.totalData = isNum(d.totalData) ? Math.max(s.data, Math.floor(d.totalData)) : s.data;

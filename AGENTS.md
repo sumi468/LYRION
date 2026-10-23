@@ -13,8 +13,8 @@ npm run typecheck && npm test && npm run build
 描画（`src/render/`）・入力（`src/input/`, `src/ui/TouchControls.ts`）・`Game.ts` に触れたら、さらに E2E:
 
 ```bash
-npm i -D playwright && npx playwright install chromium   # 初回のみ(package.json には含めていない)
-npm run build && npm run test:e2e                         # smoke.mjs + touch.mjs
+npx playwright install chromium   # 初回のみ。Windowsはインストール済みChromeも利用可
+npm run build && npm run test:e2e                         # 探査・タッチ・回帰・操縦・戦闘着陸
 ```
 
 - E2E は `?debug` で公開される `window.__lyrion`（Game）を使い、`tick()` を手動で進める決定的な方式。GPU が無い環境(SwiftShader)でも動くよう、画質 low・小さい画面で走る。
@@ -55,3 +55,7 @@ v0.2でテクスチャの段階生成・進捗表示、雲・大気の調整、W
 - `debugTeleport()` は天体位置を即時更新する。進行テストでは報酬やスキャン済み状態を直接書き換えず、通常APIを使う。
 - 大気シェーダーは `ATMO_THIN` で薄さを決めている。値を上げると円盤全体が白く塗りつぶされる（過去に修正した不具合）。
 - ソフトウェアGLでは High・高解像度の描画が極端に遅い/停止する。実GPUでの再現は不明。
+
+## v0.4の機体システム
+
+`systems/combat.ts` は敵3機・弾96発の固定プール。描画は `render/CombatView.ts` のInstancedMesh。`systems/landing.ts` は接地位置を公転・自転に追従させる。着陸時は衝突反発と戦闘を止め、再離陸時に通常飛行へ戻す。セーブv2はv1を読み込める。`npm run test:combat`、`SOAK_COMBAT=1 npm run test:soak` で新機能を検証できる。

@@ -73,6 +73,8 @@ export class TouchControls {
           tap('TGT', 'tgt', 'target'),
           hold('BRAKE', 'brake', () => (input.virtual.brake = true), () => (input.virtual.brake = false)),
           hold('BOOST', 'boost', () => (input.virtual.boost = true), () => (input.virtual.boost = false)),
+          hold('FIRE', 'fire', () => (input.virtual.fire = true), () => (input.virtual.fire = false)),
+          tap('LAND', 'land', 'land'),
         ),
       ),
     );

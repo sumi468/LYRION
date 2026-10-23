@@ -288,6 +288,28 @@ input[type='checkbox'] { width: 18px; height: 18px; accent-color: var(--accent);
   .pause-menu { gap: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition-duration: 0.01s !important; } }
+.difficulty-select { display:grid; gap:9px; margin:0 0 22px; width:100%; }
+.main-menu .difficulty-select { max-width:380px; }
+.bar.shield .bar-fill { background:#6fdde0; }
+.hud-combat { position:absolute; right:24px; top:173px; width:230px; padding-top:10px; border-top:1px solid var(--line); font-size:11px; letter-spacing:.06em; }
+.combat-label { color:#ff9c90; margin-bottom:8px; }
+.weapon-label { color:var(--dim); font-size:10px; }
+.weapon-heat { height:3px; background:#203341; margin-top:8px; overflow:hidden; }
+.weapon-heat-fill { height:100%; background:#7ad8df; transform-origin:left; }.weapon-heat-fill.hot { background:#ff6755; }
+.landing-label { position:absolute; left:50%; bottom:125px; transform:translateX(-50%); padding:8px 14px; max-width:70vw; text-align:center; font-size:11px; color:var(--dim); border:1px solid transparent; }
+.landing-label.active { color:#ffe2ad; border-color:#ad8654; background:#10151edb; }
+.enemy-layer { position:absolute; inset:0; pointer-events:none; }
+.enemy-marker { position:absolute; top:0; left:0; margin:-30px 0 0 -48px; width:96px; height:60px; border:1px solid #ff716180; color:#ff9689; text-align:center; }
+.enemy-name { position:absolute; left:50%; bottom:66px; transform:translateX(-50%); width:200px; font-size:10px; text-shadow:0 1px 5px #000; }
+.enemy-health { position:absolute; bottom:-7px; width:100%; height:3px; background:#572c30; }.enemy-health i { display:block; height:100%; background:#ff7161; transform-origin:left; }
+.enemy-marker.offscreen { height:15px; width:25px; border-style:dashed; }.enemy-marker.offscreen .enemy-name { bottom:20px; }
+.reticle.hit { filter:drop-shadow(0 0 5px #ffb38e); transform:rotate(45deg); }
+.cockpit-frame { display:none; position:absolute; inset:0; pointer-events:none; border-left:12px solid #182630bb; border-right:12px solid #182630bb; box-shadow:inset 0 -16px 0 #182630cc; }
+.cockpit-frame.on { display:block; }.cockpit-frame span { position:absolute; left:22px; top:46%; writing-mode:vertical-rl; font-size:9px; color:#688d9d; letter-spacing:.2em; }
+.cockpit-frame i,.cockpit-frame b { position:absolute; bottom:-20px; width:24vw; height:18vh; border:12px solid #243542bb; transform:skewX(30deg); }.cockpit-frame i { left:-10vw; }.cockpit-frame b { right:-10vw; transform:skewX(-30deg); }
+.tc-btn.fire { border-color:#ef8c78; color:#ffb29e; }.tc-btn.land { border-color:#bfaf76; color:#eadba4; }
+@media(max-height:520px) { .difficulty-select { margin-bottom:8px; gap:4px; }.difficulty-select .small { display:none; }.difficulty-select .seg { padding:6px 0; }.hud-combat { top:95px; right:10px; width:150px; font-size:9px; }.weapon-label { font-size:8px; }.landing-label { bottom:90px; font-size:9px; padding:4px 8px; }.combat-label { margin-bottom:4px; } }
+@media(max-width:560px) and (orientation:portrait) { .hud-combat { top:145px; right:10px; width:150px; }.landing-label { bottom:182px; width:70vw; }.hud-mission { max-width:48vw; }.main-menu .difficulty-select { max-width:330px; } }
 @media (max-width: 560px) and (orientation: portrait) {
   .tc-stick { width: 104px; height: 104px; left: max(12px, env(safe-area-inset-left)); }
   .tc-right { right: max(12px, env(safe-area-inset-right)); gap: 6px; }

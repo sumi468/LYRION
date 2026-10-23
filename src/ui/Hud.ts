@@ -14,6 +14,15 @@ export class Hud {
   private dataVal = h('span', { class: 'num' }, '0');
   private hullBar = h('div', { class: 'bar-fill' });
   private hullVal = h('span', { class: 'bar-val' });
+  private shieldBar = h('div', { class: 'bar-fill' });
+  private shieldVal = h('span', { class: 'bar-val' });
+  private heatBar = h('div', { class: 'weapon-heat-fill' });
+  private combatLabel = h('div', { class: 'combat-label' });
+  private weaponLabel = h('div', { class: 'weapon-label' });
+  private landingLabel = h('div', { class: 'landing-label' });
+  private enemyLayer = h('div', { class: 'enemy-layer' });
+  private enemyLabels = Array.from({length:3},()=>h('div',{class:'enemy-marker',hidden:true},h('span',{class:'enemy-name'}),h('div',{class:'enemy-health'},h('i'))));
+  private cockpit = h('div', { class:'cockpit-frame' },h('span',{},'LX-07 / FLIGHT SYSTEMS'),h('i'),h('b'));
   private energyBar = h('div', { class: 'bar-fill' });
   private energyVal = h('span', { class: 'bar-val' });
 
@@ -38,7 +47,7 @@ export class Hud {
   private flash = h('div', { class: 'flash' });
   private lockHint = h('div', { class: 'lock-hint' }, 'クリックして視点操作を有効化');
   private fpsEl = h('div', { class: 'hud-fps' });
-  private keys = h('div', { class: 'hud-keys' }, 'W/S 推進  A/D 旋回  Space/Shift 機首上下  F ブースト  R スキャン  Tab ターゲット  C 視点  Esc メニュー');
+  private keys = h('div', { class: 'hud-keys' }, 'W/S 推進  A/D 旋回  Space/Shift 機首上下  左クリック/J 射撃  G 着陸/離陸  R スキャン  Esc メニュー');
   private reticle = h('div', { class: 'reticle' }, h('i'), h('i'), h('i'), h('i'));
 
   private flashLevel = 0;
@@ -46,6 +55,7 @@ export class Hud {
   private last = new WeakMap<HTMLElement, string>();
 
   constructor(root: HTMLElement) {
+    this.enemyLayer.append(...this.enemyLabels);
     this.mission.append(
       h('div', { class: 'label' }, 'OBJECTIVE'),
       this.missionTitle,
@@ -59,6 +69,7 @@ export class Hud {
       { class: 'hud-status' },
       h('div', { class: 'data-row' }, h('span', { class: 'label' }, 'DATA'), this.dataVal),
       h('div', { class: 'bar-row' }, h('span', { class: 'label' }, 'HULL'), h('div', { class: 'bar hull' }, this.hullBar), this.hullVal),
+      h('div', { class: 'bar-row' }, h('span', { class: 'label' }, 'SHIELD'), h('div', { class: 'bar shield' }, this.shieldBar), this.shieldVal),
       h('div', { class: 'bar-row' }, h('span', { class: 'label' }, 'ENERGY'), h('div', { class: 'bar energy' }, this.energyBar), this.energyVal),
     );
 
@@ -85,6 +96,10 @@ export class Hud {
       this.glare,
       this.markerLayer,
       this.reticle,
+      this.enemyLayer,
+      this.cockpit,
+      h('div',{class:'hud-combat'},this.combatLabel,this.weaponLabel,h('div',{class:'weapon-heat'},this.heatBar)),
+      this.landingLabel,
       this.mission,
       status,
       this.heading,
@@ -125,6 +140,24 @@ export class Hud {
   }
 
   update(s: HudSnapshot): void {
+    this.shieldBar.style.transform=`scaleX(${Math.max(0,Math.min(1,s.shield/s.shieldMax))})`;
+    setText(this.shieldVal,`${Math.round(s.shield)}/${s.shieldMax}`);
+    setText(this.hullVal,`${Math.ceil(s.hull)}/${s.hullMax}`);
+    setText(this.combatLabel,`${s.difficulty} · 敵 ${s.enemies.length} · 撃破 ${s.kills}`);
+    setText(this.weaponLabel,s.overheated?'砲身冷却中':`TWIN PULSE · 左クリック / J · ${Math.round(s.weaponHeat*100)}%`);
+    this.heatBar.style.transform=`scaleX(${s.weaponHeat})`;
+    this.heatBar.classList.toggle('hot',s.overheated);
+    this.reticle.classList.toggle('hit',s.hit>.1);
+    this.cockpit.classList.toggle('on',s.camera==='first');
+    setText(this.landingLabel,s.landingText);
+    this.landingLabel.classList.toggle('active',s.landingMode!=='flight');
+    for(let i=0;i<this.enemyLabels.length;i++){
+      const el=this.enemyLabels[i],enemy=s.enemies.find(e=>e.id===i);el.hidden=!enemy;if(!enemy)continue;
+      el.style.transform=`translate(${enemy.x.toFixed(1)}px,${enemy.y.toFixed(1)}px)`;
+      el.classList.toggle('offscreen',!enemy.onScreen);
+      setText(el.firstElementChild as HTMLElement,`${enemy.onScreen?'HOSTILE':'HOSTILE · 圏外'} ${Math.ceil(enemy.hp)} / ${enemy.maxHp} · ${Math.round(enemy.distance)}u`);
+      (el.lastElementChild!.firstElementChild as HTMLElement).style.transform=`scaleX(${enemy.hp/enemy.maxHp})`;
+    }
     // ミッション
     if (s.mission) {
       setText(this.missionTitle, s.mission.title);
@@ -146,7 +179,7 @@ export class Hud {
     this.setStyle(this.energyBar, 'transform', `scaleX(${ep.toFixed(3)})`);
     this.hullBar.classList.toggle('low', hp < 0.3);
     this.energyBar.classList.toggle('low', ep < 0.15);
-    setText(this.hullVal, `${Math.round(hp * 100)}%`);
+    setText(this.hullVal, `${Math.ceil(s.hull)}/${s.hullMax}`);
     setText(this.energyVal, `${Math.round(ep * 100)}%`);
 
     // 速度・方位
