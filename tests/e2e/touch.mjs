@@ -59,6 +59,7 @@ try {
   const q1 = await page.evaluate(() => window.__lyrion.state.quat.toArray());
   check('キャンバスのドラッグで向きが変わる', q0.some((v, i) => Math.abs(v - q1[i]) > 1e-3));
 
+  await page.evaluate(()=>window.__lyrion.debugTeleport('cindra',1600)); // Leave station weapon-safe volume.
   // ブースト長押し
   await ptr('.tc-btn.boost', 'pointerdown', 700, 300, 2);
   const b1 = await page.evaluate(() => window.__lyrion.input.virtual.boost);

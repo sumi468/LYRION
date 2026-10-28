@@ -56,6 +56,10 @@ export class Hud {
   private keys = h('div', { class: 'hud-keys' }, 'W/S 推進  A/D 旋回  F ブースト  左クリック/J 射撃  V 回避ロール  G 着陸/離陸  R スキャン  Esc メニュー');
   private reticle = h('div', { class: 'reticle' }, h('i'), h('i'), h('i'), h('i'));
 
+  private opsText=h('div',{class:'ops-text'});
+  private opsDetail=h('div',{class:'ops-detail'});
+  private opsFill=h('div',{class:'ops-fill'});
+  private ops=h('div',{class:'hud-operations'},this.opsText,this.opsDetail,h('div',{class:'ops-track'},this.opsFill));
   private flashLevel = 0;
   private showFps = false;
   private last = new WeakMap<HTMLElement, string>();
@@ -107,6 +111,7 @@ export class Hud {
       h('div',{class:'hud-combat'},this.combatLabel,this.weaponLabel,h('div',{class:'weapon-heat'},this.heatBar),this.dodgeLabel),
       this.leadMarker,
       this.landingLabel,
+      this.ops,
       this.mission,
       status,
       this.heading,
@@ -147,6 +152,11 @@ export class Hud {
   }
 
   update(s: HudSnapshot): void {
+    this.el.dataset.mode=s.operations.mode;setText(this.opsText,s.operations.text);setText(this.opsDetail,s.operations.detail);
+    this.opsFill.style.transform=`scaleX(${s.operations.progress})`;
+    this.ops.classList.toggle('eva',s.operations.mode==='eva');
+    this.ops.classList.toggle('critical',s.operations.mode==='eva'&&(s.operations.oxygen<60||s.operations.distance>350));
+    setText(this.keys,s.operations.mode==='eva'?'WASD 移動 / Space・Shift 上下 / E 調査 / H 搭乗 / Y 帰還 / Z 姿勢安定 / B 遠征':'W/S 推進 / A/D 旋回 / F ブースト / J 射撃 / T 接岸 / H 船外 / B 遠征 / Esc メニュー');
     this.shieldBar.style.transform=`scaleX(${Math.max(0,Math.min(1,s.shield/s.shieldMax))})`;
     setText(this.shieldVal,`${Math.round(s.shield)}/${s.shieldMax}`);
     setText(this.hullVal,`${Math.ceil(s.hull)}/${s.hullMax}`);
@@ -209,8 +219,13 @@ export class Hud {
     setText(this.nearest, s.nearest ? `${s.nearest.name}  高度 ${fmtDist(s.nearest.altitude)} u` : '');
 
     // ターゲット
-    this.target.classList.toggle('empty', !s.target);
-    if (s.target) {
+    this.target.classList.toggle('empty', !s.target&&!s.stationTarget);
+    if(s.stationTarget){
+      const t=s.stationTarget;
+      setText(this.tName,t.name);setText(this.tClass,'LYRION PRIME / HOME STATION');
+      setText(this.tDist,`${fmtDist(t.distance)} u`);setText(this.tState,t.mode==='docked'?'係留中 / B MISSION CONTROL':`${t.relativeSpeed.toFixed(1)} u/s / T DOCK`);
+      this.tState.className='t-state ready';this.setStyle(this.tScanBar,'transform',`scaleX(${t.mode==='docked'?1:Math.max(0,1-t.distance/200)})`);
+    } else if (s.target) {
       const t = s.target;
       setText(this.tName, t.def.nameJa);
       setText(this.tClass, `${t.def.name}  ·  ${t.def.classLabel}`);

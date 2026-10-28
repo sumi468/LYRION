@@ -1,0 +1,109 @@
+{
+  "timestamp": "2026-10-28T14:03:14.449Z",
+  "results": [
+    {
+      "name": "実際に配信したビルドと作業ソースの識別情報が一致",
+      "ok": true,
+      "data": {
+        "version": "0.7.1",
+        "sourceRevision": "d5e2c89619100feb44eb442796f1eb3b1963ae57",
+        "sourceHash": "2ebfd73ed1970cc59fb27d6a0c76831c0335a5d561072ec2af7b682ac169b349",
+        "uncommittedChanges": false,
+        "builtAt": "2026-10-28T14:02:25.880Z"
+      }
+    },
+    {
+      "name": "画面にビルド版とソース識別子を表示",
+      "ok": true
+    },
+    {
+      "name": "メインメニューのMISSION CONTROLに指定6ミッションを表示",
+      "ok": true
+    },
+    {
+      "name": "ミッションの実データを表示 FIRST DEPARTURE",
+      "ok": true
+    },
+    {
+      "name": "ミッションの実データを表示 ORBITAL INSPECTION",
+      "ok": true
+    },
+    {
+      "name": "ミッションの実データを表示 REPAIR OPERATION",
+      "ok": true
+    },
+    {
+      "name": "ミッションの実データを表示 LUNAR EXPEDITION",
+      "ok": true
+    },
+    {
+      "name": "ミッションの実データを表示 LOST SIGNAL",
+      "ok": true
+    },
+    {
+      "name": "ミッションの実データを表示 UNKNOWN HORIZONS",
+      "ok": true
+    },
+    {
+      "name": "正式ID lyrion-primeが新規ゲームのホームワールド",
+      "ok": true
+    },
+    {
+      "name": "開始時に母星と基地を実際に描画",
+      "ok": true
+    },
+    {
+      "name": "基地は通常ターゲットとして選択され名前・距離を表示",
+      "ok": true
+    },
+    {
+      "name": "Tabの巡回で基地へ戻れる",
+      "ok": true
+    },
+    {
+      "name": "接岸前のUI操作ではミッションや報酬を開始できない",
+      "ok": true
+    },
+    {
+      "name": "基地へ実際に接岸してホーム機能を利用",
+      "ok": true
+    },
+    {
+      "name": "MISSION CONTROL受注が実ゲーム状態を変更",
+      "ok": true
+    },
+    {
+      "name": "行動前に完了・報酬を自動付与しない",
+      "ok": true
+    },
+    {
+      "name": "HUDの次目標マーカーは実ワールド座標の航行標を指す",
+      "ok": true
+    },
+    {
+      "name": "旧セーブは位置・向き・DATA・戦闘・既存ミッションを維持",
+      "ok": true
+    },
+    {
+      "name": "旧セーブを読み込んでも新6ミッションの一覧が消えない",
+      "ok": true
+    },
+    {
+      "name": "旧プレイヤーはテレポートせず基地への帰還誘導を選べる",
+      "ok": true
+    },
+    {
+      "name": "ブラウザ・コンソールエラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "build": {
+    "version": "0.7.1",
+    "sourceRevision": "d5e2c89619100feb44eb442796f1eb3b1963ae57",
+    "sourceHash": "2ebfd73ed1970cc59fb27d6a0c76831c0335a5d561072ec2af7b682ac169b349",
+    "uncommittedChanges": false,
+    "builtAt": "2026-10-28T14:02:25.880Z"
+  }
+}

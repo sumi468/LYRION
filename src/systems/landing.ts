@@ -4,7 +4,7 @@ import { BODY_BY_ID, BODY_DEFS } from '../data/starSystem';
 import type { GameState } from '../core/state';
 
 export interface LandingRecord { bodyId: string; normal: [number,number,number] }
-export const canLand = (def: BodyDef): boolean => (def.kind==='planet'||def.kind==='moon')&&!!def.surface&&def.surface.program!=='gas';
+export const canLand = (def: BodyDef): boolean => !def.homeworld&&(def.kind==='planet'||def.kind==='moon')&&!!def.surface&&def.surface.program!=='gas';
 const normal=new Vector3(),tangent=new Vector3(),relative=new Vector3(),zero=new Vector3(),up=new Vector3(0,1,0),matrix=new Matrix4();
 const spin=(def:BodyDef,time:number)=>time*Math.PI*2/def.rotationPeriod;
 

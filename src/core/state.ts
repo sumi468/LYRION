@@ -1,6 +1,8 @@
-import { Matrix4, Quaternion, Vector3 } from 'three';
+import { Quaternion, Vector3 } from 'three';
 import { BODY_DEFS, INITIAL_DETECTED } from '../data/starSystem';
-import { createPositionTable, updateBodyPositions } from '../physics/orbits';
+import { createPositionTable, updateBodyPositions, updateBodyVelocities } from '../physics/orbits';
+import { ExpeditionFrames } from '../physics/frames';
+import { createHomecomingProgress, type HomecomingProgress } from '../systems/expeditions';
 import { createUpgradeLevels, type UpgradeLevels } from '../systems/upgrades';
 
 import type { LandingRecord } from '../systems/landing';
@@ -31,26 +33,20 @@ export interface GameState {
   missionIndex: number;
   assist: boolean;
   cameraMode: CameraMode;
+  homecoming: HomecomingProgress;
 }
 
 export const HULL_MAX = 100;
 
-/** 開始位置: シンドラと恒星が両方見える位置から、シンドラを正面に見る */
-export function computeStartPose(): { pos: Vector3; quat: Quaternion } {
+/** 開始位置: 母星に向いた基地の外側。基地の点速度を引き継ぐ。 */
+export function computeStartPose(): { pos: Vector3; quat: Quaternion; vel: Vector3 } {
   const table = createPositionTable(BODY_DEFS);
   updateBodyPositions(BODY_DEFS, 0, table);
-  const cindra = table['cindra'];
-  const toStar = new Vector3().copy(cindra).negate().normalize();
-  const up = new Vector3(0, 1, 0);
-  const tangent = new Vector3().crossVectors(up, toStar).normalize();
-  const pos = new Vector3()
-    .copy(cindra)
-    .addScaledVector(tangent, 2300)
-    .addScaledVector(toStar, -500)
-    .addScaledVector(up, 120);
-  const m = new Matrix4().lookAt(pos, cindra, up);
-  const quat = new Quaternion().setFromRotationMatrix(m);
-  return { pos, quat };
+  const velocities = createPositionTable(BODY_DEFS);
+  updateBodyVelocities(BODY_DEFS, 0, table, createPositionTable(BODY_DEFS), velocities);
+  const frames = new ExpeditionFrames(); frames.update(0, table, velocities);
+  const offset = new Vector3(0, 12, 110);
+  return { pos: frames.asterion.toWorld(offset, new Vector3()), quat: frames.asterion.rotation.clone(), vel: frames.asterion.pointVelocity(offset, new Vector3()) };
 }
 
 export function createNewState(): GameState {
@@ -59,7 +55,7 @@ export function createNewState(): GameState {
     time: 0,
     playSeconds: 0,
     pos: start.pos,
-    vel: new Vector3(),
+    vel: start.vel,
     quat: start.quat,
     hull: HULL_MAX,
     shield: 60,
@@ -76,5 +72,6 @@ export function createNewState(): GameState {
     missionIndex: 0,
     assist: true,
     cameraMode: 'third',
+    homecoming: createHomecomingProgress(),
   };
 }

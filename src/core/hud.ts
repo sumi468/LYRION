@@ -31,6 +31,8 @@ export interface TargetInfo {
 
 /** Game → HUD へ毎フレーム渡す読み取り専用スナップショット */
 export interface HudSnapshot {
+  stationTarget: { name: string; distance: number; relativeSpeed: number; mode: string } | null;
+  operations: { mode: string; text: string; detail: string; progress: number; oxygen: number; oxygenMax: number; distance: number };
   shield: number;
   shieldMax: number;
   kills: number;

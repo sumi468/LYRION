@@ -1,9 +1,11 @@
 import { emptyInput, type FlightInput } from '../physics/flight';
+import type { EvaInput } from '../systems/eva';
 
 /** 1回押すごとに発火する操作 */
-export type ActionName = 'scan' | 'target' | 'camera' | 'assist' | 'upgrades' | 'log' | 'pause' | 'land' | 'dodge';
+export type ActionName = 'scan' | 'target' | 'camera' | 'assist' | 'upgrades' | 'log' | 'pause' | 'land' | 'dodge' | 'dock' | 'eva' | 'investigate' | 'return' | 'operations';
 
 const ACTION_KEYS: Record<string, ActionName> = {
+  KeyT: 'dock', KeyH: 'eva', KeyY: 'return', KeyB: 'operations',
   KeyR: 'scan',
   KeyG: 'land',
   KeyV: 'dodge',
@@ -20,7 +22,7 @@ const ACTION_KEYS: Record<string, ActionName> = {
 const PREVENT = new Set([
   'Space', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
   'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyQ', 'KeyE', 'KeyF', 'KeyX', 'KeyR', 'KeyC', 'KeyZ',
-  'ShiftLeft', 'ShiftRight', 'KeyJ', 'KeyG', 'KeyV',
+  'ShiftLeft', 'ShiftRight', 'KeyJ', 'KeyG', 'KeyV', 'KeyT', 'KeyH', 'KeyY', 'KeyB',
 ]);
 
 export interface InputSettings {
@@ -36,6 +38,7 @@ export class Input {
   readonly keys = new Set<string>();
   /** プレイ中のみ true。false の間はゲーム入力を無視し、ブラウザ標準動作を妨げない */
   enabled = false;
+  mode: 'flight' | 'eva' = 'flight';
   locked = false;
   onAction: (a: ActionName) => void = () => {};
   onLockChange: (locked: boolean) => void = () => {};
@@ -49,7 +52,7 @@ export class Input {
   private dy = 0;
   private rightDown = false;
   private leftDown = false;
-  get firing(): boolean {return this.enabled&&(this.keys.has('KeyJ')||this.leftDown||this.virtual.fire);}
+  get firing(): boolean {return this.enabled&&this.mode==='flight'&&(this.keys.has('KeyJ')||this.leftDown||this.virtual.fire);}
   private cleanup: (() => void)[] = [];
 
   attach(canvas: HTMLCanvasElement): void {
@@ -63,9 +66,9 @@ export class Input {
       if (this.enabled && PREVENT.has(e.code)) e.preventDefault();
       if (e.repeat) return;
       this.keys.add(e.code);
-      const a = ACTION_KEYS[e.code];
+      const a = this.mode==='eva'&&e.code==='KeyE' ? 'investigate' : ACTION_KEYS[e.code];
       // 一時停止系(Esc/P)は無効時も通知する(メニューを閉じる用途)
-      if (a && (this.enabled || a === 'pause' || a === 'upgrades' || a === 'log')) this.onAction(a);
+      if (a && (this.enabled || a === 'pause' || a === 'upgrades' || a === 'log' || a === 'operations')) this.onAction(a);
     });
     on('keyup', (e) => this.keys.delete(e.code));
     on('blur', () => {
@@ -175,6 +178,17 @@ export class Input {
   dispose(): void {
     for (const f of this.cleanup) f();
     this.cleanup = [];
+  }
+
+  pollEva(dt: number, out: EvaInput): EvaInput {
+    const k=this.keys,v=this.virtual;
+    out.forward=this.enabled ? Math.max(-1,Math.min(1,Number(k.has('KeyW'))-Number(k.has('KeyS'))+v.thrust)) : 0;
+    out.side=this.enabled ? Math.max(-1,Math.min(1,Number(k.has('KeyD'))-Number(k.has('KeyA'))+v.turn)) : 0;
+    out.up=this.enabled ? Math.max(-1,Math.min(1,Number(k.has('Space'))-Number(k.has('ShiftLeft')||k.has('ShiftRight'))+v.pitch)) : 0;
+    const sec=Math.max(dt,1/240),sens=.0021*this.settings.sensitivity;
+    out.yaw=this.enabled ? Math.max(-2,Math.min(2,-this.dx*sens/sec+Number(k.has('ArrowLeft'))-Number(k.has('ArrowRight')))) : 0;
+    out.pitch=this.enabled ? Math.max(-1.5,Math.min(1.5,(-this.dy*sens/sec+Number(k.has('ArrowUp'))-Number(k.has('ArrowDown')))*(this.settings.invertY?-1:1))) : 0;
+    out.brake=k.has('KeyX')||v.brake;this.dx=this.dy=0;return out;
   }
 }
 

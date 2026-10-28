@@ -1,8 +1,8 @@
-# LYRION — Beyond the Stars · v0.6.0
+# LYRION — Beyond the Stars · v0.7.1
 
-**[ブラウザで遊ぶ](https://lyrion-lilac.vercel.app)** · [GitHub](https://github.com/sumi468/LYRION)
+**[公開中の旧版](https://lyrion-lilac.vercel.app)**（今回のv0.7.1は未公開） · [GitHub](https://github.com/sumi468/LYRION)
 
-架空のリリオン星系を探検するブラウザ3Dゲーム。11天体をスキャンし、探査データで船を強化して、8段階のミッションを完成させます。TypeScript / Three.js / Vite。外部の画像・音声配信には依存しません。
+架空のリリオン星系を探検するブラウザ3Dゲーム。母星LYRION PRIMEと軌道基地ASTERIONから旅立ち、接岸・船外活動・科学調査を通じて6つの遠征を進めます。従来の11天体の図鑑、8つの探査ミッション、戦闘・着陸・機体強化も維持しています。TypeScript / Three.js / Vite。外部の画像・音声配信には依存しません。
 
 ## すぐ遊ぶ（Windows）
 
@@ -15,6 +15,26 @@ Node.js **22.12以降**が必要です。この配布物には `dist/` を含め
 `START.cmd` は `scripts/serve.mjs` を使い、`http://127.0.0.1:4173` で配信します。ポートが使用中なら次の空きポートを試します。ブラウザが自動で開かない場合は、画面に出るURLを開いてください。`dist/index.html` の直接ダブルクリックでは起動しません。
 
 Mac / Linux では `node scripts/serve.mjs` を実行し、表示されたURLを開きます（これらのOSでの実機検証は未実施）。
+
+## 今回の修正
+
+母星の正式IDは **`lyrion-prime`**。MISSION CONTROLはメインメニュー・一時停止・B / 基地から開けます。6遠征の報告報酬は **30 / 40 / 50 / 70 / 90 / 120 DATA**。ASTERIONはTabで選択でき、HUDの誘導と接岸・修理・補給・EVAに対応します。
+
+画面のBUILD表記と`build-info.json`にバージョン・ソース識別子を表示します。公開中のv0.6と今回のローカルビルドを区別できます。[修正内容と反映状況](docs/CRITICAL-FIX.md)。
+
+## v0.7.1 — HOMECOMING & DEEP SPACE EXPEDITION
+
+- 海洋・雲・大気・夜景のある母星と、公転するASTERION STATION。
+- 接岸支援、係留・自動離脱、基地での補給と遠征報告。
+- 実体のある3D宇宙飛行士の独立操作、酸素・姿勢安定・帰還支援・安全回収。
+- 点検・観測・修理・回収の11地点、前提条件と一度だけの研究報酬。
+- 初出航から月面調査・失われた信号・深宇宙の発見へ続く6遠征。
+- 日本語の遠征ボード・調査アーカイブ・飛行と船外専用のタッチ操作。
+- セーブv4。旧v1/v2の位置・探索・強化・所持データ・ミッションを移行。
+
+**開始後はT / DOCKで接岸→B / MISSION CONTROL→「最初の出発」→受注して追跡。** T / DOCKで接岸・離脱、H / EVAで船外・搭乗、船外はE / 調査、Y / 帰還。従来目標への表示切替は遠征ボードから行えます。
+
+[新機能・操作・互換性・制限の詳細](docs/HOMECOMING.md) / [v0.7の検証と性能測定](docs/HOMECOMING-VALIDATION.md)。今回の更新はローカル配布版です。本番へ自動公開していません。
 
 ## v0.6.0 — デザインとFPS表示の仕上げ
 
@@ -65,6 +85,10 @@ v0.3の変更は [操縦の更新記録](docs/FLIGHT-UPDATE.md) にあります�
 - デバッグ移動の天体位置を即時更新し、小惑星帯への移動にも対応しました。
 
 ## 検証結果
+
+v0.7の最新結果は[Homecoming検証レポート](docs/HOMECOMING-VALIDATION.md)を参照してください。以下は比較用に残したv0.6公開時の結果です。
+
+### v0.6公開時の記録
 
 実行日: **2026-10-24**。Windows / Chrome 155.0.8059.86 / **NVIDIA GeForce RTX 4060・8GB / Direct3D 11**。レンダラー文字列で実GPUを確認しています。
 
@@ -159,7 +183,7 @@ npm run test:gpu
 
 Floating Originで描画座標を原点相対に保ち、天体位置は時刻から計算します。小惑星帯はInstancedMesh、惑星は距離LOD。画質は `QUALITY_LADDER` の6段階に集約され、固定設定はL1 / L3 / L5、Autoは実測フレーム時間で調整します。一度下げた段を上限にして頻繁な往復を抑えます。
 
-セーブ・設定はブラウザのlocalStorage（`lyrion.save.v1`, `lyrion.settings.v1`）。保存キーを維持してセーブ内容をv2へ拡張し、v1のデータを引き継ぎます。旧設定には新項目を補完します。URLのホスト・ポートやブラウザを変えると保存場所は別になります。破損データや保存容量超過への耐性をテストしています。
+セーブ・設定はブラウザのlocalStorage（`lyrion.save.v1`, `lyrion.settings.v1`）。保存キーを維持してセーブ内容をv4へ拡張し、v1/v2の位置・探査・強化・所持データ・旧ミッションを引き継ぎます。船外で保存した場合は研究結果を維持して機内へ復帰します。旧設定には新項目を補完します。URLのホスト・ポートやブラウザを変えると保存場所は別になります。破損データや保存容量超過への耐性をテストしています。
 
 開発時の作業規則は [AGENTS.md](AGENTS.md)、旧版の引き継ぎ資料は [履歴](docs/history-v0.1.0.md) にあります。
 

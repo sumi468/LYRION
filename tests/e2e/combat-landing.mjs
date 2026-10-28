@@ -19,6 +19,8 @@ try {
  await screenshot(page,'50-combat-menu.png');
  await page.evaluate(()=>{const g=window.__lyrion;g.input.requestLock=()=>{};g.input.locked=true;});
  await page.getByRole('button',{name:'新しい探査を開始',exact:true}).click();await sleep(150);await page.evaluate(()=>window.__lyrion.stop());
+ // Combat is exercised outside the new protected station volume.
+ await page.evaluate(()=>window.__lyrion.debugTeleport('cindra',1600));
  await step(page,245);
  check('Hardで役割の異なるシールド付き敵5機が自然に出現',await page.evaluate(()=>{const enemies=window.__lyrion.combat.enemies.filter(e=>e.active);return enemies.length===5&&enemies.every(e=>e.hp>=189&&e.shield===75)&&new Set(enemies.map(e=>e.role)).size===3;}));
  const frozen=await page.evaluate(()=>{const g=window.__lyrion;g.pause();return g.combat.enemies[0].pos.toArray();});await step(page,20);

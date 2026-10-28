@@ -1,4 +1,5 @@
 import type { BodyDef } from './types';
+import { HOMEWORLD } from './homeworld';
 
 /**
  * 架空の恒星系「リリオン星系」。
@@ -293,12 +294,13 @@ export const BODY_DEFS: BodyDef[] = [
   },
 ];
 
+BODY_DEFS.push(HOMEWORLD);
 export const BODY_BY_ID: Record<string, BodyDef> = Object.fromEntries(BODY_DEFS.map((b) => [b.id, b]));
 
-/** 探査記録の完成率に数える対象(全天体) */
-export const CATALOG_IDS: string[] = BODY_DEFS.map((b) => b.id);
+/** Keep the original catalog and all eight mission indices stable across the expansion. */
+export const CATALOG_IDS: string[] = BODY_DEFS.filter(b => !b.homeworld).map(b => b.id);
 
 /** ゲーム開始時点で既に探知済みの天体 */
-export const INITIAL_DETECTED: string[] = ['lyrion', 'cindra', 'thalassa', 'aurelion'];
+export const INITIAL_DETECTED: string[] = ['lyrion', 'cindra', 'thalassa', 'aurelion', 'lyrion-prime'];
 
 export { TAU };

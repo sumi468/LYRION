@@ -61,6 +61,10 @@ export class TouchControls {
       'div',
       { class: 'tc', hidden: true },
       this.stick,
+      h('div', { class: 'tc-context' },tap('基地','small','operations'),tap('DOCK','small','dock'),tap('EVA','small','eva')),
+      h('div',{class:'tc-eva'},
+        hold('上昇','small',()=>input.virtual.pitch=1,()=>input.virtual.pitch=0),hold('下降','small',()=>input.virtual.pitch=-1,()=>input.virtual.pitch=0),
+        tap('調査','eva-investigate','investigate'),tap('搭乗','eva-board','eva'),tap('帰還','eva-return','return'),hold('制動','eva-brake',()=>input.virtual.brake=true,()=>input.virtual.brake=false)),
       h('div', { class: 'tc-top' }, tap('CAM', 'small', 'camera'), tap('II', 'small', 'pause')),
       h(
         'div',
@@ -86,6 +90,7 @@ export class TouchControls {
     // 端末判定: タッチ端末なら最初から有効。それ以外でも最初のタッチで有効化(ハイブリッド端末)
     if (game.isMobile) this.setEnabled(true);
     this.cleanup.push(game.ev.on('phase', () => this.sync()));
+    this.cleanup.push(game.ev.on('mode', () => {this.releaseAll();this.sync();}));
     const blur = () => this.releaseAll();
     window.addEventListener('blur', blur);
     this.cleanup.push(() => window.removeEventListener('blur', blur));
@@ -101,6 +106,7 @@ export class TouchControls {
   private sync(): void {
     const show = this.game.input.touchMode && this.game.phase === 'playing';
     this.root.hidden = !show;
+    this.root.dataset.mode=this.game.home.mode;
     if (!show) this.releaseAll();
   }
 

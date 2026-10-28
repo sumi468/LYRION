@@ -1,13 +1,14 @@
 import { Quaternion, Vector3 } from 'three';
 import { SHIELD_MAX } from '../data/combat';
 import { canLand, type LandingRecord } from './landing';
-import { BODY_BY_ID, CATALOG_IDS, INITIAL_DETECTED } from '../data/starSystem';
+import { BODY_BY_ID, INITIAL_DETECTED } from '../data/starSystem';
 import { MISSIONS } from '../data/missions';
 import { UPGRADE_BY_ID, UPGRADE_IDS } from '../data/upgrades';
 import { createNewState, HULL_MAX, type GameState } from '../core/state';
+import { sanitizeHomecoming, type HomecomingProgress } from './expeditions';
 
 export const SAVE_KEY = 'lyrion.save.v1';
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 4;
 
 /** localStorage 互換の最小インターフェース(テストで差し替え可能) */
 export interface StorageLike {
@@ -39,6 +40,7 @@ export interface SaveData {
   missionIndex: number;
   assist: boolean;
   cameraMode: 'third' | 'first';
+  homecoming: HomecomingProgress;
 }
 
 export function serialize(s: GameState, now = Date.now()): SaveData {
@@ -65,6 +67,7 @@ export function serialize(s: GameState, now = Date.now()): SaveData {
     missionIndex: s.missionIndex,
     assist: s.assist,
     cameraMode: s.cameraMode,
+    homecoming: sanitizeHomecoming(s.homecoming),
   };
 }
 
@@ -87,7 +90,7 @@ export function deserialize(raw: unknown): GameState | null {
   s.time = Math.max(0, d.time);
   s.playSeconds = isNum(d.playSeconds) ? Math.max(0, d.playSeconds) : 0;
   s.pos.set(d.pos[0], d.pos[1], d.pos[2]);
-  if (isVec(d.vel, 3)) s.vel.set(d.vel[0], d.vel[1], d.vel[2]);
+  if (isVec(d.vel, 3)) s.vel.set(d.vel[0], d.vel[1], d.vel[2]); else s.vel.set(0,0,0);
   s.quat = new Quaternion(d.quat[0], d.quat[1], d.quat[2], d.quat[3]);
   if (s.quat.lengthSq() < 1e-6) return null;
   s.quat.normalize();
@@ -116,16 +119,17 @@ export function deserialize(raw: unknown): GameState | null {
   }
   s.upgradesBought = Math.max(isNum(d.upgradesBought) ? Math.floor(d.upgradesBought) : 0, bought);
 
-  const known = new Set(CATALOG_IDS);
+  const known = new Set(Object.keys(BODY_BY_ID));
+  const canonicalId = (id: string) => id === 'prime' ? 'lyrion-prime' : id;
   s.detected = new Set(INITIAL_DETECTED);
-  if (Array.isArray(d.detected)) for (const id of d.detected) if (typeof id === 'string' && known.has(id)) s.detected.add(id);
+  if (Array.isArray(d.detected)) for (const id of d.detected) if (typeof id === 'string' && known.has(canonicalId(id))) s.detected.add(canonicalId(id));
 
   s.scanned = new Map();
   if (d.scanned && typeof d.scanned === 'object') {
     for (const [id, t] of Object.entries(d.scanned as Record<string, unknown>)) {
-      if (known.has(id) && isNum(t)) {
-        s.scanned.set(id, t);
-        s.detected.add(id);
+      if (known.has(canonicalId(id)) && isNum(t)) {
+        s.scanned.set(canonicalId(id), t);
+        s.detected.add(canonicalId(id));
       }
     }
   }
@@ -133,6 +137,9 @@ export function deserialize(raw: unknown): GameState | null {
   s.missionIndex = isNum(d.missionIndex) ? clamp(Math.floor(d.missionIndex), 0, MISSIONS.length) : 0;
   s.assist = typeof d.assist === 'boolean' ? d.assist : true;
   s.cameraMode = d.cameraMode === 'first' ? 'first' : 'third';
+  s.homecoming = sanitizeHomecoming(d.version >= 3 ? d.homecoming : null);
+  // EVA saves store the parked spacecraft pose. Recover aboard without losing research.
+  s.homecoming.wasEva = false;
   return s;
 }
 

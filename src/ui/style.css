@@ -334,3 +334,49 @@ input[type='checkbox'] { width: 18px; height: 18px; accent-color: var(--accent);
   body.touch .hud-target { bottom: 205px; }
   body.touch .landing-label { bottom:170px; width:calc(100vw - 24px); max-width:none; padding:5px 8px; font-size:10px; }
 }
+/* Expedition operations: bounded panels leave the centre of the viewport clear. */
+.hud-operations { position:absolute; left:50%; bottom:150px; transform:translateX(-50%); width:min(460px,42vw); padding:10px 14px; background:linear-gradient(110deg,rgba(5,20,29,.88),rgba(5,20,29,.5)); border-left:2px solid #66c5d8; color:#d3edf1; font-size:12px; line-height:1.6; }
+.ops-text { font-weight:600; letter-spacing:.05em; }
+.ops-detail { color:#9eb7be; font-size:11px; }
+.ops-track { height:2px; margin-top:5px; background:#193742; }
+.ops-fill { height:100%; background:#74e6e1; transform-origin:left; transform:scaleX(0); }
+.hud-operations.critical { border-color:#f19d68; color:#ffb27f; }
+.hud[data-mode="eva"] .hud-combat,.hud[data-mode="eva"] .hud-target,.hud[data-mode="eva"] .landing-label,.hud[data-mode="eva"] .hud-speed,.hud[data-mode="eva"] .cockpit-frame { display:none; }
+.operations-body { overflow:auto; padding:24px; line-height:1.8; }
+.operations-intro h2 { font-size:20px; letter-spacing:.1em; }
+.operations-actions { display:flex; flex-wrap:wrap; gap:10px; }
+.operations-actions .btn { width:auto; min-width:150px; }
+.operations-controls { color:#8ed1da; }
+.build-label { font-size:10px; letter-spacing:.12em; color:#8ca3ad; margin:8px 0 14px; }
+.campaign-name { color:#8ed1da; letter-spacing:.12em; }
+.expedition-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:18px; margin:24px 0; }
+.expedition-card { padding:20px; border:1px solid #294552; background:#0b1a23bd; }
+.expedition-card.active { border-color:#64c1d1; }
+.expedition-card h3 { font-size:20px; margin:10px 0; }
+.expedition-card p,.expedition-card li { font-size:13px; color:#a7bbc6; }
+.expedition-card ol { padding-left:20px; }
+.expedition-card li.done { color:#79dbc7; }
+.exp-location { letter-spacing:.05em; color:#bfae7d!important; }
+.research-result { color:#92d9d8!important; }
+.research-log { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:15px; }
+.research-log article { border-left:2px solid #497683; padding:4px 15px; background:#0b1e2788; }
+.research-log h4 { margin:3px 0; }.research-log p { font-size:13px; color:#aac0c8; }
+.tc-context { position:absolute; left:12px; bottom:170px; display:flex; gap:6px; pointer-events:auto; }
+.tc-eva { display:none; position:absolute; right:12px; bottom:18px; grid-template-columns:repeat(2,62px); gap:8px; pointer-events:auto; }
+.tc[data-mode="eva"] .tc-right { display:none; }.tc[data-mode="eva"] .tc-eva { display:grid; }
+body.touch .hud-operations { left:12px; bottom:260px; transform:none; width:220px; max-width:calc(100vw - 24px); padding:7px 10px; font-size:10px; }
+body.touch .ops-detail { font-size:10px; }
+body.touch .toasts { left:270px; top:55px; transform:none; width:260px; }
+body.touch .toast:nth-child(n+2) { display:none; }
+body.touch .toast-title { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; }
+@media(max-width:600px) {
+  body.touch .toasts { left:10px; top:100px; width:208px; }
+  .tc-context { top:200px; bottom:auto; }
+  body.touch .hud-operations { top:274px; bottom:auto; width:calc(100vw - 24px); max-width:366px; }
+  .operations-body { padding:14px; }.operations-actions .btn { min-width:130px; flex:1; font-size:11px; }
+  .expedition-cards { grid-template-columns:1fr; }.expedition-card { padding:15px; }
+}
+@media(max-height:500px) {
+  body.touch .hud-operations { bottom:170px; left:180px; width:260px; padding:4px 8px; }
+  .tc-context { left:180px; top:auto; bottom:16px; }.tc-eva { gap:5px; grid-template-columns:repeat(3,58px); }
+}

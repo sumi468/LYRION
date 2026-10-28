@@ -9,6 +9,13 @@ import {
   Vector3,
   WebGLRenderer,
 } from 'three';
+import { EXPEDITIONS } from '../data/expeditions';
+import { INVESTIGATION_BY_ID, STATION_SOLIDS, SHIP_SOLIDS, STATION_ID, HOMEWORLD_ID } from '../data/homeworld';
+import { HomecomingSystem } from '../systems/homecoming';
+import { emptyEvaInput, EVA_OXYGEN } from '../systems/eva';
+import { acceptExpedition, activeExpedition, currentObjective, reportExpedition } from '../systems/expeditions';
+import { clipCameraToBoxes } from '../physics/localCollision';
+import { ExpeditionView } from '../render/ExpeditionView';
 import { BODY_BY_ID, BODY_DEFS, STAR_ID } from '../data/starSystem';
 import { DIFFICULTIES, ENEMY_ROLE_LABELS, SHIELD_MAX } from '../data/combat';
 import { CombatSystem, interceptTime } from '../systems/combat';
@@ -46,6 +53,7 @@ import { DEFAULT_SETTINGS, loadSettings, saveSettings, type Settings } from '../
 import { FrameStats } from '../systems/frameStats';
 import { computeShipStats, purchaseUpgrade, upgradeCost, type ShipStats } from '../systems/upgrades';
 import { Emitter } from './events';
+import { BUILD_INFO } from './build';
 import { createNewState, HULL_MAX, type CameraMode, type GameState } from './state';
 import type { HudSnapshot, MarkerInfo, Toast } from './hud';
 
@@ -53,6 +61,7 @@ export type Phase = 'loading' | 'menu' | 'playing' | 'paused';
 
 export type GameEvents = {
   phase: Phase;
+  mode: string;
   toast: Toast;
   scanned: { def: BodyDef; reward: number };
   mission: { completed: MissionDef[]; reward: number; next: MissionDef | null };
@@ -95,11 +104,16 @@ export function detectMobile(): boolean {
  *       描画オブジェクトの更新、画質制御。DOM の UI は持たず、events と snapshot() で通知する。
  */
 export class Game {
+  readonly buildInfo = BUILD_INFO;
   readonly ev = new Emitter<GameEvents>();
   readonly input = new Input();
   readonly audio = new GameAudio();
   readonly combat = new CombatSystem();
   readonly landing = new LandingSystem();
+  readonly home = new HomecomingSystem();
+  private evaInput = emptyEvaInput();
+  private controlMode = '';
+  private expeditionView = new ExpeditionView();
   readonly saves = new SaveManager(safeLocalStorage());
   readonly isMobile = detectMobile();
 
@@ -201,7 +215,7 @@ export class Game {
     this.auto = this.settings.quality === 'auto' ? new AutoQuality(level, this.isMobile ? 30 : 58) : null;
 
     // --- シーン構築(重いテクスチャのベイクはフレームをまたいで分散し、進捗を通知) ---
-    this.scene.add(this.combatView.group,this.landingView.group);
+    this.scene.add(this.combatView.group,this.landingView.group,this.expeditionView.group);
     this.scene.add(this.sky.group, this.dust.object, this.shipModel.group, this.sunLight, this.ambient);
     this.scene.add(this.sunLight.target);
     this.ev.emit('loading', { progress: 0.05, label: '宇宙を生成しています' });
@@ -348,6 +362,7 @@ export class Game {
     this.menuHasSave = saved !== null;
     this.state = saved ?? createNewState();
     this.combat.reset();this.landing.restore(this.state.landed);
+    this.updateBodies(this.state.time); this.home.restore(this.state); this.syncControlMode();
     this.stats = computeShipStats(this.state.upgrades);
     this.menuClock = 0;
     this.targetId = null;
@@ -373,13 +388,14 @@ export class Game {
     this.combat.reset();this.landing.restore(s.landed);
     this.stats = computeShipStats(s.upgrades);
     s.energy = Math.min(s.energy, this.stats.energyMax);
-    s.vel.multiplyScalar(0.5);
+    this.updateBodies(s.time); this.home.restore(s); this.syncControlMode();
     this.origin.copy(s.pos);
-    this.refVel.set(0, 0, 0);
+    this.refVel.copy(s.vel);
     this.boostLocked = false;
     this.boost01 = 0;
     cancelScan(this.scan);
     this.syncMissionTarget();
+    if(s.homecoming.tracked)this.targetId=STATION_ID;
     this.autosaveTimer = 0;
     this.chase.snap();
     this.setPhase('playing');
@@ -415,6 +431,18 @@ export class Game {
   handlePlayAction(a: ActionName): void {
     // pause / upgrades / log は UI が処理する。ここではプレイ中の操作のみ扱う
     if (this.phase !== 'playing') return;
+    if (a==='dock') { if(!this.home.eva.active&&!this.state.landed)this.notify(this.home.docking.request(this.state,this.home.frames.asterion)); this.syncControlMode(); this.saveNow(); return; }
+    if (a==='eva') {
+      const before=this.home.eva.active;
+      if(!before&&!this.home.protected&&this.combat.count>0){this.notify('交戦中は船外に出られません。敵から離脱するか、基地へ帰還してください');return;}
+      const message=this.home.toggleEva(this.state);
+      this.notify(this.input.touchMode&&!before&&this.home.eva.active?'船外活動開始。左スティックで移動、画面ドラッグで向き、上昇・下降・調査・帰還ボタンを使用します':message);
+      if(before!==this.home.eva.active){this.syncControlMode();this.combat.reset(15);cancelScan(this.scan);resetAttitude(this.attitude);this.chase.snap();this.saveNow();}return;
+    }
+    if (a==='return') { this.home.eva.returnToShip();return; }
+    if (a==='investigate') { this.notify(this.home.investigate(this.state));return; }
+    if (this.home.eva.active) { if(a==='assist')this.home.eva.stabilized=!this.home.eva.stabilized; if(a==='camera')this.setCameraMode(this.state.cameraMode==='third'?'first':'third');return; }
+    if(this.home.docking.mode!=='flight' && a!=='camera' && a!=='target' && a!=='scan')return;
     switch (a) {
       case 'dodge':
         if(this.landing.mode==='flight'&&!this.combat.tryDodge(this.state))this.ev.emit('toast',{kind:'info',title:'回避ロールは冷却とエネルギー18が必要です'});
@@ -441,6 +469,33 @@ export class Game {
 
   // ---------------------------------------------------------------- 操作系 API
 
+  private notify(title: string): void { this.ev.emit('toast',{kind:'info',title}); }
+  private syncControlMode(): void {
+    const mode=this.home.eva.active?'eva':'flight';
+    if(this.controlMode!==this.home.mode){this.input.reset();this.input.mode=mode;this.controlMode=this.home.mode;this.ev.emit('mode',this.home.mode);}
+  }
+  selectExpedition(id: string): boolean {
+    if(this.home.mode!=='docked')return false;
+    const ok=acceptExpedition(this.state.homecoming,id);
+    if(ok){this.home.progress(this.state,0);this.saveNow();}return ok;
+  }
+  reportExpedition(): boolean {
+    const mission=reportExpedition(this.state.homecoming,this.home.context(this.state),this.state.time);
+    if(!mission)return false;
+    this.state.data+=mission.reward;this.state.totalData+=mission.reward;this.audio.cue('mission');
+    this.notify(`${mission.title} 完了 / +${mission.reward} DATA。${mission.conclusion}`);this.saveNow();return true;
+  }
+  stationService(): boolean {
+    if(this.home.mode!=='docked')return false;
+    this.state.hull=HULL_MAX;this.state.shield=SHIELD_MAX;this.state.energy=this.stats.energyMax;this.saveNow();return true;
+  }
+  navigateHome(): void {
+    if(this.phase==='menu'&&this.menuHasSave)this.continueGame();
+    else if(this.phase==='paused')this.resume();
+    this.setTarget(STATION_ID);
+    this.notify('ASTERION STATIONを選択しました。誘導マーカーを追って母星へ帰還してください');
+  }
+
   setCameraMode(m: CameraMode): void {
     this.state.cameraMode = m;
   }
@@ -459,17 +514,18 @@ export class Game {
   }
 
   cycleTarget(): void {
-    const list = BODY_DEFS.filter((d) => this.state.detected.has(d.id));
+    const list = [STATION_ID,...BODY_DEFS.filter((d) => this.state.detected.has(d.id)).map(d=>d.id)];
     if (!list.length) return;
-    const i = list.findIndex((d) => d.id === this.targetId);
-    this.targetId = list[(i + 1) % list.length].id;
+    const i = list.indexOf(this.targetId??'');
+    this.targetId = list[(i + 1) % list.length];
   }
 
   setTarget(id: string | null): void {
-    this.targetId = id;
+    this.targetId = id==='prime'?HOMEWORLD_ID:id;
   }
 
   toggleScan(): void {
+    if(this.targetId===STATION_ID){this.notify('ASTERIONは接岸可能な基地です。T / DOCKで接岸し、MISSION CONTROLをご利用ください');return;}
     if (this.scan.id) {
       cancelScan(this.scan);
       this.ev.emit('toast', { kind: 'info', title: 'スキャンを中断しました' });
@@ -621,6 +677,7 @@ export class Game {
   private updateBodies(time: number): void {
     updateBodyPositions(BODY_DEFS, time, this.positions);
     updateBodyVelocities(BODY_DEFS, time, this.positions, this.scratch, this.velocities);
+    this.home.update(time,this.positions,this.velocities); this.home.measure(this.state);
   }
 
   /** メニュー/一時停止中: 時間だけゆっくり進め、背景の船を漂わせる */
@@ -651,17 +708,20 @@ export class Game {
     this.updateBodies(s.time);
 
     // --- 入力と飛行 ---
-    const input = this.input.poll(dt, this.flightInput);
+    const evaActive=this.home.eva.active;
+    const input = evaActive ? Object.assign(this.flightInput,emptyInput()) : this.input.poll(dt, this.flightInput);
+    if(evaActive)this.input.pollEva(dt,this.evaInput);
     this.updateReferenceFrame(dt);
 
     if (s.energy <= 0.5) this.boostLocked = true;
     else if (s.energy > this.stats.energyMax * 0.15) this.boostLocked = false;
     const landingActive=this.landing.mode!=='flight';
+    const controlled=evaActive||this.home.docking.mode!=='flight';
     const wantBoost = !landingActive && input.boost && !this.boostLocked && s.energy > 0;
     input.boost = wantBoost;
     const touchedDown=this.landing.update(dt,s,this.positions,this.velocities);
     if(touchedDown){resetAttitude(this.attitude);this.saveNow();this.audio.cue('upgrade');this.ev.emit('toast',{kind:'reward',title:'着陸完了',text:'修理・補給中。G または LAND で離陸'});}
-    const res = landingActive ? {boosting:false,relSpeed:0} : stepFlight(s, input, this.stats, s.assist, this.refVel, wantBoost, dt, this.attitude);
+    const res = landingActive||controlled ? {boosting:false,relSpeed:0} : stepFlight(s, input, this.stats, s.assist, this.refVel, wantBoost, dt, this.attitude);
 
     if (res.boosting) s.energy = Math.max(0, s.energy - this.stats.boostDrain * dt);
     else s.energy = Math.min(this.stats.energyMax, s.energy + this.stats.energyRegen * dt);
@@ -671,11 +731,14 @@ export class Game {
     this.thrustLevel += (Math.min(1, thrustTarget) - this.thrustLevel) * (1 - Math.exp(-dt * 8));
     this.audio.update(dt, this.thrustLevel, this.boost01, this.scan.id !== null);
 
+    const operation=this.home.step(dt,s,this.evaInput);
+    if(operation){this.notify(operation.message??'調査完了');if(operation.reward)this.audio.cue('scan');this.saveNow();}
+    this.syncControlMode();
     // --- 衝突・熱 ---
     this.sinceDamage += dt;
-    if(!landingActive)this.collide(dt);
+    if(!landingActive&&!controlled)this.collide(dt);
     const previousEnemies=this.combat.count;
-    const fight=this.combat.step(dt,s,s.time,this.input.firing,this.settings.difficulty,this.worlds,landingActive);
+    const fight=this.combat.step(dt,s,s.time,this.input.firing&&!controlled,this.settings.difficulty,this.worlds,landingActive||this.home.protected);
     if(this.combat.count>previousEnemies)this.ev.emit('toast',{kind:'warn',title:'敵の哨戒機が接近',text:'照準を合わせ、左クリック / J または FIRE で射撃'});
     if(this.combat.shotPulse)this.audio.cue('weapon');
     if(fight.damage>0){
@@ -688,7 +751,9 @@ export class Game {
 
     // --- 探知・スキャン・ターゲット ---
     this.detect();
-    this.updateScan(dt);
+    if(!evaActive)this.updateScan(dt);
+    this.home.distances.lumen=this.surfaceDistance(BODY_BY_ID.lumen);
+    if(this.home.progress(s,dt)){const objective=currentObjective(s.homecoming);this.notify(objective?`次の目標：${objective.text}`:'遠征目標を達成しました');if(objective?.kind==='scan-body')this.setTarget(objective.target??null);this.saveNow();}
 
     // --- 船体の自然回復(被弾後しばらく経ってから)---
     if (this.sinceDamage > 6 && s.hull < HULL_MAX) s.hull = Math.min(HULL_MAX, s.hull + 0.4 * dt);
@@ -706,6 +771,7 @@ export class Game {
   /** 近くの天体の速度を基準系にする(公転する天体のそばで停止できるように) */
   private updateReferenceFrame(dt: number): void {
     const p = this.state.pos;
+    if(this.home.stationDistance<1100){const frame=this.home.frames.asterion;frame.toLocal(p,_v1);frame.pointVelocity(_v1,this.refVel);return;}
     let best: BodyDef | null = null;
     let bestD = Infinity;
     for (const d of BODY_DEFS) {
@@ -903,7 +969,8 @@ export class Game {
     const visualTime = s.time + (this.phase === 'menu' ? this.menuClock * 6 : 0);
 
     // Floating Origin: 船が原点から離れたら原点を移し替える(描画座標は常に原点付近)
-    maybeRebaseOrigin(this.origin, s.pos, 1200);
+    const eva=this.home.eva;
+    maybeRebaseOrigin(this.origin, eva.active?eva.position:s.pos, 1200);
 
     // カメラ
     if (this.phase === 'menu') {
@@ -915,6 +982,12 @@ export class Game {
       _v2.copy(s.pos).addScaledVector(_fwd.set(0, 0, -1).applyQuaternion(s.quat), 90).sub(this.origin);
       camera.up.set(0, 1, 0);
       camera.lookAt(_v2);
+    } else if(eva.active) {
+      _v1.set(0,.7,s.cameraMode==='first'?.12:3.8).applyQuaternion(eva.rotation);
+      this.camWorld.copy(eva.position).add(_v1);
+      clipCameraToBoxes(eva.position,this.camWorld,this.home.frames.asterion,STATION_SOLIDS);
+      clipCameraToBoxes(eva.position,this.camWorld,this.home.shipFrame,SHIP_SOLIDS,.2);
+      camera.quaternion.copy(eva.rotation);camera.position.copy(this.camWorld).sub(this.origin);
     } else {
       const speedFrac = this.relSpeed / this.stats.maxSpeed;
       this.chase.update(dt, s.pos, this.displayQuat, s.cameraMode, speedFrac, this.boost01, this.camWorld, this.attitude.bank+this.combat.rollAngle);
@@ -935,7 +1008,9 @@ export class Game {
     this.combatView.group.visible=this.phase!=='menu';this.combatView.update(this.combat,this.origin);
     this.landingView.group.visible=!!this.landing.anchor;
     if(this.landing.anchor){this.landingView.fitSurface(BODY_BY_ID[this.landing.anchor.bodyId].radius);this.landingView.group.position.copy(this.landing.surface).sub(this.origin);this.landingView.group.quaternion.copy(this.landing.quaternion);}
-    this.shipModel.setHullVisible(this.phase === 'menu' || this.chase.firstPersonAmount < 0.85);
+    this.shipModel.setHullVisible(eva.active || this.phase === 'menu' || this.chase.firstPersonAmount < 0.85);
+    this.expeditionView.update(this.home,s.homecoming,this.origin,this.camWorld,s.time,this.profile);
+    this.expeditionView.astronaut.visible=eva.active&&s.cameraMode!=='first';
 
     // 恒星
     this.sun.update(this.positions[STAR_ID], this.origin, camera, visualTime);
@@ -982,6 +1057,11 @@ export class Game {
   }
 
   private marker(kind: 'target' | 'guide', id: string): MarkerInfo | null {
+    if(id===STATION_ID){
+      const p={x:0,y:0,behind:false},world=this.home.frames.asterion.position;
+      this.project(world,p);const w=window.innerWidth,h=window.innerHeight;
+      return {kind,id,label:'ASTERION STATION',dist:world.distanceTo(this.state.pos),x:Math.max(45,Math.min(w-45,p.x)),y:Math.max(130,Math.min(h-185,p.y)),onScreen:!p.behind&&p.x>45&&p.x<w-45&&p.y>130&&p.y<h-185,angle:Math.atan2(p.y-h/2,p.x-w/2),unknown:false,scanned:false};
+    }
     const def = BODY_BY_ID[id];
     if (!def) return null;
     const s = this.state;
@@ -1066,6 +1146,8 @@ export class Game {
     const def = this.targetId ? BODY_BY_ID[this.targetId] : null;
     const markers: MarkerInfo[] = [];
     let target: HudSnapshot['target'] = null;
+    const stationTarget=this.targetId===STATION_ID?{name:'ASTERION STATION',distance:this.home.stationDistance,relativeSpeed:this.home.docking.relativeSpeed,mode:this.home.mode}:null;
+    if(stationTarget){const marker=this.marker('target',STATION_ID);if(marker)markers.push(marker);}
 
     if (def && this.phase !== 'menu') {
       const m = this.marker('target', def.id);
@@ -1082,7 +1164,7 @@ export class Game {
         progress: this.scan.id === def.id ? this.scan.progress : 0,
       };
     }
-    if (mission && this.phase !== 'menu') {
+    if (mission && !s.homecoming.tracked && this.phase !== 'menu') {
       const gid = missionTarget(this.missionCtx());
       if (gid && gid !== this.targetId) {
         const m = this.marker('guide', gid);
@@ -1090,6 +1172,11 @@ export class Game {
       }
     }
 
+    const objective=s.homecoming.tracked?currentObjective(s.homecoming):null;
+    const goalId=objective?.target??(objective?.kind==='report'?'asterion':null);
+    const goal=goalId?(this.home.points[goalId]??this.positions[goalId]??(goalId==='deep'?this.home.frames.deep.position:null)):null;
+    if(goal&&goalId&&goalId!==this.targetId){const p={x:0,y:0,behind:false};this.project(goal,p);const w=window.innerWidth,h=window.innerHeight;
+      markers.push({kind:'guide',id:`exp-${goalId}`,label:INVESTIGATION_BY_ID[goalId]?.name??(goalId==='asterion'?'ASTERION':goalId==='nav'?'航法ウェイポイント':BODY_BY_ID[goalId]?.nameJa??'遠方の信号'),dist:goal.distanceTo(this.home.eva.active?this.home.eva.position:s.pos),x:Math.max(40,Math.min(w-40,p.x)),y:Math.max(130,Math.min(h-190,p.y)),onScreen:!p.behind&&p.x>40&&p.x<w-40&&p.y>130&&p.y<h-190,angle:Math.atan2(p.y-h/2,p.x-w/2),unknown:false,scanned:false});}
     // 方位(黄道面での向き)とピッチ
     _fwd.set(0, 0, -1).applyQuaternion(s.quat);
     const heading = ((Math.atan2(_fwd.x, -_fwd.z) * 180) / Math.PI + 360) % 360;
@@ -1115,6 +1202,7 @@ export class Game {
     const landAltitude=landable?this.surfaceDistance(landable):Infinity;
     const landingText=this.landing.mode==='landed'?'着陸中 · 修理 / 補給 · [G] 離陸':this.landing.mode==='approach'?'自動着陸中 · [G] 中止':landable&&landAltitude<=450?`${landable.nameJa} · [G] 着陸`:'岩石・氷の天体に接近すると [G] で着陸';
     return {
+      stationTarget,
       shield:s.shield,shieldMax:SHIELD_MAX,kills:s.kills,enemies,difficulty:DIFFICULTIES[this.settings.difficulty].label,
       weaponHeat:this.combat.heat,overheated:this.combat.overheated,hit:this.combat.hitFlash,
       landingText,landingMode:this.landing.mode,
@@ -1130,7 +1218,10 @@ export class Game {
       assist: s.assist,
       camera: s.cameraMode,
       locked: this.input.locked || this.input.touchMode,
-      mission: mission
+      operations: this.operationsSnapshot(),
+      mission: this.state.homecoming.tracked&&activeExpedition(s.homecoming)
+        ? {title:activeExpedition(s.homecoming)!.title,objective:currentObjective(s.homecoming)?.text??'遠征完了。B / 基地で次の遠征を選択',hint:currentObjective(s.homecoming)?.hint??'記録と発見を遠征ボードで確認',index:EXPEDITIONS.indexOf(activeExpedition(s.homecoming)!),total:EXPEDITIONS.length}
+        : mission
         ? { title: mission.title, objective: mission.objective, hint: mission.hint, index: s.missionIndex, total: MISSIONS.length }
         : null,
       target,
@@ -1146,6 +1237,16 @@ export class Game {
     };
   }
 
+  private operationsSnapshot(): HudSnapshot['operations'] {
+    const h=this.home,s=this.state,e=h.eva;
+    const nearest=h.investigations.nearest(s.homecoming,h.distances);
+    const label=nearest?`${nearest.name} · ${Math.round(h.distances[nearest.id])}u`:'';
+    const text=e.active ? `船外活動 / O₂ ${Math.ceil(e.oxygen)}秒 / 機体まで ${Math.round(e.distance)}u` : h.mode==='docked'?'ASTERION STATION / 係留中':h.stationDistance<1600?`ASTERION · ${Math.round(h.docking.distance)}u / 相対速度 ${h.docking.relativeSpeed.toFixed(1)}u/s`:'HOME → ASTERION / B 遠征ボード';
+    const touch=this.input.touchMode;
+    const detail=e.active ? (e.emergency>0?'安全回収中':e.returning?'LX-07へ帰還中':h.investigations.activeId?`${h.investigationName()} / ${Math.round(h.investigations.progress*100)}%`:label+(touch?' · 調査 / 搭乗 / 帰還ボタン':' · E 調査 / H 搭乗 / Y 帰還')) : h.mode==='docked'?(touch?'基地：遠征・補給 / EVA：船外 / DOCK：離脱':'B 遠征・補給 / H 船外活動 / T 離脱'):h.mode==='aligning'?'自動ドッキング中 / Tで中止':h.mode==='undocking'?'自動離脱中':touch?'基地で遠征を受注 / DOCK 接岸 / EVA 船外活動':'B 遠征・補給 / T ドッキング / H 船外活動';
+    return {mode:h.mode,text,detail,progress:h.investigations.progress,oxygen:e.oxygen,oxygenMax:EVA_OXYGEN,distance:e.distance};
+  }
+
   // ---------------------------------------------------------------- 破棄・デバッグ
 
   /** デバッグ・検証用: 天体の近くへ移動する(通常プレイでは使わない) */
@@ -1153,6 +1254,7 @@ export class Game {
     resetAttitude(this.attitude);
     const d = BODY_BY_ID[id];
     if (!d) return;
+    this.home.eva.reset();this.home.docking.mode='flight';this.state.homecoming.docked=false;this.syncControlMode();
     this.landing.restore(null);this.state.landed=null;this.combat.reset();
     this.updateBodies(this.state.time);
     if (d.kind === 'belt' && d.belt) {
@@ -1193,6 +1295,7 @@ export class Game {
     this.cleanup = [];
     this.input.dispose();
     this.audio.dispose();
+    this.expeditionView.dispose();
     for (const v of this.views.values()) v.dispose();
     this.views.clear();
     this.sun.dispose();

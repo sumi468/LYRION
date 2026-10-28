@@ -67,3 +67,10 @@ v0.2でテクスチャの段階生成・進捗表示、雲・大気の調整、W
 ## v0.6の描画とFPS
 
 `render/modelParts.ts` は静的部品を消費して結合する。`ProbeModel` は4材質、`LandingView` は6材質と1基礎インスタンス、機体は20メッシュ。基地の基礎は天体の半径が変わったときだけ球面へ合わせる。小惑星の細分形状は表示数2000以上（L3以上）で使用する。`systems/frameStats.ts` は経過時間からFPSを計算。設定の `fpsDisplayVersion` で旧版からの一度だけの表示ON移行を管理する。変更時は `npm run test:polish`。`HEADED=1 npm run test:gpu` は通常Chromeウィンドウの測定を `display-benchmark.json` に分けて記録する。
+
+
+## v0.7の遠征・基地・船外活動
+
+`data/homeworld.ts` と `data/expeditions.ts` が新コンテンツ。旧11天体の `CATALOG_IDS` と8ミッションの番号は維持し、PRIMEは図鑑完成条件から除外します。`physics/frames.ts` が絶対座標・公転・点速度の共有基準系です。`HomecomingSystem` がDocking/EVA/Investigation/Expeditionを統合し、`ExpeditionView` が描画・disposeを担当します。
+
+セーブv4はv1/v2を移行します。EVA中の保存は駐機した船へ安全復帰します。UIはB、接岸T、船外H、船外調査E、帰還Y。飛行中Eはロールのまま。新モードではInputの保持状態を解除し、EVAで機体を動かさないでください。新機能変更後は `npm run test:homecoming` で6遠征を最後まで確認します。`node tests/e2e/homecoming-gpu.mjs` は実GPUの6場面測定です。基準値は `docs/validation/homecoming-baseline.json`。

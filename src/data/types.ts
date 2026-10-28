@@ -85,6 +85,8 @@ export interface BodyDef {
   kind: BodyKind;
   /** 日本語の分類ラベル */
   classLabel: string;
+  /** Inhabited operational hub, outside the legacy eleven-object survey catalog. */
+  homeworld?: boolean;
 
   /** ---- ゲーム内スケール ---- */
   /** 半径 [u]。belt の場合は 0 */
