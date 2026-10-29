@@ -13,7 +13,7 @@ try{
  report.build=await page.evaluate(()=>window.__lyrion.buildInfo);
  const manifest=await (await page.request.get(server.url.split('?')[0]+'build-info.json')).json();
  const source=JSON.parse(readFileSync(new URL('../../public/build-info.json',import.meta.url),'utf8'));
- check('実際に配信したビルドと作業ソースの識別情報が一致',manifest.sourceHash===source.sourceHash&&manifest.sourceHash===report.build.sourceHash&&manifest.version==='0.7.1',report.build);
+ check('実際に配信したビルドと作業ソースの識別情報が一致',manifest.sourceHash===source.sourceHash&&manifest.sourceHash===report.build.sourceHash&&manifest.version===source.version,report.build);
  check('画面にビルド版とソース識別子を表示',await page.locator('.build-label').filter({hasText:source.sourceHash.slice(0,12)}).isVisible());
  await page.screenshot({path:join(SHOTS,'90-critical-main.png')});
  await page.getByRole('button',{name:'MISSION CONTROL / 遠征',exact:true}).click();await sleep(400);

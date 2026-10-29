@@ -16,13 +16,13 @@ export class InvestigationSystem {
     return distance <= INVESTIGATION_RANGE ? 'in-range' : 'available';
   }
   nearest(state: HomecomingProgress, distances: Readonly<Record<string, number>>): InvestigationDef | null {
-    let nearest: InvestigationDef | null = null, best = 80;
+    let nearest: InvestigationDef | null = null, completed: InvestigationDef | null = null, best = 80, completedDistance = 80;
     for (const def of INVESTIGATIONS) {
       const distance = distances[def.id] ?? Infinity;
-      const bias = state.investigated[def.id] === undefined ? 0 : 1;
-      if (distance + bias < best) { best = distance + bias; nearest = def; }
+      if(state.investigated[def.id]!==undefined){if(distance<completedDistance){completedDistance=distance;completed=def;}continue;}
+      if (distance < best) { best = distance; nearest = def; }
     }
-    return nearest;
+    return nearest??completed;
   }
   request(id: string, state: HomecomingProgress, distance: number, eva: boolean): string {
     if (!eva) return 'この設備は船外活動で調査します';

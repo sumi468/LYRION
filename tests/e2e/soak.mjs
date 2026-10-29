@@ -17,6 +17,7 @@ try {
   await page.addInitScript(()=>localStorage.setItem('lyrion.settings.v1',JSON.stringify({quality:'high',audioEnabled:false})));
   await page.goto(server.url);
   await page.waitForFunction(()=>window.__lyrion?.phase==='menu',null,{timeout:120000});
+  report.build=await page.evaluate(()=>window.__lyrion.buildInfo);
   report.graphics=await graphicsInfo(page);
   if(report.graphics.hardware!==true)throw new Error('Hardware GPU required');
   await page.evaluate(()=>{const g=window.__lyrion;g.input.requestLock=()=>{};g.input.locked=true;g.startNew();});

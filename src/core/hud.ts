@@ -61,7 +61,7 @@ export interface HudSnapshot {
   assist: boolean;
   camera: CameraMode;
   locked: boolean;
-  mission: { title: string; objective: string; hint: string; index: number; total: number } | null;
+  mission: { title: string; objective: string; hint: string; index: number; total: number; code?: string; completed?: number; objectiveTotal?: number; destination?: string; distance?: number; action?: string } | null;
   target: TargetInfo | null;
   markers: MarkerInfo[];
   sun: { x: number; y: number; opacity: number } | null;

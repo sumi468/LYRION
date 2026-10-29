@@ -1,0 +1,222 @@
+{
+  "timestamp": "2026-10-29T07:00:00.810Z",
+  "source": "Integrated stabilization build",
+  "cases": [
+    {
+      "id": "return-assist-intermediate-waypoint",
+      "reproduced": false,
+      "recoveredAt": {
+        "afterSeconds": 13.350000000000001,
+        "preBoardHatchDistance": 1.285047361388357
+      },
+      "finalMode": "docked",
+      "ok": true
+    },
+    {
+      "id": "landing-approach-permits-eva",
+      "reproduced": false,
+      "before": {
+        "landing": "approach",
+        "landed": null
+      },
+      "immediate": {
+        "eva": false,
+        "landing": "approach"
+      },
+      "after": {
+        "eva": false,
+        "landing": "landed",
+        "landed": {
+          "bodyId": "cindra",
+          "normal": [
+            -0.8602448614602828,
+            0.09599555129129883,
+            -0.5007630502178236
+          ]
+        },
+        "oxygen": 346.64999999999696
+      },
+      "ok": true
+    },
+    {
+      "id": "undock-save-has-stale-docked-state",
+      "reproduced": false,
+      "mode": "undocking",
+      "savedDocked": false,
+      "liveDocked": false,
+      "restoredMode": "flight",
+      "ok": true
+    },
+    {
+      "id": "flying-ship-return-assist-hardcoded-waypoint",
+      "reproduced": false,
+      "recovered": {
+        "seconds": 4.1000000000000005,
+        "preBoardHatchDistance": 1.300627025410202
+      },
+      "frame": "asterion",
+      "parkedLocal": [
+        99.99999999999983,
+        8.999999999999982,
+        -79.99999999999963
+      ],
+      "ok": true
+    },
+    {
+      "id": "blocked-actions-silent",
+      "reproduced": false,
+      "attempted": [
+        "dock",
+        "land",
+        "dodge"
+      ],
+      "toastCount": 3,
+      "mode": "eva",
+      "ok": true
+    },
+    {
+      "id": "camera-clip-minimum-retains-wall-intersection",
+      "reproduced": false,
+      "focusLocal": [
+        3.539999999999586,
+        8.798517470154366e-15,
+        7.999999999999789
+      ],
+      "cameraLocal": [
+        3.4296049784084417,
+        0.7239251563232219,
+        8.017663203454635
+      ],
+      "hullClearance": 0.3296049784084416,
+      "cameraRequiredRadius": 0.3,
+      "nearPlane": 0.06,
+      "ok": true
+    },
+    {
+      "id": "suit-sphere-allows-boots-through-hull",
+      "reproduced": false,
+      "avatarCentreY": 4.219999999999999,
+      "suitMinY": 3.1208098144049874,
+      "suitMaxY": 5.190118180471455,
+      "hullTopY": 3.1,
+      "penetration": -0.020809814404987304,
+      "ok": true
+    },
+    {
+      "id": "wall-contact-discards-tangential-eva-motion",
+      "reproduced": false,
+      "requestedInwardSpeed": -3,
+      "requestedTangentialSpeed": 2,
+      "resultLocalVelocity": [
+        1.1731067506293158e-16,
+        0.000026941481275369328,
+        1.9994070447657417
+      ],
+      "resultLocalPosition": [
+        3.540000000000323,
+        -2.8949065367100957e-14,
+        8.100000000000593
+      ],
+      "ok": true
+    },
+    {
+      "id": "completed-target-steals-nearby-repair-interaction",
+      "reproduced": false,
+      "diagnosisCompleted": true,
+      "diagnosisDistance": 4.067408781946104e-12,
+      "repairDistance": 2.5612496949727377,
+      "active": "antenna-repair",
+      "message": "破損した通信増幅器の作業を開始",
+      "localPosition": [
+        -6.99999999999576,
+        4.60000000000006,
+        -11.000000000001032
+      ],
+      "ok": true
+    },
+    {
+      "id": "planet-contact-return-route-uninitialized",
+      "reproduced": true,
+      "initiated": {
+        "returning": true,
+        "routeLength": 0,
+        "hatchDistance": 88.88753814769281
+      },
+      "after": {
+        "returning": true,
+        "routeLength": 0,
+        "hatchDistance": 88.71627209124283,
+        "displacement": 0.1651657744223622,
+        "towardHatch": 0.06755717484407313,
+        "localVelocity": [
+          1.623858262837537,
+          1.3104827376286192,
+          -8.754754099150453
+        ]
+      },
+      "ok": false
+    },
+    {
+      "id": "suit-sidewall-and-backpack-clearance",
+      "reproduced": true,
+      "poses": [
+        {
+          "name": "side",
+          "yaw": 0,
+          "centreX": 3.539999999999586,
+          "meshMinX": 2.945307576347885,
+          "hullFaceX": 3.1,
+          "clearance": -0.154692423652115
+        },
+        {
+          "name": "backpack",
+          "yaw": -1.5707963267948966,
+          "centreX": 3.539999999999586,
+          "meshMinX": 2.9172115433113337,
+          "hullFaceX": 3.1,
+          "clearance": -0.1827884566886664
+        },
+        {
+          "name": "diagonal",
+          "yaw": 0.8,
+          "centreX": 3.539999999999586,
+          "meshMinX": 2.6710802913509766,
+          "hullFaceX": 3.1,
+          "clearance": -0.4289197086490235
+        }
+      ],
+      "ok": false
+    },
+    {
+      "id": "wayfarer-recorder-planet-envelope-blocks-work",
+      "reproduced": true,
+      "evaStarted": true,
+      "initial": {
+        "returning": true,
+        "routeLength": 0,
+        "distance": 0.10599470549542166
+      },
+      "message": "WAYFARER-3 データレコーダーの作業を開始",
+      "maxDistance": 49.480879490690874,
+      "completed": false,
+      "returning": true,
+      "routeLength": 0,
+      "ok": false
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "build": {
+    "version": "0.8.0",
+    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
+    "sourceHash": "422af28298681ae5577dea453782015396d35a69143d7832cf7d3a2643b7e65e",
+    "uncommittedChanges": true,
+    "builtAt": "2026-10-28T22:24:49.115Z"
+  },
+  "failure": "Error: Stabilization regression remains"
+}

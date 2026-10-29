@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-28T13:54:20.604Z",
+  "timestamp": "2026-10-29T07:23:01.263Z",
   "url": "http://127.0.0.1:4188/?debug",
   "results": [
     {
@@ -9,8 +9,8 @@
         "enabled": true,
         "visible": true,
         "text": "200 FPS5.0 msHIGH",
-        "fps": 199.99999999999991,
-        "frameMs": 5.000000000000003
+        "fps": 200,
+        "frameMs": 5
       }
     },
     {

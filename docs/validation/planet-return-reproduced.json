@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-10-29T07:15:46.940Z",
+  "errors": [],
+  "build": {
+    "version": "0.8.0",
+    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
+    "sourceHash": "10ee61cbdf14d9e4f04f8a5dfa61bd0409ecf6f40646ae596edb79e336e5e36a",
+    "uncommittedChanges": true,
+    "builtAt": "2026-10-29T07:13:20.189Z"
+  },
+  "planetReturn": {
+    "before": {
+      "active": true,
+      "distance": 331.98621922285594,
+      "oxygen": 360
+    },
+    "accepted": {
+      "returning": true,
+      "routeLength": 2,
+      "routeBlocked": false
+    },
+    "minimumHatchDistance": 311.9076281703025,
+    "recovered": null,
+    "final": {
+      "active": true,
+      "returning": true,
+      "hatchDistance": 311.85178926170573,
+      "oxygen": 299.99999999998636,
+      "surfaceDistance": 1.3800000000002228
+    }
+  }
+}

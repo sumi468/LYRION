@@ -1,0 +1,206 @@
+{
+  "timestamp": "2026-10-29T07:24:07.556Z",
+  "results": [
+    {
+      "name": "6任務の一覧と1つの詳細を分けて表示",
+      "ok": true
+    },
+    {
+      "name": "接岸前の受注不可に理由を表示",
+      "ok": true
+    },
+    {
+      "name": "別任務の説明を読むだけで進行状態を変更しない",
+      "ok": true
+    },
+    {
+      "name": "ロックされた任務に前提となる任務を明示",
+      "ok": true
+    },
+    {
+      "name": "HUDが任務コード・目標内進捗・目的地・距離・操作を表示",
+      "ok": true,
+      "data": {
+        "mission": {
+          "title": "最初の出発",
+          "code": "MISSION 01 — FIRST DEPARTURE",
+          "objective": "最初の遠征ブリーフィングを受ける",
+          "hint": "T / DOCKで接岸し、B / MISSION CONTROLで「受注して追跡」を選びます。",
+          "index": 0,
+          "total": 6,
+          "completed": 0,
+          "objectiveTotal": 6,
+          "destination": "ASTERION STATION",
+          "distance": 78.7200308440636,
+          "action": "Tで接岸。ASTERIONは任務・補給・帰還の拠点です"
+        },
+        "code": "MISSION 01 — FIRST DEPARTURE",
+        "progress": "進行状況 0 / 6",
+        "destination": "目的地 ASTERION STATION",
+        "distance": "残り距離 79 u",
+        "action": "Tで接岸。ASTERIONは任務・補給・帰還の拠点です"
+      }
+    },
+    {
+      "name": "未受注で接岸中のEVAは矛盾する接岸案内を隠して機内帰還を案内",
+      "ok": true,
+      "data": {
+        "mode": "eva",
+        "docked": true,
+        "action": "Yで機内へ帰還 → Bで任務を受注",
+        "staticHintVisible": false
+      }
+    },
+    {
+      "name": "受注後の現在目標と達成済み項目が詳細へ反映",
+      "ok": true
+    },
+    {
+      "name": "進行前の報告に次の必要行動を説明",
+      "ok": true
+    },
+    {
+      "name": "受注後のHUDは現在目標と達成数を更新",
+      "ok": true
+    },
+    {
+      "name": "EVA中の基地操作には接岸ではなく再搭乗を案内",
+      "ok": true
+    },
+    {
+      "name": "EVAのメニューから船外操作へ戻れる",
+      "ok": true
+    },
+    {
+      "name": "従来の探査目標では静的な操作ヒントを維持",
+      "ok": true
+    },
+    {
+      "name": "390×844の目標HUD・通知が計器・タッチ操作と重ならない",
+      "ok": true,
+      "data": {
+        "mission": {
+          "x": 10,
+          "y": 8,
+          "right": 220,
+          "bottom": 161.46875
+        },
+        "status": {
+          "x": 230,
+          "y": 8,
+          "right": 380,
+          "bottom": 85
+        },
+        "context": {
+          "x": 12,
+          "y": 200,
+          "right": 159.546875,
+          "bottom": 236
+        },
+        "ops": {
+          "x": 12,
+          "y": 274,
+          "right": 378,
+          "bottom": 327
+        },
+        "toast": {
+          "x": 12,
+          "y": 242,
+          "right": 222,
+          "bottom": 267
+        },
+        "combat": {
+          "x": 230,
+          "y": 145,
+          "right": 380,
+          "bottom": 257
+        },
+        "fps": {
+          "x": 312.421875,
+          "y": 90,
+          "right": 380,
+          "bottom": 107
+        },
+        "overlap": false,
+        "toastOverlap": false,
+        "progressVisible": true,
+        "action": "DOCKで接岸。ASTERIONは任務・補給・帰還の拠点です",
+        "distance": "残り距離 79 u"
+      }
+    },
+    {
+      "name": "800×360の目標HUD・通知が計器・タッチ操作と重ならない",
+      "ok": true,
+      "data": {
+        "mission": {
+          "x": 10,
+          "y": 8,
+          "right": 260,
+          "bottom": 156.59375
+        },
+        "status": {
+          "x": 640,
+          "y": 8,
+          "right": 790,
+          "bottom": 85
+        },
+        "context": {
+          "x": 180,
+          "y": 308,
+          "right": 350.78125,
+          "bottom": 344
+        },
+        "ops": {
+          "x": 285,
+          "y": 163,
+          "right": 535,
+          "bottom": 210
+        },
+        "toast": {
+          "x": 270,
+          "y": 55,
+          "right": 530,
+          "bottom": 84
+        },
+        "combat": {
+          "x": 640,
+          "y": 108,
+          "right": 790,
+          "bottom": 176
+        },
+        "fps": {
+          "x": 722.421875,
+          "y": 90,
+          "right": 790,
+          "bottom": 107
+        },
+        "overlap": false,
+        "toastOverlap": false,
+        "progressVisible": true,
+        "action": "DOCKで接岸。ASTERIONは任務・補給・帰還の拠点です",
+        "distance": "残り距離 79 u"
+      }
+    },
+    {
+      "name": "モバイルでも6任務と1つの詳細を操作できる",
+      "ok": true
+    },
+    {
+      "name": "モバイルで選んだ任務の詳細へ移動する",
+      "ok": true
+    },
+    {
+      "name": "ページ・コンソールエラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "build": {
+    "version": "0.8.0",
+    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
+    "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+    "uncommittedChanges": true,
+    "builtAt": "2026-10-29T07:21:49.682Z"
+  }
+}

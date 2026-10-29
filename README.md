@@ -1,6 +1,6 @@
-# LYRION — Beyond the Stars · v0.7.1
+# LYRION — Beyond the Stars · v0.8.0
 
-**[公開中の旧版](https://lyrion-lilac.vercel.app)**（今回のv0.7.1は未公開） · [GitHub](https://github.com/sumi468/LYRION)
+**[公開中の旧版](https://lyrion-lilac.vercel.app)**（今回のv0.8.0はローカル検証版） · [GitHub](https://github.com/sumi468/LYRION)
 
 架空のリリオン星系を探検するブラウザ3Dゲーム。母星LYRION PRIMEと軌道基地ASTERIONから旅立ち、接岸・船外活動・科学調査を通じて6つの遠征を進めます。従来の11天体の図鑑、8つの探査ミッション、戦闘・着陸・機体強化も維持しています。TypeScript / Three.js / Vite。外部の画像・音声配信には依存しません。
 
@@ -17,6 +17,17 @@ Node.js **22.12以降**が必要です。この配布物には `dist/` を含め
 Mac / Linux では `node scripts/serve.mjs` を実行し、表示されたURLを開きます（これらのOSでの実機検証は未実施）。
 
 ## 今回の修正
+
+v0.8では既存のゲーム進行を安定させ、ミッション案内と宇宙服を作り直しました。再現手順・原因・影響範囲は[不具合の監査記録](docs/STABILIZATION-AUDIT.md)、実行結果と未検証項目は[今回の検証レポート](docs/STABILIZATION-VALIDATION.md)にまとめています。
+
+- MISSION CONTROLは6任務の一覧と、選択した1任務の詳細を表示。物語・目的地・達成項目・現在の目標・報酬・受注できない理由を確認できます。
+- プレイ中のHUDは任務番号、目標の達成数、実際の目的地までの距離、現在使える操作を表示。接岸・離脱・EVA・報告に合わせて案内が切り替わります。スマホでも案内を隠しません。
+- 帰還支援は障害物を避けて実際のハッチまで移動。EVA・着陸・接岸の操作競合、即時保存、近接した調査対象の選択、壁際の移動とカメラを修正しました。
+- オリジナルのEVAスーツを、人体に沿う布の形状・反射バイザー・金属リング・胸部装備・生命維持バックパック・ホース・グローブ・ブーツで再制作。動きに合わせて関節と姿勢制御噴射を表示します。[構造と出典](docs/ASTRONAUT-SUIT.md)。
+
+開始地点では、正面にLYRION PRIME、その軌道上にASTERION STATIONがあります。**T / DOCKで接岸 → B / 基地で任務を選択 → T / DOCKで離脱 → HUDの青い目的地へ**。船外ではWASDが並進移動、Space / Shiftが上下、Eが調査です。**Y / 帰還でハッチへ戻り、基地へ成果を報告**してください。自由探査と従来の8ミッションは引き続き利用できます。
+
+### v0.7.1から引き継いだ内容
 
 母星の正式IDは **`lyrion-prime`**。MISSION CONTROLはメインメニュー・一時停止・B / 基地から開けます。6遠征の報告報酬は **30 / 40 / 50 / 70 / 90 / 120 DATA**。ASTERIONはTabで選択でき、HUDの誘導と接岸・修理・補給・EVAに対応します。
 
@@ -86,7 +97,7 @@ v0.3の変更は [操縦の更新記録](docs/FLIGHT-UPDATE.md) にあります�
 
 ## 検証結果
 
-v0.7の最新結果は[Homecoming検証レポート](docs/HOMECOMING-VALIDATION.md)を参照してください。以下は比較用に残したv0.6公開時の結果です。
+v0.8の結果は[今回の検証レポート](docs/STABILIZATION-VALIDATION.md)、v0.7の記録は[Homecoming検証レポート](docs/HOMECOMING-VALIDATION.md)を参照してください。以下は比較用に残したv0.6公開時の結果です。
 
 ### v0.6公開時の記録
 
@@ -154,6 +165,8 @@ npm run typecheck
 npm test
 npm run build
 npm run test:e2e
+npm run test:stabilization
+npm run test:gpu:stabilization
 npm run test:polish
 npm run test:gpu
 npm run test:soak

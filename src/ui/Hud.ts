@@ -8,9 +8,14 @@ export class Hud {
 
   private mission = h('div', { class: 'hud-mission' });
   private missionTitle = h('div', { class: 'mission-title' });
+  private missionCode = h('div', { class: 'mission-code' });
   private missionObj = h('div', { class: 'mission-obj' });
   private missionHint = h('div', { class: 'mission-hint' });
   private missionStep = h('div', { class: 'mission-step' });
+  private missionDestination = h('div', { class: 'mission-destination' });
+  private missionDistance = h('div', { class: 'mission-distance' });
+  private missionAction = h('div', { class: 'mission-action' });
+  private missionFill = h('i');
 
   private dataVal = h('span', { class: 'num' }, '0');
   private hullBar = h('div', { class: 'bar-fill' });
@@ -67,11 +72,15 @@ export class Hud {
   constructor(root: HTMLElement) {
     this.enemyLayer.append(...this.enemyLabels);
     this.mission.append(
-      h('div', { class: 'label' }, 'OBJECTIVE'),
+      this.missionCode,
       this.missionTitle,
       this.missionObj,
-      this.missionHint,
       this.missionStep,
+      h('div', { class: 'mission-progress-track' }, this.missionFill),
+      this.missionDestination,
+      this.missionDistance,
+      this.missionAction,
+      this.missionHint,
     );
 
     const status = h(
@@ -185,15 +194,29 @@ export class Hud {
     }
     // ミッション
     if (s.mission) {
+      const progress = s.mission.completed, total = s.mission.objectiveTotal;
+      setText(this.missionCode, s.mission.code ?? `EXPLORATION ${s.mission.index + 1} / ${s.mission.total}`);
       setText(this.missionTitle, s.mission.title);
       setText(this.missionObj, s.mission.objective);
       setText(this.missionHint, s.mission.hint);
-      setText(this.missionStep, `${s.mission.index + 1} / ${s.mission.total}`);
+      this.missionHint.hidden = !!s.mission.action;
+      setText(this.missionStep, progress !== undefined && total !== undefined ? `進行状況 ${progress} / ${total}` : `探査 ${s.mission.index + 1} / ${s.mission.total}`);
+      this.missionFill.style.transform = `scaleX(${progress !== undefined && total ? Math.max(0, Math.min(1, progress / total)) : 0})`;
+      setText(this.missionDestination, s.mission.destination ? `目的地 ${s.mission.destination}` : '');
+      setText(this.missionDistance, s.mission.distance !== undefined && Number.isFinite(s.mission.distance) ? `残り距離 ${fmtDist(Math.max(0, s.mission.distance))} u` : '');
+      setText(this.missionAction, s.mission.action ?? '');
+      this.missionAction.hidden = !s.mission.action;
+      this.missionDestination.hidden = !s.mission.destination;
+      this.missionDistance.hidden = s.mission.distance === undefined || !Number.isFinite(s.mission.distance);
     } else {
+      setText(this.missionCode, 'EXPLORATION COMPLETE');
       setText(this.missionTitle, 'すべての目標を達成');
       setText(this.missionObj, '自由に探索を続けられます');
       setText(this.missionHint, '');
+      this.missionHint.hidden = true;
       setText(this.missionStep, '');
+      this.missionFill.style.transform = 'scaleX(1)';
+      this.missionAction.hidden = this.missionDestination.hidden = this.missionDistance.hidden = true;
     }
 
     // ステータス

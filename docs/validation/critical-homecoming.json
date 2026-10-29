@@ -1,15 +1,15 @@
 {
-  "timestamp": "2026-10-28T14:03:14.449Z",
+  "timestamp": "2026-10-29T07:23:49.324Z",
   "results": [
     {
       "name": "実際に配信したビルドと作業ソースの識別情報が一致",
       "ok": true,
       "data": {
-        "version": "0.7.1",
-        "sourceRevision": "d5e2c89619100feb44eb442796f1eb3b1963ae57",
-        "sourceHash": "2ebfd73ed1970cc59fb27d6a0c76831c0335a5d561072ec2af7b682ac169b349",
-        "uncommittedChanges": false,
-        "builtAt": "2026-10-28T14:02:25.880Z"
+        "version": "0.8.0",
+        "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
+        "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+        "uncommittedChanges": true,
+        "builtAt": "2026-10-29T07:21:49.682Z"
       }
     },
     {
@@ -100,10 +100,10 @@
   ],
   "errors": [],
   "build": {
-    "version": "0.7.1",
-    "sourceRevision": "d5e2c89619100feb44eb442796f1eb3b1963ae57",
-    "sourceHash": "2ebfd73ed1970cc59fb27d6a0c76831c0335a5d561072ec2af7b682ac169b349",
-    "uncommittedChanges": false,
-    "builtAt": "2026-10-28T14:02:25.880Z"
+    "version": "0.8.0",
+    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
+    "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+    "uncommittedChanges": true,
+    "builtAt": "2026-10-29T07:21:49.682Z"
   }
 }

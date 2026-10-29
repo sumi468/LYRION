@@ -77,22 +77,25 @@ try {
  page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
  await page.addInitScript(()=>localStorage.setItem('lyrion.settings.v1',JSON.stringify({quality:'high',difficulty:'off',audioEnabled:false})));
  await page.goto(server.url);await page.waitForFunction(()=>window.__lyrion?.phase==='menu',null,{timeout:120000});
+ report.build=await page.evaluate(()=>window.__lyrion.buildInfo);
  report.graphics=await graphicsInfo(page);if(!report.graphics.hardware)throw new Error('Hardware GPU required');
  await page.evaluate(()=>{const g=window.__lyrion;g.input.requestLock=()=>{};g.input.locked=true;g.startNew();});
- for(const scene of ['normal-exploration','homeworld-orbit','asterion','eva','combat','low-mobile']) {
+ for(const scene of ['normal-exploration','homeworld-orbit','asterion','eva','combat','low-mobile','low-mobile-eva']) {
    if(scene==='normal-exploration')await page.evaluate(()=>{const g=window.__lyrion;g.debugTeleport('aurelion',800);g.setTarget('aurelion');});
    if(scene==='homeworld-orbit')await page.evaluate(()=>{const g=window.__lyrion;g.debugTeleport('lyrion-prime',650);g.setTarget('lyrion-prime');});
    if(['asterion','eva','low-mobile'].includes(scene))await page.evaluate(()=>{const g=window.__lyrion;g.home.eva.reset();g.home.docking.mode='flight';g.home.docking.restore(true,g.state,g.home.frames.asterion);g.home.measure(g.state);g.syncControlMode();g.chase.snap();g.setTarget(null);});
    if(scene==='eva')await page.evaluate(()=>{const g=window.__lyrion;g.handlePlayAction('eva');g.home.eva.localPosition.set(-10,7,25);g.home.eva.sync(g.state,g.home.frames.asterion);});
    if(scene==='combat')await page.evaluate(()=>{const g=window.__lyrion;g.debugTeleport('cindra',1600);g.applySettings({...g.settings,difficulty:'hard'});g.combat.spawn(g.state,'hard',g.worlds);g.state.hull=100;g.state.shield=60;});
    if(scene==='low-mobile'){await page.setViewportSize({width:390,height:844});await page.evaluate(async()=>{const g=window.__lyrion;g.applySettings({...g.settings,quality:'low',difficulty:'off'});await g.texturesReady;g.input.touchMode=true;g.ev.emit('mode',g.home.mode);document.body.classList.add('touch');});}
+   if(scene==='low-mobile-eva')await page.evaluate(()=>{const g=window.__lyrion;g.handlePlayAction('eva');g.home.eva.localPosition.set(-10,7,25);g.home.eva.sync(g.state,g.home.frames.asterion);});
    await sleep(1500);
-   const data={scene,quality:scene==='low-mobile'?'low':'high',...await sample(page,4000)};data.timing=await gpuTiming(page);report.samples.push(data);
+   const data={scene,quality:scene.startsWith('low-mobile')?'low':'high',...await sample(page,4000)};data.timing=await gpuTiming(page);report.samples.push(data);
    console.log(`${scene}: ${data.fps.toFixed(1)} rAF/s, p95 ${data.p95Ms.toFixed(1)}ms, GPU ${data.timing.gpu?.meanMs?.toFixed(3)}ms, calls ${data.drawCalls}`);
    await page.screenshot({path:join(SHOTS,`85-performance-${scene}.png`)});
  }
- const baseline=JSON.parse(readFileSync(new URL('../../docs/validation/homecoming-baseline.json',import.meta.url),'utf-8'));
- report.comparison={baselineTimestamp:baseline.timestamp,before:baseline.samples.find(s=>s.quality==='high'&&s.scene==='aurelion'),after:report.samples[0],note:'Same high-quality Aurelion viewpoint. Headless rAF frequency is not display FPS.'};
+ const baseline=JSON.parse(readFileSync(new URL(`../../docs/validation/${process.env.GPU_BASELINE||'homecoming-baseline.json'}`,import.meta.url),'utf-8'));
+ report.comparison={baselineTimestamp:baseline.timestamp,before:baseline.samples.find(s=>s.quality==='high'&&['aurelion','normal-exploration'].includes(s.scene)),after:report.samples[0],note:'Same high-quality Aurelion viewpoint. Headless rAF frequency is not display FPS.'};
+ report.sceneComparison=report.samples.map(after=>({scene:after.scene,before:baseline.samples.find(s=>s.scene===after.scene&&s.quality===after.quality)??null,after}));
  if(errors.length)throw new Error(errors.join(' | '));
-}catch(e){report.failure=String(e);console.error(e);}finally{writeFileSync(new URL(`../../docs/validation/${process.env.HEADED==='1'?'homecoming-display':'homecoming-gpu'}.json`,import.meta.url),JSON.stringify(report,null,2));await browser.close();server.close();}
+}catch(e){report.failure=String(e);console.error(e);}finally{writeFileSync(new URL(`../../docs/validation/${process.env.GPU_REPORT_PREFIX||'homecoming'}-${process.env.HEADED==='1'?'display':'gpu'}.json`,import.meta.url),JSON.stringify(report,null,2));await browser.close();server.close();}
 if(report.failure)process.exitCode=1;

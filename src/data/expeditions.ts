@@ -10,7 +10,7 @@ export const EXPEDITIONS: readonly ExpeditionDef[] = [
     briefing: 'ここが私たちの母星、リリオン・プライム。遠征の第一歩は、帰る場所を覚えることです。基地から外側の航行標へ向かい、相対速度を落としてから帰還してください。自由な探索はいつでも続けられます。',
     objectives: [
       { id: 'departure-brief', kind: 'brief', text: '最初の遠征ブリーフィングを受ける', hint: 'T / DOCKで接岸し、B / MISSION CONTROLで「受注して追跡」を選びます。', target: 'asterion' },
-      { id: 'departure-clear', kind: 'depart', text: '基地の外へ出航する', hint: '係留中ならTで離脱。Wで推進し、基地から200u離れてください。', target: 'nav' },
+      { id: 'departure-clear', kind: 'depart', text: '基地の外へ出航する', hint: 'Tで離脱したらSで後退。青い航行標へ機首を向け、Wで推進してください。', target: 'nav' },
       { id: 'departure-nav', kind: 'approach', text: '近傍の航行標へ向かう', hint: '青い航行標を追い、55u以内へ接近してください。', target: 'nav', range: 55 },
       { id: 'departure-stable', kind: 'stabilize', text: '航行標で相対速度8u/s以下を2秒保つ', hint: 'X / BRAKEで減速。飛行アシストONなら、その場に留まれます。', target: 'nav' },
       { id: 'departure-return', kind: 'dock', text: 'アステリオンへ帰還しドッキングする', hint: '外側の接舷灯へ接近。相対速度18u/s以下でT / DOCKを押します。', target: 'asterion' },

@@ -380,3 +380,86 @@ body.touch .toast-title { display:-webkit-box; -webkit-box-orient:vertical; -web
   body.touch .hud-operations { bottom:170px; left:180px; width:260px; padding:4px 8px; }
   .tc-context { left:180px; top:auto; bottom:16px; }.tc-eva { gap:5px; grid-template-columns:repeat(3,58px); }
 }
+
+/* Mission stabilization: compact overview and one focused briefing. */
+.operations-body .operations-intro { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px 20px; }
+.operations-home { display:flex; flex-direction:column; gap:4px; }
+.operations-home>span { color:#84a6b4; font-size:10px; letter-spacing:.16em; }
+.operations-home>strong { font-size:17px; letter-spacing:.08em; color:#e2f1f4; }
+.operations-body .campaign-name { margin:0; align-self:center; font-size:10px; }
+.operations-current { grid-column:1/-1; padding:10px 13px; background:#102732; border-left:2px solid #77d1da; }
+.operations-current>span { color:#8dc3ca; font-size:11px; margin-right:14px; }
+.operations-current>strong { font-size:13px; }.operations-current p { margin:4px 0 0; font-size:12px; color:#bed0d5; }
+.operations-body .operations-actions { grid-column:1/-1; gap:8px; margin-top:4px; }
+.operations-body .operations-actions .btn,.station-service-actions .btn { min-width:130px; padding:10px 14px; font-size:11px; }
+.homecoming-flow { display:flex; flex-wrap:wrap; gap:8px 15px; margin:16px 0; padding:9px 12px; border:1px solid #203d48; background:#09151c; }
+.homecoming-flow>span { display:flex; align-items:center; gap:6px; font-size:10px; color:#9db4bf; }
+.homecoming-flow b { border:1px solid #3e6471; border-radius:50%; width:18px; height:18px; text-align:center; font-weight:500; color:#b5d5dc; }
+.station-services { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px 15px; padding:12px 14px; background:#0c1b25; border:1px solid #29454e; }
+.station-services h3 { margin:0 0 3px; font-size:13px; }.station-services p { font-size:11px; color:#9fb7c0; line-height:1.6; margin:0; }
+.station-service-actions { display:flex; gap:8px; align-items:flex-start; }.station-services .report-reason { grid-column:1/-1; color:#b6cace; }
+.mission-browser { display:grid; grid-template-columns:minmax(240px,.8fr) minmax(0,1.2fr); gap:20px; margin:16px 0; align-items:start; }
+.mission-overview>h2 { font-size:17px; margin:0; }.mission-selection-label { font-size:10px; color:#8caab6; margin:5px 0 12px; }
+.mission-overview .expedition-cards { display:grid; grid-template-columns:1fr; gap:9px; margin:0; }
+.mission-overview .expedition-card { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:2px 8px; padding:10px 12px; background:#0b1922; border:1px solid #263f4b; }
+.mission-overview .expedition-card.selected { background:#0d2430; border-color:#64b9cd; }
+.mission-overview .expedition-card.active { box-shadow:inset 3px 0 #5bb9ba; }
+.mission-overview .expedition-card .label { align-self:center; font-size:8px; letter-spacing:.04em; color:#8aacbb; }
+.mission-status { display:inline-block; margin:0; font-size:8px; color:#9ac9ce; text-align:right; }.mission-status.locked { color:#a8a0a1; }.mission-status.complete { color:#92d7ad; }
+.mission-overview .expedition-card h3 { grid-column:1/-1; font-size:15px; margin:1px 0 3px; }.expedition-card h3 a { color:#e3edf3; text-decoration:none; }.expedition-card h3 a:hover { color:#84e2e2; text-decoration:underline; }
+.mission-card-summary { display:none; }.mission-card-meta { display:flex; align-self:center; flex-wrap:wrap; gap:3px 10px; font-size:10px; color:#9eafb8; }.mission-card-meta strong { color:#d0bb88; font-weight:500; }
+.mission-overview .expedition-card .exp-location { display:none; }
+.mission-overview .expedition-card .btn { padding:6px 9px; min-height:30px; font-size:9px; width:auto; }
+.mission-overview .expedition-card .mission-access-reason { grid-column:1/-1; font-size:9px; line-height:1.5; margin:3px 0 0; color:#8fa9b3; }
+.mission-detail { position:sticky; top:0; background:#0a1720; border:1px solid #365967; padding:19px; scroll-margin-top:15px; }
+.mission-detail:focus { outline:1px solid #76ccd3; outline-offset:2px; }.mission-detail-kicker { font-size:10px; color:#7ec7d0; letter-spacing:.12em; }
+.mission-detail>h2 { margin:7px 0 10px; font-size:23px; }.mission-story { font-size:12px; line-height:1.85; color:#afc3cc; margin:0 0 16px; }
+.mission-detail-meta { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:12px 0; border-top:1px solid #25414b; border-bottom:1px solid #25414b; }
+.mission-detail-meta>div:first-child { grid-column:1/-1; }.mission-detail-meta span,.mission-next>span { display:block; color:#789aa7; font-size:10px; }.mission-detail-meta strong { display:block; font-weight:500; font-size:12px; color:#d3dfe6; }
+.mission-next { margin:16px 0; border-left:2px solid #7bc5c5; padding:9px 11px; background:#112a34; }.mission-next>strong { display:block; font-size:14px; line-height:1.65; margin-top:3px; }.mission-next>p { font-size:11px; line-height:1.65; color:#98b5bf; margin:5px 0 0; }
+.mission-checklist-title { font-size:12px; margin:14px 0 7px; }.mission-checklist { list-style:none; padding:0; margin:0; display:grid; gap:6px; }
+.mission-checklist li { display:flex; align-items:start; gap:9px; padding:7px 9px; background:#0b1e28; color:#8ba1ac; }.mission-checklist li.current { background:#16343f; color:#e2edf1; }.mission-checklist li.done { color:#7fc3ac; background:#102822; }
+.objective-check { min-width:14px; margin-top:5px; }.objective-state { display:block; font-size:9px; opacity:.8; }.mission-checklist li strong { font-size:11px; font-weight:500; line-height:1.55; }
+.operations-help,.operations-archive { padding:12px 0; border-top:1px solid #25414b; color:#9eb8c4; font-size:12px; }.operations-help summary,.operations-archive summary { cursor:pointer; }.operations-help p { font-size:11px; line-height:1.8; }.operations-archive .research-log { margin-top:12px; }
+.operations-tracking { margin-top:12px; }.operations-tracking .btn { font-size:11px; padding:9px 14px; }
+
+/* Current objective stays legible independently from transient notifications. */
+.hud-mission { width:min(350px,39vw); background:linear-gradient(100deg,rgba(5,17,27,.92),rgba(5,17,27,.6)); }
+.mission-code { font-family:'Oxanium','M PLUS 1',sans-serif; color:#83c7d4; font-size:10px; letter-spacing:.1em; line-height:1.45; }
+.mission-title { margin-top:4px; font-size:14px; }.mission-obj { font-size:13px; line-height:1.55; color:#e0edf3; }
+.mission-step { margin-top:7px; letter-spacing:.05em; font-size:10px; color:#9ebdc9; }
+.mission-progress-track { margin:4px 0 7px; height:2px; background:#263e4a; }.mission-progress-track i { display:block; height:100%; background:#72cbc6; transform-origin:left; transform:scaleX(0); }
+.mission-destination { color:#9ab5c2; font-size:10px; line-height:1.5; }.mission-distance { color:#cee5ed; font-size:11px; margin-top:3px; }
+.mission-action { border-left:2px solid #8dd4bd; margin-top:7px; padding:4px 7px; background:#173c3d; color:#baefe0; font-size:11px; line-height:1.5; }
+.mission-hint { font-size:10px; margin-top:5px; line-height:1.55; }
+@media(max-width:800px) {
+  .operations-body .operations-intro { grid-template-columns:1fr; }.operations-body .campaign-name { font-size:9px; }
+  .station-services { grid-template-columns:1fr; }.station-service-actions { flex-wrap:wrap; }
+  .mission-browser { grid-template-columns:1fr; gap:16px; }.mission-detail { position:static; padding:15px; }
+  .mission-overview .expedition-cards { grid-template-columns:repeat(2,minmax(0,1fr)); }.mission-overview .expedition-card { padding:10px; }
+  .mission-overview .expedition-card h3 { font-size:13px; }.mission-overview .expedition-card .label { font-size:8px; }
+  .mission-overview .expedition-card { grid-template-columns:1fr; }.mission-overview .mission-status { text-align:left; }.mission-overview .expedition-card .btn { margin-top:3px; }.mission-overview .mission-access-reason { min-height:40px; }
+}
+@media(max-width:560px) and (orientation:portrait) {
+  body.touch .hud-mission { width:210px; max-width:calc(100vw - 180px); padding:7px 9px; }
+  body.touch .mission-code { font-size:8px; letter-spacing:.04em; }
+  body.touch .mission-title { font-size:12px; margin-top:3px; }
+  body.touch .mission-obj { font-size:10px; line-height:1.45; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+  body.touch .mission-step { display:block; margin-top:5px; font-size:9px; }
+  body.touch .mission-progress-track { margin:3px 0 5px; }
+  body.touch .mission-destination { font-size:8px; line-height:1.4; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
+  body.touch .mission-distance { font-size:9px; margin-top:2px; }
+  body.touch .mission-action { font-size:9px; margin-top:4px; padding:3px 5px; line-height:1.4; }
+  body.touch .mission-hint { display:none; }
+  body.touch .toasts { left:12px; top:242px; width:210px; max-width:calc(100vw - 180px); }
+  body.touch .toast { padding:4px 8px; max-width:100%; }
+  body.touch .toast-title { -webkit-line-clamp:1; font-size:10px; line-height:1.5; }
+  body.touch .toast-text { display:none; }
+}
+@media(max-height:500px) {
+  body.touch .hud-mission { width:250px; padding:6px 9px; }.mission-code { font-size:8px; }.mission-title { font-size:11px; }.mission-obj { font-size:10px; line-height:1.4; }
+  body.touch .mission-step { display:block; font-size:9px; margin-top:4px; }.mission-progress-track { margin:2px 0 4px; }
+  body.touch .mission-destination { font-size:8px; }.mission-distance { font-size:9px; }.mission-action { font-size:9px; padding:2px 5px; margin-top:4px; }
+  body.touch .hud-operations { left:285px; bottom:150px; width:250px; }
+}
+.operations-guidance-reason { grid-column:1/-1; margin:0; color:#88a8b5; font-size:10px; line-height:1.6; }.mission-selection-help { color:#88a8b5; font-size:10px; margin:4px 0 12px; }

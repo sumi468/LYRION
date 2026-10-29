@@ -54,6 +54,8 @@ import { FrameStats } from '../systems/frameStats';
 import { computeShipStats, purchaseUpgrade, upgradeCost, type ShipStats } from '../systems/upgrades';
 import { Emitter } from './events';
 import { BUILD_INFO } from './build';
+import { destinationLabel, missionProgress } from '../systems/missionPresentation';
+import { guidanceAction } from '../systems/guidance';
 import { createNewState, HULL_MAX, type CameraMode, type GameState } from './state';
 import type { HudSnapshot, MarkerInfo, Toast } from './hud';
 
@@ -140,6 +142,8 @@ export class Game {
   private landingView = new LandingView();
   private sunLight = new DirectionalLight(0xfff0d8, 3);
   private ambient = new AmbientLight(0x56657f, 1.0);
+  /** Broad, shadowless bounce from the apparent disk of a nearby world. */
+  private planetLight = new DirectionalLight(0xb5c9e5, 0);
 
   private origin = new Vector3();
   private positions = createPositionTable(BODY_DEFS);
@@ -148,7 +152,9 @@ export class Game {
   private worlds = BODY_DEFS.filter(d=>d.radius>0).map(d=>({pos:this.positions[d.id],radius:d.radius}));
   private refVel = new Vector3();
   private camWorld = new Vector3();
+  private evaCameraFocus = new Vector3();
   private flightInput = emptyInput();
+  private readonly idleFlightInput = emptyInput();
   private attitude = createAttitude();
   private displayQuat = new Quaternion();
 
@@ -216,8 +222,8 @@ export class Game {
 
     // --- シーン構築(重いテクスチャのベイクはフレームをまたいで分散し、進捗を通知) ---
     this.scene.add(this.combatView.group,this.landingView.group,this.expeditionView.group);
-    this.scene.add(this.sky.group, this.dust.object, this.shipModel.group, this.sunLight, this.ambient);
-    this.scene.add(this.sunLight.target);
+    this.scene.add(this.sky.group, this.dust.object, this.shipModel.group, this.sunLight, this.ambient, this.planetLight);
+    this.scene.add(this.sunLight.target, this.planetLight.target);
     this.ev.emit('loading', { progress: 0.05, label: '宇宙を生成しています' });
     await nextFrame();
     await this.sky.bakeAsync(this.baker, this.isMobile ? 1024 : 2048,
@@ -424,6 +430,7 @@ export class Game {
   saveNow(): boolean {
     const ok = this.phase === 'playing' || this.phase === 'paused' || (this.phase === 'menu' && this.menuHasSave);
     if (!ok) return false;
+    this.home.persist(this.state);
     return this.saves.save(this.state);
   }
 
@@ -431,21 +438,32 @@ export class Game {
   handlePlayAction(a: ActionName): void {
     // pause / upgrades / log は UI が処理する。ここではプレイ中の操作のみ扱う
     if (this.phase !== 'playing') return;
-    if (a==='dock') { if(!this.home.eva.active&&!this.state.landed)this.notify(this.home.docking.request(this.state,this.home.frames.asterion)); this.syncControlMode(); this.saveNow(); return; }
+    if(a==='dock'){
+      if(this.home.eva.active){this.notify('船外活動中は接岸を操作できません。Y / 帰還でLX-07の機内へ戻ってください');return;}
+      if(this.landing.mode!=='flight'){this.notify('着陸・降下中は接岸できません。G / LANDで離陸または降下を中止してください');return;}
+      this.notify(this.home.docking.request(this.state,this.home.frames.asterion));this.home.persist(this.state);this.syncControlMode();this.saveNow();return;
+    }
     if (a==='eva') {
       const before=this.home.eva.active;
+      if(!before&&this.landing.mode!=='flight'){this.notify('着陸・降下中は船外に出られません。G / LANDで離陸または降下を中止してください');return;}
       if(!before&&!this.home.protected&&this.combat.count>0){this.notify('交戦中は船外に出られません。敵から離脱するか、基地へ帰還してください');return;}
       const message=this.home.toggleEva(this.state);
       this.notify(this.input.touchMode&&!before&&this.home.eva.active?'船外活動開始。左スティックで移動、画面ドラッグで向き、上昇・下降・調査・帰還ボタンを使用します':message);
       if(before!==this.home.eva.active){this.syncControlMode();this.combat.reset(15);cancelScan(this.scan);resetAttitude(this.attitude);this.chase.snap();this.saveNow();}return;
     }
-    if (a==='return') { this.home.eva.returnToShip();return; }
+    if(a==='return'){this.notify(this.home.requestReturn());return;}
     if (a==='investigate') { this.notify(this.home.investigate(this.state));return; }
-    if (this.home.eva.active) { if(a==='assist')this.home.eva.stabilized=!this.home.eva.stabilized; if(a==='camera')this.setCameraMode(this.state.cameraMode==='third'?'first':'third');return; }
-    if(this.home.docking.mode!=='flight' && a!=='camera' && a!=='target' && a!=='scan')return;
+    if(this.home.eva.active){
+      if(a==='assist'){this.home.eva.stabilized=!this.home.eva.stabilized;this.notify(`宇宙服の姿勢安定 ${this.home.eva.stabilized?'ON':'OFF'}`);}
+      else if(a==='camera')this.setCameraMode(this.state.cameraMode==='third'?'first':'third');
+      else this.notify('この操作は機内で使用します。船外はE / 調査、Y / 帰還、H / 搭乗です');
+      return;
+    }
+    if(this.home.docking.mode!=='flight' && a!=='camera' && a!=='target' && a!=='scan'){this.notify(this.home.mode==='docked'?'係留中は推進・着陸・回避を操作できません。T / DOCKで離脱してください':'接岸・離脱支援中です。接岸を取り消す操作はT / DOCKです');return;}
     switch (a) {
       case 'dodge':
-        if(this.landing.mode==='flight'&&!this.combat.tryDodge(this.state))this.ev.emit('toast',{kind:'info',title:'回避ロールは冷却とエネルギー18が必要です'});
+        if(this.landing.mode!=='flight')this.notify('着陸・降下中は回避できません。G / LANDで離陸または降下を中止してください');
+        else if(!this.combat.tryDodge(this.state))this.ev.emit('toast',{kind:'info',title:'回避ロールは冷却とエネルギー18が必要です'});
         break;
       case 'land':
         this.toggleLanding();
@@ -507,6 +525,7 @@ export class Game {
 
   toggleLanding(): void {
     if(this.phase!=='playing')return;
+    if(this.home.eva.active||this.home.docking.mode!=='flight'){this.notify('着陸装置は機内で飛行中に使用します。船外から戻り、基地の係留を解除してください');return;}
     const before=this.landing.mode;
     const message=this.landing.request(this.state,this.positions,this.velocities);
     if(this.landing.mode!==before){resetAttitude(this.attitude);cancelScan(this.scan);this.combat.reset(15);this.chase.snap();this.saveNow();}
@@ -709,7 +728,7 @@ export class Game {
 
     // --- 入力と飛行 ---
     const evaActive=this.home.eva.active;
-    const input = evaActive ? Object.assign(this.flightInput,emptyInput()) : this.input.poll(dt, this.flightInput);
+    const input = evaActive ? Object.assign(this.flightInput,this.idleFlightInput) : this.input.poll(dt, this.flightInput);
     if(evaActive)this.input.pollEva(dt,this.evaInput);
     this.updateReferenceFrame(dt);
 
@@ -983,10 +1002,11 @@ export class Game {
       camera.up.set(0, 1, 0);
       camera.lookAt(_v2);
     } else if(eva.active) {
-      _v1.set(0,.7,s.cameraMode==='first'?.12:3.8).applyQuaternion(eva.rotation);
+      _v1.set(s.cameraMode==='first'?0:.72,s.cameraMode==='first'?.74:.88,s.cameraMode==='first'?-.12:4.5).applyQuaternion(eva.rotation);
       this.camWorld.copy(eva.position).add(_v1);
-      clipCameraToBoxes(eva.position,this.camWorld,this.home.frames.asterion,STATION_SOLIDS);
-      clipCameraToBoxes(eva.position,this.camWorld,this.home.shipFrame,SHIP_SOLIDS,.2);
+      this.evaCameraFocus.copy(eva.position).add(_v1.set(0,.72,0).applyQuaternion(eva.rotation));
+      clipCameraToBoxes(this.evaCameraFocus,this.camWorld,this.home.frames.asterion,STATION_SOLIDS);
+      clipCameraToBoxes(this.evaCameraFocus,this.camWorld,this.home.shipFrame,SHIP_SOLIDS,.3);
       camera.quaternion.copy(eva.rotation);camera.position.copy(this.camWorld).sub(this.origin);
     } else {
       const speedFrac = this.relSpeed / this.stats.maxSpeed;
@@ -997,6 +1017,7 @@ export class Game {
       }
       camera.position.copy(this.camWorld).sub(this.origin);
     }
+    const near=eva.active ? .06 : .6;if(camera.near!==near){camera.near=near;camera.updateProjectionMatrix();}
     camera.updateMatrixWorld();
 
     // 船
@@ -1010,7 +1031,7 @@ export class Game {
     if(this.landing.anchor){this.landingView.fitSurface(BODY_BY_ID[this.landing.anchor.bodyId].radius);this.landingView.group.position.copy(this.landing.surface).sub(this.origin);this.landingView.group.quaternion.copy(this.landing.quaternion);}
     this.shipModel.setHullVisible(eva.active || this.phase === 'menu' || this.chase.firstPersonAmount < 0.85);
     this.expeditionView.update(this.home,s.homecoming,this.origin,this.camWorld,s.time,this.profile);
-    this.expeditionView.astronaut.visible=eva.active&&s.cameraMode!=='first';
+    this.expeditionView.astronaut.visible=this.expeditionView.astronautModel.visualActive&&s.cameraMode!=='first';
 
     // 恒星
     this.sun.update(this.positions[STAR_ID], this.origin, camera, visualTime);
@@ -1022,6 +1043,21 @@ export class Game {
     _v1.multiplyScalar(1 / Math.max(sunDist, 1e-3));
     this.sunLight.position.copy(_v1).multiplyScalar(100);
     this.sunLight.intensity = sunIntensity(sunDist) * 1.1;
+
+    // Nearby illuminated worlds fill the otherwise black pressure garment.
+    // This is world-space lighting in normal gameplay, independent of the
+    // review camera, with no shadow map, texture bake, or frame allocation.
+    const focus=eva.active ? eva.position : s.pos;
+    let bounce=0;
+    for(const body of BODY_DEFS){
+      if(body.radius<=0||body.kind==='star'||body.kind==='anomaly')continue;
+      const p=this.positions[body.id],distanceSq=Math.max(body.radius**2,p.distanceToSquared(focus));
+      _v1.copy(focus).sub(p).normalize();_v2.copy(this.positions[STAR_ID]).sub(p).normalize();
+      const phase=.5+.5*_v1.dot(_v2);
+      const amount=1.4*Math.min(1,4*body.radius**2/distanceSq)*phase;
+      if(amount>bounce){bounce=amount;this.planetLight.position.copy(_v1).multiplyScalar(-100);}
+    }
+    this.planetLight.intensity=bounce;
 
     const ctx: ViewContext = { origin: this.origin, camera, sunPos, time: visualTime, profile: this.profile };
     for (const [id, v] of this.views) v.update(ctx, this.positions[id]);
@@ -1143,11 +1179,13 @@ export class Game {
   snapshot(): HudSnapshot {
     const s = this.state;
     const mission = currentMission(s.missionIndex);
+    const expedition=s.homecoming.tracked?activeExpedition(s.homecoming):null;
+    const objective=expedition?currentObjective(s.homecoming):null;
     const def = this.targetId ? BODY_BY_ID[this.targetId] : null;
     const markers: MarkerInfo[] = [];
     let target: HudSnapshot['target'] = null;
     const stationTarget=this.targetId===STATION_ID?{name:'ASTERION STATION',distance:this.home.stationDistance,relativeSpeed:this.home.docking.relativeSpeed,mode:this.home.mode}:null;
-    if(stationTarget){const marker=this.marker('target',STATION_ID);if(marker)markers.push(marker);}
+    if(stationTarget&&objective?.kind!=='dock'){const marker=this.marker('target',STATION_ID);if(marker)markers.push(marker);}
 
     if (def && this.phase !== 'menu') {
       const m = this.marker('target', def.id);
@@ -1172,10 +1210,9 @@ export class Game {
       }
     }
 
-    const objective=s.homecoming.tracked?currentObjective(s.homecoming):null;
     const goalId=objective?.target??(objective?.kind==='report'?'asterion':null);
-    const goal=goalId?(this.home.points[goalId]??this.positions[goalId]??(goalId==='deep'?this.home.frames.deep.position:null)):null;
-    if(goal&&goalId&&goalId!==this.targetId){const p={x:0,y:0,behind:false};this.project(goal,p);const w=window.innerWidth,h=window.innerHeight;
+    const goal=objective?.kind==='dock'?this.home.points.dock:goalId?(this.home.points[goalId]??this.positions[goalId]??(goalId==='deep'?this.home.frames.deep.position:null)):null;
+    if(goal&&goalId&&(goalId!==this.targetId||objective?.kind==='dock')){const p={x:0,y:0,behind:false};this.project(goal,p);const w=window.innerWidth,h=window.innerHeight;
       markers.push({kind:'guide',id:`exp-${goalId}`,label:INVESTIGATION_BY_ID[goalId]?.name??(goalId==='asterion'?'ASTERION':goalId==='nav'?'航法ウェイポイント':BODY_BY_ID[goalId]?.nameJa??'遠方の信号'),dist:goal.distanceTo(this.home.eva.active?this.home.eva.position:s.pos),x:Math.max(40,Math.min(w-40,p.x)),y:Math.max(130,Math.min(h-190,p.y)),onScreen:!p.behind&&p.x>40&&p.x<w-40&&p.y>130&&p.y<h-190,angle:Math.atan2(p.y-h/2,p.x-w/2),unknown:false,scanned:false});}
     // 方位(黄道面での向き)とピッチ
     _fwd.set(0, 0, -1).applyQuaternion(s.quat);
@@ -1219,8 +1256,8 @@ export class Game {
       camera: s.cameraMode,
       locked: this.input.locked || this.input.touchMode,
       operations: this.operationsSnapshot(),
-      mission: this.state.homecoming.tracked&&activeExpedition(s.homecoming)
-        ? {title:activeExpedition(s.homecoming)!.title,objective:currentObjective(s.homecoming)?.text??'遠征完了。B / 基地で次の遠征を選択',hint:currentObjective(s.homecoming)?.hint??'記録と発見を遠征ボードで確認',index:EXPEDITIONS.indexOf(activeExpedition(s.homecoming)!),total:EXPEDITIONS.length}
+      mission: expedition
+        ? {title:expedition.title,code:`MISSION ${expedition.number} — ${expedition.codeName}`,objective:objective?.text??'遠征完了。基地で次の任務を選択',hint:objective?.hint??'自由探査も続けられます',index:EXPEDITIONS.indexOf(expedition),total:EXPEDITIONS.length,...this.expeditionGuidance(expedition)}
         : mission
         ? { title: mission.title, objective: mission.objective, hint: mission.hint, index: s.missionIndex, total: MISSIONS.length }
         : null,
@@ -1235,6 +1272,13 @@ export class Game {
       nearest: this.nearest,
       warning: this.warning,
     };
+  }
+
+  private expeditionGuidance(expedition: typeof EXPEDITIONS[number]): Pick<NonNullable<HudSnapshot['mission']>,'completed'|'objectiveTotal'|'destination'|'distance'|'action'> {
+    const s=this.state,h=this.home,progress=missionProgress(expedition,s.homecoming),o=progress.next;
+    const distance=o?.target==='asterion'?h.docking.distance:o?.target&&this.home.distances[o.target]!==undefined?this.home.distances[o.target]:o?.target&&BODY_BY_ID[o.target]?Math.max(0,this.surfaceDistance(BODY_BY_ID[o.target])):undefined;
+    const reason=o?.kind==='dock'&&h.mode==='flight'?h.docking.availability(s,h.frames.asterion):null;
+    return {completed:progress.completed,objectiveTotal:progress.total,destination:o?.kind==='dock'?'ASTERION STATION / 接岸誘導灯':destinationLabel(o?.target),distance,action:guidanceAction(o,s.homecoming,{mode:h.mode,landing:this.landing.mode,distance:distance??Infinity,relativeSpeed:h.docking.relativeSpeed,dockReason:reason,investigationId:h.investigations.activeId,workProgress:h.investigations.progress,touch:this.input.touchMode})};
   }
 
   private operationsSnapshot(): HudSnapshot['operations'] {
@@ -1262,6 +1306,7 @@ export class Game {
       this.state.vel.set(0, 0, 0);
       this.state.quat.setFromUnitVectors(_fwd.set(0, 0, -1), _v1.set(0, -1, 0));
       this.origin.copy(this.state.pos);
+      this.home.measure(this.state);
       this.chase.snap();
       return;
     }
@@ -1275,6 +1320,7 @@ export class Game {
     this.state.vel.copy(this.velocities[id]);
     this.state.quat.setFromUnitVectors(_fwd.set(0, 0, -1), _v3.copy(c).sub(this.state.pos).normalize());
     this.origin.copy(this.state.pos);
+    this.home.measure(this.state);
     this.chase.snap();
   }
 

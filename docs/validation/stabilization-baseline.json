@@ -1,0 +1,143 @@
+{
+  "timestamp": "2026-10-28T22:18:17.288Z",
+  "source": "v0.7.1 baseline dist; no product edits",
+  "cases": [
+    {
+      "id": "return-assist-intermediate-waypoint",
+      "reproduced": true,
+      "recoveredAt": {
+        "afterSeconds": 3.35,
+        "preBoardHatchDistance": 103.61659438771869
+      },
+      "finalMode": "docked"
+    },
+    {
+      "id": "landing-approach-permits-eva",
+      "reproduced": true,
+      "before": {
+        "landing": "approach",
+        "landed": null
+      },
+      "immediate": {
+        "eva": true,
+        "landing": "approach"
+      },
+      "after": {
+        "eva": true,
+        "landing": "landed",
+        "landed": {
+          "bodyId": "cindra",
+          "normal": [
+            -0.8602448614602828,
+            0.09599555129129883,
+            -0.5007630502178236
+          ]
+        },
+        "oxygen": 354.99999999999886
+      }
+    },
+    {
+      "id": "undock-save-has-stale-docked-state",
+      "reproduced": true,
+      "mode": "undocking",
+      "savedDocked": true,
+      "liveDocked": true,
+      "restoredMode": "docked"
+    },
+    {
+      "id": "flying-ship-return-assist-hardcoded-waypoint",
+      "reproduced": true,
+      "recovered": {
+        "seconds": 12.5,
+        "preBoardHatchDistance": 110.566497393866
+      },
+      "frame": "asterion",
+      "parkedLocal": [
+        99.99999999999983,
+        8.999999999999982,
+        -79.99999999999963
+      ]
+    },
+    {
+      "id": "blocked-actions-silent",
+      "reproduced": true,
+      "attempted": [
+        "dock",
+        "land",
+        "dodge"
+      ],
+      "toastCount": 0,
+      "mode": "eva"
+    },
+    {
+      "id": "camera-clip-minimum-retains-wall-intersection",
+      "reproduced": true,
+      "focusLocal": [
+        3.520000000000068,
+        9.992007221626409e-16,
+        7.999999999999962
+      ],
+      "cameraLocal": [
+        3.140000000000292,
+        0.06999999999998821,
+        8.000000000000288
+      ],
+      "hullClearance": 0.0400000000002918,
+      "cameraRequiredRadius": 0.3,
+      "nearPlane": 0.6
+    },
+    {
+      "id": "suit-sphere-allows-boots-through-hull",
+      "reproduced": true,
+      "avatarCentreY": 3.5999999999999908,
+      "suitMinY": 2.5303575740888435,
+      "suitMaxY": 4.609999990463222,
+      "hullTopY": 3.1,
+      "penetration": 0.5696424259111565
+    },
+    {
+      "id": "wall-contact-discards-tangential-eva-motion",
+      "reproduced": true,
+      "requestedInwardSpeed": -3,
+      "requestedTangentialSpeed": 2,
+      "resultLocalVelocity": [
+        5.104768216192461e-16,
+        -8.302941247084334e-18,
+        -4.2877629006363397e-16
+      ],
+      "resultLocalPosition": [
+        3.520000000000131,
+        -2.350897254643769e-14,
+        8.100000000000474
+      ]
+    },
+    {
+      "id": "completed-target-steals-nearby-repair-interaction",
+      "reproduced": true,
+      "diagnosisCompleted": true,
+      "diagnosisDistance": 4.067408781946104e-12,
+      "repairDistance": 2.5612496949727377,
+      "active": null,
+      "message": "調査済みです。記録は遠征ボードから確認できます",
+      "localPosition": [
+        -6.99999999999576,
+        4.60000000000006,
+        -11.000000000001032
+      ]
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "build": {
+    "version": "0.7.1",
+    "sourceRevision": "d5e2c89619100feb44eb442796f1eb3b1963ae57",
+    "sourceHash": "2ebfd73ed1970cc59fb27d6a0c76831c0335a5d561072ec2af7b682ac169b349",
+    "uncommittedChanges": false,
+    "builtAt": "2026-10-28T14:02:25.880Z"
+  }
+}

@@ -4,6 +4,9 @@ import type { HomecomingSystem } from '../systems/homecoming';
 import type { HomecomingProgress } from '../systems/expeditions';
 import type { QualityProfile } from './quality';
 import { mergeParts } from './modelParts';
+import { AstronautModel } from './AstronautModel';
+
+const boardingPosition = new Vector3();
 
 type Parts = BufferGeometry[][];
 const box = (x: number,y: number,z: number,px=0,py=0,pz=0) => new BoxGeometry(x,y,z).translate(px,py,pz);
@@ -24,10 +27,9 @@ export class ExpeditionView {
   readonly station: Group;
   readonly satellite: Group;
   readonly deep: Group;
-  readonly astronaut = new Group();
+  readonly astronautModel = new AstronautModel();
+  readonly astronaut = this.astronautModel.group;
   private detail: Group;
-  private arms: Group[] = [];
-  private legs: Group[] = [];
   private targets: Mesh[] = [];
   private repairLight = new Mesh(new SphereGeometry(.18,8,6),new MeshStandardMaterial({color:0xeb8e35,emissive:0xeb8e35,emissiveIntensity:1.5}));
   private materials = [
@@ -75,19 +77,6 @@ export class ExpeditionView {
     deep[1].push(tube(1.8,7,0,0,0,'y'),box(4,2,5,11,-1.5,4));deep[3].push(new TorusGeometry(3.5,.24,6,32).rotateX(Math.PI/2));
     deep[0].push(tube(.2,12,0,0,0,'x'));deep[2].push(box(4,.1,5,-5,0,0),box(4,.1,5,5,0,0));deep[4].push(tube(.65,.3,0,3.6,0,'y'));this.deep=assemble(deep,this.materials);this.group.add(this.deep);
 
-    // The suit is human-scale (~1.85u). Individual limb pivots convey RCS movement.
-    const suit:Parts=this.materials.map(()=>[]);
-    suit[5].push(box(.65,.68,.38,0,.05,0),new SphereGeometry(.32,16,12).translate(0,.69,0));
-    suit[6].push(new SphereGeometry(.29,16,10,Math.PI*.55,Math.PI*.9).scale(1,.75,1).translate(0,.7,-.045));
-    suit[0].push(box(.56,.65,.27,0,.04,.3));suit[1].push(box(.34,.29,.09,0,.15,-.24));suit[7].push(box(.66,.13,.4,0,-.24,0));
-    for(const x of [-.3,.3])for(const y of [-.12,.25])suit[1].push(tube(.065,.15,x,y,.46));
-    suit[4].push(box(.15,.05,.04,-.13,.2,-.3));this.astronaut.add(assemble(suit,this.materials));
-    for(const sign of [-1,1]) {
-      const arm=new Group();arm.position.set(sign*.44,.26,0);const a:Parts=this.materials.map(()=>[]);
-      a[5].push(tube(.13,.55,0,-.23,0,'y'));a[1].push(tube(.14,.1,0,-.34,0,'y'));a[0].push(new SphereGeometry(.14,8,6).translate(0,-.55,0));arm.add(assemble(a,this.materials));this.arms.push(arm);this.astronaut.add(arm);
-      const leg=new Group();leg.position.set(sign*.18,-.32,0);const l:Parts=this.materials.map(()=>[]);
-      l[5].push(tube(.15,.6,0,-.28,0,'y'));l[1].push(box(.29,.18,.43,0,-.65,-.09));leg.add(assemble(l,this.materials));this.legs.push(leg);this.astronaut.add(leg);
-    }
     this.group.add(this.astronaut);
     const targetGeo=new TorusGeometry(.65,.045,4,20);
     for (let i=0;i<INVESTIGATIONS.length;i++){const m=new Mesh(targetGeo,this.materials[4]);this.targets.push(m);this.group.add(m);}
@@ -100,11 +89,14 @@ export class ExpeditionView {
       g.visible=f.position.distanceToSquared(camera)<(id==='asterion'?20000:6000)**2;
     }
     this.detail.visible=profile.belt>=2000&&system.stationDistance<1800;
-    const eva=system.eva;this.astronaut.visible=eva.active;
+    const eva=system.eva;this.astronautModel.update(eva,system.investigations.activeId!==null,time,profile);
     const repaired=progress.investigated['antenna-repair']!==undefined;
     this.repairLight.material.color.setHex(repaired?0x64e8b0:0xeb8e35);this.repairLight.material.emissive.copy(this.repairLight.material.color);
-    if(eva.active){this.astronaut.position.copy(eva.position).sub(origin);this.astronaut.quaternion.copy(eva.rotation);}
-    for(let i=0;i<2;i++){this.arms[i].rotation.z=(i===0?1:-1)*(.2+eva.thrust*.3);this.arms[i].rotation.x=(system.investigations.activeId?-1.2:-.2)+Math.sin(time*1.8+i)*eva.thrust*.08;this.legs[i].rotation.x=.12+eva.thrust*.18;}
+    if(this.astronautModel.visualActive){
+      boardingPosition.copy(eva.position);
+      if(!eva.active&&this.astronautModel.boardingNearShip)boardingPosition.lerp(eva.hatchPosition,this.astronautModel.boardingAmount);
+      this.astronaut.position.copy(boardingPosition).sub(origin);this.astronaut.quaternion.copy(eva.rotation);
+    }
     for(let i=0;i<this.targets.length;i++){
       const def=INVESTIGATIONS[i],m=this.targets[i];
       m.visible=eva.active&&system.distances[def.id]<65&&progress.investigated[def.id]===undefined;
@@ -112,6 +104,9 @@ export class ExpeditionView {
     }
   }
   dispose(): void {
+    // The suit owns its batched geometry, PBR maps and reflection texture.
+    // Remove it before traversing station hardware to avoid double disposal.
+    this.astronautModel.dispose();
     const geometries=new Set<BufferGeometry>();this.group.traverse(o=>{if(o instanceof Mesh)geometries.add(o.geometry);});
     for(const g of geometries)g.dispose();for(const m of this.materials)m.dispose();this.group.clear();
   }

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-28T13:53:51.533Z",
+  "timestamp": "2026-10-29T07:22:35.055Z",
   "browser": "156.0.8078.73",
   "graphics": {
     "vendor": "Google Inc. (NVIDIA)",
@@ -18,10 +18,10 @@
       "data": {
         "state": "running",
         "active": true,
-        "rms": 0.009271638561755719,
+        "rms": 0.012106951598976718,
         "sources": 9,
         "musicNotesScheduled": 4,
-        "musicRms": 0.011569492077132258
+        "musicRms": 0.009629927861373186
       }
     },
     {
