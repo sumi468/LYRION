@@ -1,6 +1,6 @@
 # LYRION — Beyond the Stars · v0.8.0
 
-**[公開中の旧版](https://lyrion-lilac.vercel.app)**（今回のv0.8.0はローカル検証版） · [GitHub](https://github.com/sumi468/LYRION)
+**[LYRION v0.8.0をプレイ](https://lyrion-lilac.vercel.app)** · [GitHub](https://github.com/sumi468/LYRION)
 
 架空のリリオン星系を探検するブラウザ3Dゲーム。母星LYRION PRIMEと軌道基地ASTERIONから旅立ち、接岸・船外活動・科学調査を通じて6つの遠征を進めます。従来の11天体の図鑑、8つの探査ミッション、戦闘・着陸・機体強化も維持しています。TypeScript / Three.js / Vite。外部の画像・音声配信には依存しません。
 
@@ -45,7 +45,7 @@ v0.8では既存のゲーム進行を安定させ、ミッション案内と宇�
 
 **開始後はT / DOCKで接岸→B / MISSION CONTROL→「最初の出発」→受注して追跡。** T / DOCKで接岸・離脱、H / EVAで船外・搭乗、船外はE / 調査、Y / 帰還。従来目標への表示切替は遠征ボードから行えます。
 
-[新機能・操作・互換性・制限の詳細](docs/HOMECOMING.md) / [v0.7の検証と性能測定](docs/HOMECOMING-VALIDATION.md)。今回の更新はローカル配布版です。本番へ自動公開していません。
+[新機能・操作・互換性・制限の詳細](docs/HOMECOMING.md) / [v0.7の検証と性能測定](docs/HOMECOMING-VALIDATION.md)。この節はv0.7の実装・ローカル検証時点の記録です。
 
 ## v0.6.0 — デザインとFPS表示の仕上げ
 
