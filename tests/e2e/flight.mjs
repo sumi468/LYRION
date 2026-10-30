@@ -24,6 +24,8 @@ try{
  await page.getByRole('button',{name:'新しい探査を開始',exact:true}).click();
   await sleep(400);
  await page.evaluate(()=>window.__lyrion.stop());
+ // Isolate lateral thrust from the new start's inherited orbital velocity.
+ await page.evaluate(()=>{const g=window.__lyrion;g.state.pos.set(40000,10000,40000);g.state.vel.set(0,0,0);g.refVel.set(0,0,0);g.state.assist=false;});
  const initial=await page.evaluate(()=>window.__lyrion.state.pos.toArray());
  await page.keyboard.down('KeyA');
  await page.evaluate(()=>{for(let i=0;i<60;i++)window.__lyrion.tick(1/60);});

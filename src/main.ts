@@ -19,7 +19,7 @@ async function boot(): Promise<void> {
   const game = new Game();
   const ui = new Ui(root, game, fatal);
   const dispatch = (a: Parameters<typeof game.handlePlayAction>[0]) => {
-    if (a === 'pause' || a === 'upgrades' || a === 'log') ui.handleAction(a);
+    if (a === 'pause' || a === 'upgrades' || a === 'log' || a === 'operations') ui.handleAction(a);
     else game.handlePlayAction(a);
   };
   game.input.onAction = dispatch;

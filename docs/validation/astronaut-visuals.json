@@ -1,0 +1,102 @@
+{
+  "timestamp": "2026-10-29T07:24:20.592Z",
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "model": {
+    "triangles": 40752,
+    "batches": 38,
+    "bounds": {
+      "min": [
+        -0.5456496027972478,
+        -1.040450423712837,
+        -0.31799998879434105
+      ],
+      "max": [
+        0.5456496027972478,
+        1.022949114503948,
+        0.6969821657809377
+      ],
+      "size": [
+        1.0912992055944957,
+        2.063399538216785,
+        1.0149821545752788
+      ]
+    },
+    "posedBounds": {
+      "min": [
+        -0.6009111473026217,
+        -1.0838400845860148,
+        -0.736334876414631
+      ],
+      "max": [
+        0.7052988069762095,
+        1.0208289803958206,
+        0.7028777058035304
+      ],
+      "size": [
+        1.3062099542788312,
+        2.1046690649818354,
+        1.4392125822181614
+      ],
+      "radiusXZ": 0.8838542616866804,
+      "radius3D": 1.1774267801187963,
+      "maxXZPoint": [
+        -0.5013705426185276,
+        0.44808252588835196,
+        -0.7278914307066061
+      ],
+      "max3DPoint": [
+        0.44675097024503085,
+        -1.0679985586915863,
+        -0.21477074232477383
+      ]
+    },
+    "evaActive": true
+  },
+  "screenshots": [
+    "C:\\Users\\user\\Documents\\Codex\\2026-10-22\\ko\\outputs\\lyrion\\docs\\screenshots\\90-astronaut-front.png",
+    "C:\\Users\\user\\Documents\\Codex\\2026-10-22\\ko\\outputs\\lyrion\\docs\\screenshots\\90-astronaut-side.png",
+    "C:\\Users\\user\\Documents\\Codex\\2026-10-22\\ko\\outputs\\lyrion\\docs\\screenshots\\90-astronaut-back.png",
+    "C:\\Users\\user\\Documents\\Codex\\2026-10-22\\ko\\outputs\\lyrion\\docs\\screenshots\\90-astronaut-beside-lx07.png",
+    "C:\\Users\\user\\Documents\\Codex\\2026-10-22\\ko\\outputs\\lyrion\\docs\\screenshots\\90-astronaut-station-eva.png"
+  ],
+  "errors": [],
+  "build": {
+    "version": "0.8.0",
+    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
+    "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+    "uncommittedChanges": true,
+    "builtAt": "2026-10-29T07:21:49.682Z"
+  },
+  "sunOcclusion": {
+    "region": {
+      "x": 660,
+      "y": 451,
+      "width": 120,
+      "height": 120,
+      "coordinates": "WebGL bottom-left pixels, projected opaque suit belly"
+    },
+    "sprites": 2,
+    "maxDelta": 0,
+    "meanDelta": 0
+  },
+  "inspection": {
+    "mission": "orbital-inspection",
+    "completed": true,
+    "working": "maintenance-panel",
+    "fov": 70,
+    "fps": 200
+  },
+  "render": {
+    "calls": 64,
+    "triangles": 709432,
+    "memory": {
+      "geometries": 88,
+      "textures": 24
+    }
+  }
+}

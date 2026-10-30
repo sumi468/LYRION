@@ -1,0 +1,220 @@
+{
+  "timestamp": "2026-10-29T07:23:15.843Z",
+  "results": [
+    {
+      "name": "故郷の軌道で開始し、既存探査を維持",
+      "ok": true
+    },
+    {
+      "name": "Hardでも基地周辺を保護",
+      "ok": true
+    },
+    {
+      "name": "航法目標と安定保持を達成",
+      "ok": true
+    },
+    {
+      "name": "指定報酬を一度だけ付与 30 DATA",
+      "ok": true
+    },
+    {
+      "name": "遠征完了 first-departure",
+      "ok": true
+    },
+    {
+      "name": "報酬の二重取得を防止",
+      "ok": true
+    },
+    {
+      "name": "宇宙飛行士が独立移動し射撃を無効化",
+      "ok": true
+    },
+    {
+      "name": "実作業で調査完了 maintenance-panel",
+      "ok": true
+    },
+    {
+      "name": "実作業で調査完了 station-sensor",
+      "ok": true
+    },
+    {
+      "name": "EVA中の停止は酸素と入力を保持・解除",
+      "ok": true
+    },
+    {
+      "name": "帰還支援で再搭乗",
+      "ok": true
+    },
+    {
+      "name": "指定報酬を一度だけ付与 40 DATA",
+      "ok": true
+    },
+    {
+      "name": "遠征完了 orbital-inspection",
+      "ok": true
+    },
+    {
+      "name": "報酬の二重取得を防止",
+      "ok": true
+    },
+    {
+      "name": "実作業で調査完了 antenna-diagnosis",
+      "ok": true
+    },
+    {
+      "name": "実作業で調査完了 antenna-repair",
+      "ok": true
+    },
+    {
+      "name": "実作業で調査完了 communications-test",
+      "ok": true
+    },
+    {
+      "name": "帰還支援で再搭乗",
+      "ok": true
+    },
+    {
+      "name": "指定報酬を一度だけ付与 50 DATA",
+      "ok": true
+    },
+    {
+      "name": "遠征完了 repair-operation",
+      "ok": true
+    },
+    {
+      "name": "報酬の二重取得を防止",
+      "ok": true
+    },
+    {
+      "name": "安全な自動離脱から手動操縦に戻る",
+      "ok": true
+    },
+    {
+      "name": "既存スキャンを新遠征が認識",
+      "ok": true
+    },
+    {
+      "name": "既存の地表着陸が遠征目標を達成",
+      "ok": true
+    },
+    {
+      "name": "指定報酬を一度だけ付与 70 DATA",
+      "ok": true
+    },
+    {
+      "name": "遠征完了 lunar-expedition",
+      "ok": true
+    },
+    {
+      "name": "報酬の二重取得を防止",
+      "ok": true
+    },
+    {
+      "name": "実作業で調査完了 wayfarer-recorder",
+      "ok": true
+    },
+    {
+      "name": "実作業で調査完了 probe-component",
+      "ok": true
+    },
+    {
+      "name": "帰還支援で再搭乗",
+      "ok": true
+    },
+    {
+      "name": "指定報酬を一度だけ付与 90 DATA",
+      "ok": true
+    },
+    {
+      "name": "遠征完了 lost-signal",
+      "ok": true
+    },
+    {
+      "name": "報酬の二重取得を防止",
+      "ok": true
+    },
+    {
+      "name": "実作業で調査完了 deep-readings",
+      "ok": true
+    },
+    {
+      "name": "実作業で調査完了 deep-evidence",
+      "ok": true
+    },
+    {
+      "name": "EVA保存は調査・データ・目標を維持して機内復帰",
+      "ok": true
+    },
+    {
+      "name": "指定報酬を一度だけ付与 120 DATA",
+      "ok": true
+    },
+    {
+      "name": "遠征完了 unknown-horizons",
+      "ok": true
+    },
+    {
+      "name": "報酬の二重取得を防止",
+      "ok": true
+    },
+    {
+      "name": "6遠征を最後まで完了し旧ミッションの番号を維持",
+      "ok": true
+    },
+    {
+      "name": "30回のEVA・接岸切替でGPU資源が増殖しない",
+      "ok": true,
+      "data": {
+        "before": {
+          "geometries": 89,
+          "textures": 24
+        },
+        "after": {
+          "geometries": 89,
+          "textures": 24
+        },
+        "mode": "docked"
+      }
+    },
+    {
+      "name": "タッチでドッキング",
+      "ok": true
+    },
+    {
+      "name": "タッチで船外へ出てEVA専用操作を表示",
+      "ok": true
+    },
+    {
+      "name": "EVAのタッチ上昇は宇宙飛行士だけを移動",
+      "ok": true
+    },
+    {
+      "name": "タッチ調査で科学データを取得",
+      "ok": true
+    },
+    {
+      "name": "EVAタッチ操作が画面内 390",
+      "ok": true
+    },
+    {
+      "name": "EVAタッチ操作が画面内 800",
+      "ok": true
+    },
+    {
+      "name": "タッチだけで機内復帰",
+      "ok": true
+    },
+    {
+      "name": "ページ・コンソールエラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  }
+}

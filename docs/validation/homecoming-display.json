@@ -1,0 +1,210 @@
+{
+  "timestamp": "2026-10-28T13:57:13.589Z",
+  "browser": "156.0.8078.73",
+  "headless": false,
+  "samples": [
+    {
+      "scene": "normal-exploration",
+      "quality": "high",
+      "durationMs": 4000.500000005961,
+      "frames": 799,
+      "fps": 199.72503437040606,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.199999999999818,
+      "over33ms": 0,
+      "levels": [
+        "L5"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 46,
+        "textures": 18
+      },
+      "drawCalls": 24,
+      "triangles": 669810,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.25,
+          "medianMs": 0.20000000298023224,
+          "p95Ms": 0.4000000059604645,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.3548024,
+          "medianMs": 0.340832,
+          "p95Ms": 0.574464,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "scene": "homeworld-orbit",
+      "quality": "high",
+      "durationMs": 4000.2999999970198,
+      "frames": 801,
+      "fps": 200.23498237647095,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "over33ms": 0,
+      "levels": [
+        "L5"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 50,
+        "textures": 18
+      },
+      "drawCalls": 29,
+      "triangles": 668682,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.2275000002235174,
+          "medianMs": 0.20000000298023224,
+          "p95Ms": 0.3999999910593033,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.37315519999999996,
+          "medianMs": 0.36864,
+          "p95Ms": 0.42464,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "scene": "asterion",
+      "quality": "high",
+      "durationMs": 4001.800000005962,
+      "frames": 801,
+      "fps": 200.15992803208724,
+      "medianMs": 5,
+      "p95Ms": 5.099999999998545,
+      "p99Ms": 5.200000000000728,
+      "over33ms": 0,
+      "levels": [
+        "L5"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 50,
+        "textures": 18
+      },
+      "drawCalls": 35,
+      "triangles": 671720,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.2449999999254942,
+          "medianMs": 0.20000000298023224,
+          "p95Ms": 0.4000000059604645,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.34289200000000003,
+          "medianMs": 0.338944,
+          "p95Ms": 0.377856,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "scene": "eva",
+      "quality": "high",
+      "durationMs": 4004.100000005961,
+      "frames": 796,
+      "fps": 198.79623385999724,
+      "medianMs": 5,
+      "p95Ms": 5.100000000002183,
+      "p99Ms": 5.100000000002183,
+      "over33ms": 0,
+      "levels": [
+        "L5"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 68,
+        "textures": 18
+      },
+      "drawCalls": 52,
+      "triangles": 670048,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.3675000000745058,
+          "medianMs": 0.3999999910593033,
+          "p95Ms": 0.6000000089406967,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.36772960000000005,
+          "medianMs": 0.344,
+          "p95Ms": 0.633856,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "scene": "combat",
+      "quality": "high",
+      "durationMs": 4001.800000002979,
+      "frames": 800,
+      "fps": 199.91004048163438,
+      "medianMs": 5,
+      "p95Ms": 5.100000000002183,
+      "p99Ms": 5.100000000002183,
+      "over33ms": 0,
+      "levels": [
+        "L5"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 68,
+        "textures": 18
+      },
+      "drawCalls": 35,
+      "triangles": 677594,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.2649999998509884,
+          "medianMs": 0.29999999701976776,
+          "p95Ms": 0.3999999910593033,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.3650456,
+          "medianMs": 0.352256,
+          "p95Ms": 0.540672,
+          "samples": 40
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "failure": "Error: page.evaluate: Target page, context or browser has been closed"
+}

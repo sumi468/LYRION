@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-10-28T13:50:47.594Z",
+  "url": "https://lyrion-lilac.vercel.app/",
+  "status": 200,
+  "assets": [
+    "./favicon.svg",
+    "./fonts/oxanium.woff2",
+    "./assets/index-Rw2L1_xq.js",
+    "./assets/three-k-MrtNJN.js",
+    "./assets/index-6TyaPhFP.css"
+  ],
+  "buildInfoStatus": 404,
+  "matchesKnownV06Assets": true,
+  "knownV06Commit": "5246b1d293ca3b12feada8b3331b04db6d03596d",
+  "commitProvenance": "Live JS/CSS bytes exactly match the archived v0.6 release recorded for commit 5246b1d293ca3b12feada8b3331b04db6d03596d. Direct current Vercel deployment metadata access was denied (403).",
+  "assetSha256": [
+    {
+      "path": "./assets/index-Rw2L1_xq.js",
+      "status": 200,
+      "sha256": "0728b44894e85a9d152a2dfad20f7e1fc1976b5aa7947e97c7ed124b618be8c6",
+      "matchesV06ArchiveBytes": true
+    },
+    {
+      "path": "./assets/three-k-MrtNJN.js",
+      "status": 200,
+      "sha256": "ece1132123cbad02d5ebb744311023f2d6a1bc3135ed154308e3d130785e1bc7",
+      "matchesV06ArchiveBytes": true
+    },
+    {
+      "path": "./assets/index-6TyaPhFP.css",
+      "status": 200,
+      "sha256": "0339ef351ec320d12cd46e9c8557dbc51b81b8d7c8f2a5fe435e4001fa119cba",
+      "matchesV06ArchiveBytes": true
+    }
+  ],
+  "allLiveBundlesEqualV06Archive": true
+}

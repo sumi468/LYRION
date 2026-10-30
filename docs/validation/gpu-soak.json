@@ -1,861 +1,358 @@
 {
-  "timestamp": "2026-10-23T16:12:53.968Z",
-  "durationSec": 300,
+  "timestamp": "2026-10-29T07:26:26.698Z",
+  "durationSec": 120,
   "combatMode": true,
-  "browser": "155.0.8059.86",
+  "browser": "156.0.8078.73",
   "samples": [
     {
-      "elapsedSec": 6.08,
+      "elapsedSec": 6.055,
       "scene": "thalassa",
       "phase": "playing",
-      "fps": 166.60055533518533,
+      "fps": 199.92159937279473,
       "hull": 100,
       "shield": 24,
       "enemies": 5,
-      "bolts": 9,
-      "energy": 40.19780000000038,
+      "bolts": 8,
+      "energy": 40.911599999999915,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 12.12,
+      "elapsedSec": 12.098,
       "scene": "aurelion",
       "phase": "playing",
-      "fps": 166.60055533518533,
+      "fps": 199.99999999999986,
       "hull": 16,
       "shield": 0,
       "enemies": 5,
       "bolts": 8,
-      "energy": 44.409300000000854,
+      "energy": 45.11059999999862,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 18.167,
+      "elapsedSec": 18.14,
       "scene": "vesper",
       "phase": "playing",
-      "fps": 170.9741550695824,
+      "fps": 199.92003198720326,
       "hull": 60,
       "shield": 60,
       "enemies": 0,
       "bolts": 8,
-      "energy": 91.5815000000004,
+      "energy": 91.55000000000089,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 24.207,
+      "elapsedSec": 24.192,
       "scene": "lumen",
       "phase": "playing",
-      "fps": 166.6666666666666,
+      "fps": 199.99999999999991,
       "hull": 3,
       "shield": 0,
       "enemies": 5,
       "bolts": 4,
-      "energy": 95.78100000000158,
+      "energy": 95.79950000000433,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 30.234,
+      "elapsedSec": 30.224,
       "scene": "wayfarer",
       "phase": "playing",
-      "fps": 171.7252396166123,
+      "fps": 199.99999999999986,
       "hull": 60,
       "shield": 60,
       "enemies": 0,
       "bolts": 4,
-      "energy": 88.45200000000055,
+      "energy": 88.49950000000138,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 36.255,
+      "elapsedSec": 36.266,
       "scene": "cindra",
       "phase": "playing",
-      "fps": 170.83829956296876,
+      "fps": 199.99999999999986,
       "hull": 21,
       "shield": 0,
       "enemies": 5,
       "bolts": 5,
-      "energy": 92.55700000000166,
+      "energy": 92.69900000000482,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 42.296,
+      "elapsedSec": 42.319,
       "scene": "thalassa",
       "phase": "playing",
-      "fps": 166.86531585220683,
+      "fps": 199.99999999999991,
       "hull": 60,
       "shield": 60,
       "enemies": 0,
       "bolts": 6,
-      "energy": 92.31350000000032,
+      "energy": 92.50050000000078,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 48.326,
+      "elapsedSec": 48.365,
       "scene": "aurelion",
       "phase": "playing",
-      "fps": 169.75917883932382,
+      "fps": 199.99999999999986,
       "hull": 21,
       "shield": 0,
       "enemies": 5,
       "bolts": 4,
-      "energy": 96.47800000000151,
+      "energy": 96.72400000000405,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 54.345,
+      "elapsedSec": 54.406,
       "scene": "vesper",
       "phase": "playing",
-      "fps": 171.8625099920083,
+      "fps": 200.07846214201524,
       "hull": 60,
       "shield": 60,
       "enemies": 0,
       "bolts": 8,
-      "energy": 94.03450000000024,
+      "energy": 93.97550000000061,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 60.378,
+      "elapsedSec": 60.454,
       "scene": "lumen",
       "phase": "playing",
-      "fps": 174.32646592709875,
+      "fps": 200.07846214202095,
       "hull": 60,
       "shield": 60,
       "enemies": 0,
       "bolts": 8,
-      "energy": 95.41100000000014,
+      "energy": 95.62500000000034,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 66.407,
+      "elapsedSec": 66.513,
       "scene": "wayfarer",
       "phase": "playing",
-      "fps": 171.38302112395766,
-      "hull": 60.129240000000046,
+      "fps": 199.99999999999991,
+      "hull": 60.149960000000064,
       "shield": 51,
       "enemies": 5,
       "bolts": 8,
-      "energy": 36.14990000000035,
+      "energy": 36.37660000000052,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 72.46,
+      "elapsedSec": 72.555,
       "scene": "cindra",
       "phase": "playing",
-      "fps": 171.45135566187992,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 95.4595000000001,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 78.498,
-      "scene": "thalassa",
-      "phase": "playing",
-      "fps": 173.36485421591598,
-      "hull": 60.19384000000003,
-      "shield": 33,
-      "enemies": 5,
-      "bolts": 9,
-      "energy": 36.262400000000476,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 84.529,
-      "scene": "aurelion",
-      "phase": "playing",
-      "fps": 169.96047430830032,
-      "hull": 3.19384000000003,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 7,
-      "energy": 40.40390000000103,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 90.577,
-      "scene": "vesper",
-      "phase": "playing",
-      "fps": 170.4996034892961,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 85.67710000000022,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 96.606,
-      "scene": "lumen",
-      "phase": "playing",
-      "fps": 170.4320253666348,
-      "hull": 30,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 3,
-      "energy": 89.8271000000008,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 102.641,
-      "scene": "wayfarer",
-      "phase": "playing",
-      "fps": 171.8625099920083,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 95.14550000000011,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 108.682,
-      "scene": "cindra",
-      "phase": "playing",
-      "fps": 171.17834394904648,
-      "hull": 12,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 6,
-      "energy": 99.33750000000103,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 114.719,
-      "scene": "thalassa",
-      "phase": "playing",
-      "fps": 172.41379310344033,
-      "hull": 1.2436399999999814,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 9,
-      "energy": 40.11390000000099,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 120.749,
-      "scene": "aurelion",
-      "phase": "playing",
-      "fps": 172.27877838684802,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 91.67800000000035,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 126.787,
-      "scene": "vesper",
-      "phase": "playing",
-      "fps": 171.31474103585649,
-      "hull": 61.16040000000036,
-      "shield": 33,
-      "enemies": 5,
-      "bolts": 13,
-      "energy": 32.56570000000077,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 132.821,
-      "scene": "lumen",
-      "phase": "playing",
-      "fps": 173.84433030424353,
+      "fps": 199.99999999999991,
       "hull": 60,
       "shield": 60,
       "enemies": 0,
       "bolts": 6,
-      "energy": 92.63850000000018,
+      "energy": 93.74950000000057,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 138.851,
-      "scene": "wayfarer",
-      "phase": "playing",
-      "fps": 173.70706671929312,
-      "hull": 57,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 10,
-      "energy": 33.499900000000125,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 144.892,
-      "scene": "cindra",
-      "phase": "playing",
-      "fps": 173.29657345411974,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 6,
-      "energy": 91.54700000000021,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 150.924,
+      "elapsedSec": 78.595,
       "scene": "thalassa",
       "phase": "playing",
-      "fps": 170.4320253666348,
-      "hull": 60.273080000000036,
-      "shield": 33,
-      "enemies": 5,
-      "bolts": 11,
-      "energy": 32.38520000000044,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 156.967,
-      "scene": "aurelion",
-      "phase": "playing",
-      "fps": 172.54901960784306,
-      "hull": 3.2730800000000357,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 7,
-      "energy": 36.59470000000079,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 162.994,
-      "scene": "vesper",
-      "phase": "playing",
-      "fps": 170.97415506958242,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 86.07619999999977,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 169.036,
-      "scene": "lumen",
-      "phase": "playing",
-      "fps": 170.49960348930594,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 8,
-      "energy": 95.47450000000015,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 175.08,
-      "scene": "wayfarer",
-      "phase": "playing",
-      "fps": 170.8382995629836,
+      "fps": 199.99999999999991,
       "hull": 60,
       "shield": 24,
       "enemies": 5,
-      "bolts": 13,
-      "energy": 36.147000000000126,
+      "bolts": 9,
+      "energy": 34.321100000000314,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 181.125,
-      "scene": "cindra",
-      "phase": "playing",
-      "fps": 166.6666666666666,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 92.72000000000034,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 187.171,
-      "scene": "thalassa",
-      "phase": "playing",
-      "fps": 171.31474103585649,
-      "hull": 12,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 7,
-      "energy": 33.6567000000005,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 193.203,
+      "elapsedSec": 84.647,
       "scene": "aurelion",
       "phase": "playing",
-      "fps": 174.95029821073555,
+      "fps": 199.99999999999991,
       "hull": 60,
       "shield": 60,
       "enemies": 0,
-      "bolts": 8,
-      "energy": 89.28000000000031,
+      "bolts": 12,
+      "energy": 93.14950000000073,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 199.236,
+      "elapsedSec": 90.704,
       "scene": "vesper",
       "phase": "playing",
-      "fps": 171.65668662674642,
-      "hull": 39.55560000000014,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 7,
-      "energy": 30.106500000000388,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 205.272,
-      "scene": "lumen",
-      "phase": "playing",
-      "fps": 166.6666666666666,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 88.50000000000055,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 211.334,
-      "scene": "wayfarer",
-      "phase": "playing",
-      "fps": 175.64870259481035,
-      "hull": 60.99412000000027,
-      "shield": 51,
-      "enemies": 5,
-      "bolts": 8,
-      "energy": 29.145600000000776,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 217.362,
-      "scene": "cindra",
-      "phase": "playing",
-      "fps": 172.21135029354198,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 6,
-      "energy": 91.8555000000002,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 223.403,
-      "scene": "thalassa",
-      "phase": "playing",
-      "fps": 167.26403823177623,
-      "hull": 60,
-      "shield": 51,
-      "enemies": 5,
-      "bolts": 8,
-      "energy": 32.691800000000136,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 229.443,
-      "scene": "aurelion",
-      "phase": "playing",
-      "fps": 172.5490196078431,
-      "hull": 21,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 5,
-      "energy": 36.867800000000535,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 235.489,
-      "scene": "vesper",
-      "phase": "playing",
-      "fps": 170.906200317961,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 85.80280000000047,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 241.533,
-      "scene": "lumen",
-      "phase": "playing",
-      "fps": 171.51974471479053,
-      "hull": 21.014360000000003,
-      "shield": 0,
-      "enemies": 5,
-      "bolts": 4,
-      "energy": 90.02330000000121,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 247.572,
-      "scene": "wayfarer",
-      "phase": "playing",
-      "fps": 171.51974471481046,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 96.41450000000007,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 253.615,
-      "scene": "cindra",
-      "phase": "playing",
-      "fps": 172.00938232993346,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 97.88700000000006,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 259.662,
-      "scene": "thalassa",
-      "phase": "playing",
-      "fps": 173.1601731601493,
-      "hull": 60,
-      "shield": 51,
-      "enemies": 5,
-      "bolts": 10,
-      "energy": 38.74629999999982,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 265.685,
-      "scene": "aurelion",
-      "phase": "playing",
-      "fps": 173.09205350117222,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 10,
-      "energy": 95.41950000000037,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 271.712,
-      "scene": "vesper",
-      "phase": "playing",
-      "fps": 173.91304347826082,
-      "hull": 60.17772000000013,
-      "shield": 33,
-      "enemies": 5,
-      "bolts": 13,
-      "energy": 36.26670000000075,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 277.737,
-      "scene": "lumen",
-      "phase": "playing",
-      "fps": 170.36450079237727,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 4,
-      "energy": 93.02350000000038,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 283.786,
-      "scene": "wayfarer",
-      "phase": "playing",
-      "fps": 171.93122750897234,
-      "hull": 60,
-      "shield": 15,
-      "enemies": 5,
-      "bolts": 10,
-      "energy": 33.644400000000026,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 289.818,
-      "scene": "cindra",
-      "phase": "playing",
-      "fps": 170.9062003179808,
-      "hull": 60,
-      "shield": 60,
-      "enemies": 0,
-      "bolts": 6,
-      "energy": 91.15150000000041,
-      "memory": {
-        "geometries": 35,
-        "textures": 17
-      },
-      "finite": true,
-      "fatal": false
-    },
-    {
-      "elapsedSec": 295.85,
-      "scene": "thalassa",
-      "phase": "playing",
-      "fps": 172.009382329953,
-      "hull": 7.571639792508321,
+      "fps": 199.99999999999991,
+      "hull": 48,
       "shield": 0,
       "enemies": 5,
       "bolts": 9,
-      "energy": 32.23690000000119,
+      "energy": 34.03110000000024,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     },
     {
-      "elapsedSec": 301.879,
-      "scene": "aurelion",
+      "elapsedSec": 96.757,
+      "scene": "lumen",
       "phase": "playing",
-      "fps": 172.6167124362732,
+      "fps": 199.99999999999991,
       "hull": 60,
       "shield": 60,
       "enemies": 0,
-      "bolts": 8,
-      "energy": 90.11000000000055,
+      "bolts": 6,
+      "energy": 92.72450000000093,
       "memory": {
-        "geometries": 35,
-        "textures": 17
+        "geometries": 49,
+        "textures": 18
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 102.817,
+      "scene": "wayfarer",
+      "phase": "playing",
+      "fps": 199.99999999999991,
+      "hull": 57.21996000000006,
+      "shield": 0,
+      "enemies": 5,
+      "bolts": 9,
+      "energy": 33.50060000000062,
+      "memory": {
+        "geometries": 49,
+        "textures": 18
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 108.847,
+      "scene": "cindra",
+      "phase": "playing",
+      "fps": 199.99999999999991,
+      "hull": 60,
+      "shield": 60,
+      "enemies": 0,
+      "bolts": 6,
+      "energy": 87.79950000000161,
+      "memory": {
+        "geometries": 49,
+        "textures": 18
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 114.914,
+      "scene": "thalassa",
+      "phase": "playing",
+      "fps": 200.07846214202095,
+      "hull": 60.993960000000385,
+      "shield": 33,
+      "enemies": 5,
+      "bolts": 9,
+      "energy": 28.519000000001878,
+      "memory": {
+        "geometries": 49,
+        "textures": 18
+      },
+      "finite": true,
+      "fatal": false
+    },
+    {
+      "elapsedSec": 120.966,
+      "scene": "aurelion",
+      "phase": "playing",
+      "fps": 199.99999999999991,
+      "hull": 60,
+      "shield": 60,
+      "enemies": 0,
+      "bolts": 12,
+      "energy": 93.15050000000058,
+      "memory": {
+        "geometries": 49,
+        "textures": 18
       },
       "finite": true,
       "fatal": false
     }
   ],
   "errors": [],
+  "build": {
+    "version": "0.8.0",
+    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
+    "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+    "uncommittedChanges": true,
+    "builtAt": "2026-10-29T07:21:49.682Z"
+  },
   "graphics": {
     "vendor": "Google Inc. (NVIDIA)",
     "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",

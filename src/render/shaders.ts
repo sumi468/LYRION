@@ -453,6 +453,17 @@ void main(){
     col += albedo * lv * uLava;
   }
 
+#ifdef USE_CITY
+  // Stable, sparse settlement lights on land. No extra textures or draw calls.
+  vec2 cityUv = vUv * vec2(620.0, 310.0);
+  vec2 district = floor(cityUv / 5.0);
+  float settlement = step(0.90, fract(sin(dot(district, vec2(127.1, 311.7))) * 43758.5453));
+  vec2 lamp = fract(cityUv) - 0.5;
+  float lights = exp(-dot(lamp, lamp) * 48.0) * settlement;
+  float land = smoothstep(uSea + 0.018, uSea + 0.05, h) * (1.0 - smoothstep(0.8, 0.88, h));
+  col += vec3(1.0, 0.65, 0.25) * lights * land * (1.0 - smoothstep(-0.25, 0.05, ndlGeo)) * 0.75;
+#endif
+
   gl_FragColor = vec4(col, 1.0);
   #include <tonemapping_fragment>
   #include <colorspace_fragment>

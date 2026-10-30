@@ -1,7 +1,8 @@
 import type { Game } from '../core/Game';
 import { DIFFICULTIES, type Difficulty } from '../data/combat';
 import type { ActionName } from '../input/Input';
-import { BODY_DEFS } from '../data/starSystem';
+import { operationsPanel } from './Operations';
+import { BODY_DEFS, CATALOG_IDS } from '../data/starSystem';
 import { UPGRADE_DEFS } from '../data/upgrades';
 import type { BodyDef, UpgradeDef } from '../data/types';
 import { computeShipStats, upgradeCost } from '../systems/upgrades';
@@ -9,8 +10,9 @@ import type { QualitySetting } from '../render/quality';
 import type { Settings } from '../systems/settings';
 import { clear, fmtNum, fmtTime, h } from './dom';
 import { Hud } from './Hud';
+import { BUILD_INFO } from '../core/build';
 
-type Panel = 'none' | 'loading' | 'main' | 'pause' | 'log' | 'upgrades' | 'settings' | 'complete';
+type Panel = 'none' | 'loading' | 'main' | 'pause' | 'log' | 'upgrades' | 'settings' | 'complete' | 'operations';
 
 const CONTROLS: [string, string][] = [
   ['W / S', '前進 / 後退'],
@@ -28,6 +30,9 @@ const CONTROLS: [string, string][] = [
   ['G', '自動着陸 / 離陸 / 降下中止'],
   ['V', '回避ロール（エネルギー18・冷却6秒）'],
   ['U / L', 'アップグレード / 探査記録'],
+  ['T / H', '接岸・離脱 / 船外活動・搭乗'],
+  ['E / Y（船外）', '調査 / 機体へ帰還'],
+  ['B', '遠征ボード・基地サービス'],
   ['Esc / P', '一時停止'],
 ];
 
@@ -48,7 +53,7 @@ export class Ui {
     this.hud = new Hud(root);
     this.hud.setShowFps(game.settings.showFps);
     this.buildLoading();
-    for (const p of ['main', 'pause', 'log', 'upgrades', 'settings', 'complete'] as Panel[]) {
+    for (const p of ['main', 'pause', 'log', 'upgrades', 'settings', 'complete', 'operations'] as Panel[]) {
       const el = h('div', { class: 'screen', 'data-screen': p });
       this.screens.set(p, el);
       root.append(el);
@@ -72,6 +77,7 @@ export class Ui {
     if (p === 'log') this.renderLog();
     if (p === 'upgrades') this.renderUpgrades();
     if (p === 'settings') this.renderSettings();
+    if (p === 'operations') this.renderOperations();
     this.hud.setVisible(this.game.phase === 'playing');
   }
 
@@ -146,7 +152,7 @@ export class Ui {
       } else if (g.phase === 'menu' && this.panel !== 'main') this.show('main');
       return;
     }
-    const target: Panel = a === 'upgrades' ? 'upgrades' : 'log';
+    const target: Panel = a === 'operations'?'operations':a === 'upgrades' ? 'upgrades' : 'log';
     if (g.phase === 'playing') {
       g.pause();
       this.show(target);
@@ -189,19 +195,20 @@ export class Ui {
     const saved = g.menuHasSave;
     const savedAt = g.saves.savedAt();
     const sub = saved
-      ? `${fmtNum(g.state.totalData)} DATA  ·  スキャン ${g.state.scanned.size}/${BODY_DEFS.length}${savedAt ? '  ·  ' + new Date(savedAt).toLocaleString('ja-JP', { dateStyle: 'short', timeStyle: 'short' }) : ''}`
+      ? `${fmtNum(g.state.totalData)} DATA  ·  スキャン ${CATALOG_IDS.filter(id=>g.state.scanned.has(id)).length}/${CATALOG_IDS.length}${savedAt ? '  ·  ' + new Date(savedAt).toLocaleString('ja-JP', { dateStyle: 'short', timeStyle: 'short' }) : ''}`
       : undefined;
     const list = h(
       'div',
       { class: 'menu-list' },
       this.btn('続きから', () => g.continueGame(), { primary: saved, disabled: !saved, sub }),
       this.btn('新しい探査を開始', () => this.confirmNew(), { primary: !saved }),
+      this.btn('MISSION CONTROL / 遠征', () => this.show('operations')),
       this.btn('探査記録', () => this.show('log'), { disabled: !saved }),
       this.btn('宇宙船アップグレード', () => this.show('upgrades'), { disabled: !saved }),
       this.btn('設定', () => this.show('settings')),
     );
     el.append(
-      h('div', { class: 'main-menu' }, h('div', { class: 'logo' }, 'LYRION'), h('div', { class: 'logo-sub' }, 'BEYOND THE STARS'), this.difficultySelector(()=>this.renderMain()), list),
+      h('div', { class: 'main-menu' }, h('div', { class: 'logo' }, 'LYRION'), h('div', { class: 'logo-sub' }, 'BEYOND THE STARS'),h('div',{class:'build-label'},`BUILD ${BUILD_INFO.version} · ${BUILD_INFO.sourceHash.slice(0,12)}`), this.difficultySelector(()=>this.renderMain()), list),
       h('div', { class: 'main-foot' }, 'WASD で操縦  ·  マウスで視点  ·  F でブースト  ·  R でスキャン'),
     );
   }
@@ -227,11 +234,12 @@ export class Ui {
         'div',
         { class: 'pause-menu' },
         h('div', { class: 'panel-title' }, 'PAUSED'),
-        h('div', { class: 'pause-stat' }, `探査データ ${fmtNum(g.state.data)}   ·   スキャン ${g.state.scanned.size}/${BODY_DEFS.length}   ·   飛行時間 ${fmtTime(g.state.playSeconds)}`),
+        h('div', { class: 'pause-stat' }, `探査データ ${fmtNum(g.state.data)}   ·   スキャン ${CATALOG_IDS.filter(id=>g.state.scanned.has(id)).length}/${CATALOG_IDS.length}   ·   飛行時間 ${fmtTime(g.state.playSeconds)}`),
         h(
           'div',
           { class: 'menu-list' },
           this.btn('再開', () => g.resume(), { primary: true }),
+          this.btn('遠征ボード・基地', () => this.show('operations')),
           this.btn('宇宙船アップグレード', () => this.show('upgrades')),
           this.btn('探査記録', () => this.show('log')),
           this.btn('設定', () => this.show('settings')),
@@ -239,6 +247,11 @@ export class Ui {
         ),
       ),
     );
+  }
+
+  private renderOperations(): void {
+    const el=this.screens.get('operations')!;clear(el);
+    el.append(this.panelShell('MISSION CONTROL / EXPEDITION CAMPAIGN',operationsPanel(this.game,()=>this.renderOperations(),()=>this.game.phase==='menu'?this.show('main'):this.game.resume(),()=>this.show('upgrades'))));
   }
 
   private panelShell(title: string, body: Node, extra?: Node): HTMLElement {
@@ -275,11 +288,11 @@ export class Ui {
         ),
       );
     }
-    const pct = Math.round((s.scanned.size / BODY_DEFS.length) * 100);
+    const pct = Math.round((CATALOG_IDS.filter(id=>s.scanned.has(id)).length / CATALOG_IDS.length) * 100);
     const progress = h(
       'div',
       { class: 'log-progress' },
-      h('span', {}, `記録完成率 ${pct}%  (${s.scanned.size}/${BODY_DEFS.length})`),
+      h('span', {}, `記録完成率 ${pct}%  (${CATALOG_IDS.filter(id=>s.scanned.has(id)).length}/${CATALOG_IDS.length})`),
       h('div', { class: 'bar' }, h('div', { class: 'bar-fill', style: `transform:scaleX(${pct / 100})` })),
     );
 

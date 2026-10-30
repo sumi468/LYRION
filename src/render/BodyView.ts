@@ -125,6 +125,7 @@ export class BodyView {
       vertexShader: PLANET_VERT,
       fragmentShader: PLANET_FRAG,
       defines: {
+        ...(d.homeworld ? { USE_CITY: '' } : {}),
         ...(d.ring ? { USE_RING: '' } : {}),
         ...(d.clouds ? { USE_CLOUDSHADOW: '' } : {}),
       },

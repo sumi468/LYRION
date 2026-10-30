@@ -16,6 +16,8 @@ try{
  report.graphics=await graphicsInfo(page);
  await page.evaluate(()=>{const g=window.__lyrion;g.input.requestLock=()=>{};g.input.locked=true;});
  await page.getByRole('button',{name:'新しい探査を開始',exact:true}).click();await sleep(650);await page.evaluate(()=>window.__lyrion.stop());
+ // Combat is exercised outside the new protected station volume.
+ await page.evaluate(()=>window.__lyrion.debugTeleport('cindra',1600));
  await step(page,245);
  const formation=await page.evaluate(()=>{const g=window.__lyrion;return {count:g.combat.count,roles:[...new Set(g.combat.enemies.filter(e=>e.active).map(e=>e.role))],rear:g.combat.pursuers,shields:g.combat.enemies.filter(e=>e.active).map(e=>e.shield)};});
  check('Normalは3種類3機で出現し、後方からも追跡する',formation.count===3&&formation.roles.length===3&&formation.rear>0&&formation.shields.every(s=>s===50),formation);

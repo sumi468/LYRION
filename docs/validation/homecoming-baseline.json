@@ -1,0 +1,502 @@
+{
+  "timestamp": "2026-10-24T13:29:49.297Z",
+  "browser": "155.0.8059.86",
+  "platform": "win32",
+  "headless": true,
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "deviceScaleFactor": 1,
+  "samples": [
+    {
+      "quality": "low",
+      "scene": "departure",
+      "loadMs": 2772,
+      "durationMs": 6000.099999982118,
+      "frames": 1201,
+      "fps": 200.16333061175303,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "over33ms": 0,
+      "levels": [
+        "L1"
+      ],
+      "renderSize": [
+        1248,
+        702
+      ],
+      "memory": {
+        "geometries": 26,
+        "textures": 16
+      },
+      "drawCalls": 20,
+      "triangles": 82668,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.49749999940395356,
+          "medianMs": 0.5,
+          "p95Ms": 0.699999988079071,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.07012720000000003,
+          "medianMs": 0.06656,
+          "p95Ms": 0.095232,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "low",
+      "scene": "thalassa",
+      "loadMs": 2772,
+      "durationMs": 6001.5,
+      "frames": 1201,
+      "fps": 200.11663750728985,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.199999999998909,
+      "over33ms": 0,
+      "levels": [
+        "L1"
+      ],
+      "renderSize": [
+        1248,
+        702
+      ],
+      "memory": {
+        "geometries": 26,
+        "textures": 16
+      },
+      "drawCalls": 19,
+      "triangles": 82906,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.25500000044703486,
+          "medianMs": 0.29999998211860657,
+          "p95Ms": 0.4000000059604645,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.06610319999999999,
+          "medianMs": 0.064128,
+          "p95Ms": 0.093184,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "low",
+      "scene": "aurelion",
+      "loadMs": 2772,
+      "durationMs": 6003.200000000001,
+      "frames": 1201,
+      "fps": 200.05996801705754,
+      "medianMs": 5,
+      "p95Ms": 5.100000000002183,
+      "p99Ms": 5.100000000002183,
+      "over33ms": 0,
+      "levels": [
+        "L1"
+      ],
+      "renderSize": [
+        1248,
+        702
+      ],
+      "memory": {
+        "geometries": 30,
+        "textures": 17
+      },
+      "drawCalls": 22,
+      "triangles": 83882,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.23499999940395355,
+          "medianMs": 0.20000001788139343,
+          "p95Ms": 0.3999999761581421,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.0808944,
+          "medianMs": 0.077824,
+          "p95Ms": 0.100352,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "medium",
+      "scene": "departure",
+      "loadMs": 776,
+      "durationMs": 6000.699999988079,
+      "frames": 1201,
+      "fps": 200.1433166134594,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "over33ms": 0,
+      "levels": [
+        "L3"
+      ],
+      "renderSize": [
+        1728,
+        972
+      ],
+      "memory": {
+        "geometries": 26,
+        "textures": 16
+      },
+      "drawCalls": 20,
+      "triangles": 373436,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.2600000001490116,
+          "medianMs": 0.29999998211860657,
+          "p95Ms": 0.4000000059604645,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.21732560000000004,
+          "medianMs": 0.200352,
+          "p95Ms": 0.243712,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "medium",
+      "scene": "thalassa",
+      "loadMs": 776,
+      "durationMs": 6001.399999994039,
+      "frames": 1201,
+      "fps": 200.1199720067306,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000002183,
+      "over33ms": 0,
+      "levels": [
+        "L3"
+      ],
+      "renderSize": [
+        1728,
+        972
+      ],
+      "memory": {
+        "geometries": 26,
+        "textures": 17
+      },
+      "drawCalls": 21,
+      "triangles": 374396,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.2674999989569187,
+          "medianMs": 0.29999998211860657,
+          "p95Ms": 0.4000000059604645,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.20691279999999995,
+          "medianMs": 0.19456,
+          "p95Ms": 0.23552,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "medium",
+      "scene": "aurelion",
+      "loadMs": 776,
+      "durationMs": 6000.799999988078,
+      "frames": 1201,
+      "fps": 200.13998133621953,
+      "medianMs": 5,
+      "p95Ms": 5.100000000002183,
+      "p99Ms": 5.200000000000728,
+      "over33ms": 0,
+      "levels": [
+        "L3"
+      ],
+      "renderSize": [
+        1728,
+        972
+      ],
+      "memory": {
+        "geometries": 30,
+        "textures": 17
+      },
+      "drawCalls": 22,
+      "triangles": 374546,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.49999999850988386,
+          "medianMs": 0.5,
+          "p95Ms": 0.800000011920929,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.23455279999999998,
+          "medianMs": 0.219136,
+          "p95Ms": 0.279232,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "high",
+      "scene": "departure",
+      "loadMs": 927,
+      "durationMs": 6003.200000000001,
+      "frames": 1201,
+      "fps": 200.05996801705754,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "over33ms": 0,
+      "levels": [
+        "L5"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 25,
+        "textures": 16
+      },
+      "drawCalls": 20,
+      "triangles": 668988,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.45749999955296516,
+          "medianMs": 0.4000000059604645,
+          "p95Ms": 0.6000000238418579,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.38099359999999993,
+          "medianMs": 0.326464,
+          "p95Ms": 0.789312,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "high",
+      "scene": "thalassa",
+      "loadMs": 927,
+      "durationMs": 6004.5,
+      "frames": 1202,
+      "fps": 200.18319593638105,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "over33ms": 0,
+      "levels": [
+        "L5"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 25,
+        "textures": 17
+      },
+      "drawCalls": 21,
+      "triangles": 671196,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.4649999998509884,
+          "medianMs": 0.4000000059604645,
+          "p95Ms": 0.7999999821186066,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.3478344000000001,
+          "medianMs": 0.31808,
+          "p95Ms": 0.735168,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "high",
+      "scene": "aurelion",
+      "loadMs": 927,
+      "durationMs": 6001.700000000001,
+      "frames": 1201,
+      "fps": 200.10996884216135,
+      "medianMs": 5,
+      "p95Ms": 5.100000000002183,
+      "p99Ms": 5.100000000002183,
+      "over33ms": 0,
+      "levels": [
+        "L5"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 29,
+        "textures": 17
+      },
+      "drawCalls": 22,
+      "triangles": 669794,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.4524999998509884,
+          "medianMs": 0.4000000059604645,
+          "p95Ms": 0.9000000059604645,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.37610639999999995,
+          "medianMs": 0.340992,
+          "p95Ms": 0.931776,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "auto",
+      "scene": "departure",
+      "loadMs": 906,
+      "durationMs": 6003.800000017882,
+      "frames": 1201,
+      "fps": 200.03997468210517,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "over33ms": 0,
+      "levels": [
+        "L3",
+        "L4"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 29,
+        "textures": 16
+      },
+      "drawCalls": 20,
+      "triangles": 520148,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.25749999955296515,
+          "medianMs": 0.29999998211860657,
+          "p95Ms": 0.3999999761581421,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.3455408,
+          "medianMs": 0.274432,
+          "p95Ms": 0.912384,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "auto",
+      "scene": "thalassa",
+      "loadMs": 906,
+      "durationMs": 6002.200000017881,
+      "frames": 1201,
+      "fps": 200.09329912305856,
+      "medianMs": 5,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "over33ms": 0,
+      "levels": [
+        "L4"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 29,
+        "textures": 17
+      },
+      "drawCalls": 21,
+      "triangles": 521668,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.6400000005960464,
+          "medianMs": 0.6000000238418579,
+          "p95Ms": 1,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.27333280000000004,
+          "medianMs": 0.267264,
+          "p95Ms": 0.30288,
+          "samples": 40
+        }
+      }
+    },
+    {
+      "quality": "auto",
+      "scene": "aurelion",
+      "loadMs": 906,
+      "durationMs": 6001.300000023843,
+      "frames": 1200,
+      "fps": 199.95667605272732,
+      "medianMs": 5,
+      "p95Ms": 5.100000000002183,
+      "p99Ms": 5.200000000000728,
+      "over33ms": 0,
+      "levels": [
+        "L4",
+        "L5"
+      ],
+      "renderSize": [
+        1920,
+        1080
+      ],
+      "memory": {
+        "geometries": 31,
+        "textures": 17
+      },
+      "drawCalls": 22,
+      "triangles": 669794,
+      "phase": "playing",
+      "timing": {
+        "synchronizedFrame": {
+          "meanMs": 0.48000000044703484,
+          "medianMs": 0.4000000059604645,
+          "p95Ms": 0.7000000178813934,
+          "samples": 40
+        },
+        "gpu": {
+          "meanMs": 0.3799728,
+          "medianMs": 0.34384,
+          "p95Ms": 0.811008,
+          "samples": 40
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  }
+}

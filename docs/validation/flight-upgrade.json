@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-23T16:08:29.609Z",
+  "timestamp": "2026-10-29T07:22:36.018Z",
   "results": [
     {
       "name": "同梱した未来的フォントを日本語・英数字にロード",
@@ -38,7 +38,7 @@
       "name": "推進しながら右旋回し、右バンクする",
       "ok": true,
       "data": {
-        "distance": 66.0458628530793,
+        "distance": 68.4096467330132,
         "bank": -0.7094173286915462
       }
     },
@@ -48,10 +48,10 @@
       "data": {
         "state": "running",
         "active": true,
-        "rms": 0.0088696620175839,
-        "sources": 11,
-        "musicNotesScheduled": 17,
-        "musicRms": 0.012439666344410004
+        "rms": 0.006513629762827098,
+        "sources": 10,
+        "musicNotesScheduled": 16,
+        "musicRms": 0.015967680369017353
       }
     },
     {
@@ -59,7 +59,7 @@
       "ok": true,
       "data": {
         "meshes": 20,
-        "textures": 17,
+        "textures": 18,
         "drawCalls": 21
       }
     },

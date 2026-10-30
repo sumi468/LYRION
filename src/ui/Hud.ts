@@ -8,9 +8,14 @@ export class Hud {
 
   private mission = h('div', { class: 'hud-mission' });
   private missionTitle = h('div', { class: 'mission-title' });
+  private missionCode = h('div', { class: 'mission-code' });
   private missionObj = h('div', { class: 'mission-obj' });
   private missionHint = h('div', { class: 'mission-hint' });
   private missionStep = h('div', { class: 'mission-step' });
+  private missionDestination = h('div', { class: 'mission-destination' });
+  private missionDistance = h('div', { class: 'mission-distance' });
+  private missionAction = h('div', { class: 'mission-action' });
+  private missionFill = h('i');
 
   private dataVal = h('span', { class: 'num' }, '0');
   private hullBar = h('div', { class: 'bar-fill' });
@@ -56,6 +61,10 @@ export class Hud {
   private keys = h('div', { class: 'hud-keys' }, 'W/S 推進  A/D 旋回  F ブースト  左クリック/J 射撃  V 回避ロール  G 着陸/離陸  R スキャン  Esc メニュー');
   private reticle = h('div', { class: 'reticle' }, h('i'), h('i'), h('i'), h('i'));
 
+  private opsText=h('div',{class:'ops-text'});
+  private opsDetail=h('div',{class:'ops-detail'});
+  private opsFill=h('div',{class:'ops-fill'});
+  private ops=h('div',{class:'hud-operations'},this.opsText,this.opsDetail,h('div',{class:'ops-track'},this.opsFill));
   private flashLevel = 0;
   private showFps = false;
   private last = new WeakMap<HTMLElement, string>();
@@ -63,11 +72,15 @@ export class Hud {
   constructor(root: HTMLElement) {
     this.enemyLayer.append(...this.enemyLabels);
     this.mission.append(
-      h('div', { class: 'label' }, 'OBJECTIVE'),
+      this.missionCode,
       this.missionTitle,
       this.missionObj,
-      this.missionHint,
       this.missionStep,
+      h('div', { class: 'mission-progress-track' }, this.missionFill),
+      this.missionDestination,
+      this.missionDistance,
+      this.missionAction,
+      this.missionHint,
     );
 
     const status = h(
@@ -107,6 +120,7 @@ export class Hud {
       h('div',{class:'hud-combat'},this.combatLabel,this.weaponLabel,h('div',{class:'weapon-heat'},this.heatBar),this.dodgeLabel),
       this.leadMarker,
       this.landingLabel,
+      this.ops,
       this.mission,
       status,
       this.heading,
@@ -147,6 +161,11 @@ export class Hud {
   }
 
   update(s: HudSnapshot): void {
+    this.el.dataset.mode=s.operations.mode;setText(this.opsText,s.operations.text);setText(this.opsDetail,s.operations.detail);
+    this.opsFill.style.transform=`scaleX(${s.operations.progress})`;
+    this.ops.classList.toggle('eva',s.operations.mode==='eva');
+    this.ops.classList.toggle('critical',s.operations.mode==='eva'&&(s.operations.oxygen<60||s.operations.distance>350));
+    setText(this.keys,s.operations.mode==='eva'?'WASD 移動 / Space・Shift 上下 / E 調査 / H 搭乗 / Y 帰還 / Z 姿勢安定 / B 遠征':'W/S 推進 / A/D 旋回 / F ブースト / J 射撃 / T 接岸 / H 船外 / B 遠征 / Esc メニュー');
     this.shieldBar.style.transform=`scaleX(${Math.max(0,Math.min(1,s.shield/s.shieldMax))})`;
     setText(this.shieldVal,`${Math.round(s.shield)}/${s.shieldMax}`);
     setText(this.hullVal,`${Math.ceil(s.hull)}/${s.hullMax}`);
@@ -175,15 +194,29 @@ export class Hud {
     }
     // ミッション
     if (s.mission) {
+      const progress = s.mission.completed, total = s.mission.objectiveTotal;
+      setText(this.missionCode, s.mission.code ?? `EXPLORATION ${s.mission.index + 1} / ${s.mission.total}`);
       setText(this.missionTitle, s.mission.title);
       setText(this.missionObj, s.mission.objective);
       setText(this.missionHint, s.mission.hint);
-      setText(this.missionStep, `${s.mission.index + 1} / ${s.mission.total}`);
+      this.missionHint.hidden = !!s.mission.action;
+      setText(this.missionStep, progress !== undefined && total !== undefined ? `進行状況 ${progress} / ${total}` : `探査 ${s.mission.index + 1} / ${s.mission.total}`);
+      this.missionFill.style.transform = `scaleX(${progress !== undefined && total ? Math.max(0, Math.min(1, progress / total)) : 0})`;
+      setText(this.missionDestination, s.mission.destination ? `目的地 ${s.mission.destination}` : '');
+      setText(this.missionDistance, s.mission.distance !== undefined && Number.isFinite(s.mission.distance) ? `残り距離 ${fmtDist(Math.max(0, s.mission.distance))} u` : '');
+      setText(this.missionAction, s.mission.action ?? '');
+      this.missionAction.hidden = !s.mission.action;
+      this.missionDestination.hidden = !s.mission.destination;
+      this.missionDistance.hidden = s.mission.distance === undefined || !Number.isFinite(s.mission.distance);
     } else {
+      setText(this.missionCode, 'EXPLORATION COMPLETE');
       setText(this.missionTitle, 'すべての目標を達成');
       setText(this.missionObj, '自由に探索を続けられます');
       setText(this.missionHint, '');
+      this.missionHint.hidden = true;
       setText(this.missionStep, '');
+      this.missionFill.style.transform = 'scaleX(1)';
+      this.missionAction.hidden = this.missionDestination.hidden = this.missionDistance.hidden = true;
     }
 
     // ステータス
@@ -209,8 +242,13 @@ export class Hud {
     setText(this.nearest, s.nearest ? `${s.nearest.name}  高度 ${fmtDist(s.nearest.altitude)} u` : '');
 
     // ターゲット
-    this.target.classList.toggle('empty', !s.target);
-    if (s.target) {
+    this.target.classList.toggle('empty', !s.target&&!s.stationTarget);
+    if(s.stationTarget){
+      const t=s.stationTarget;
+      setText(this.tName,t.name);setText(this.tClass,'LYRION PRIME / HOME STATION');
+      setText(this.tDist,`${fmtDist(t.distance)} u`);setText(this.tState,t.mode==='docked'?'係留中 / B MISSION CONTROL':`${t.relativeSpeed.toFixed(1)} u/s / T DOCK`);
+      this.tState.className='t-state ready';this.setStyle(this.tScanBar,'transform',`scaleX(${t.mode==='docked'?1:Math.max(0,1-t.distance/200)})`);
+    } else if (s.target) {
       const t = s.target;
       setText(this.tName, t.def.nameJa);
       setText(this.tClass, `${t.def.name}  ·  ${t.def.classLabel}`);

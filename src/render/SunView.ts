@@ -56,7 +56,9 @@ export class SunView {
     ]);
     const mk = (map: CanvasTexture) =>
       new Sprite(
-        new SpriteMaterial({ map, blending: AdditiveBlending, depthWrite: false, depthTest: false, transparent: true }),
+        // The opaque scene must occlude the corona, including a suit or hull in
+        // front of the sun. Otherwise its additive ring shines through cloth.
+        new SpriteMaterial({ map, blending: AdditiveBlending, depthWrite: false, depthTest: true, transparent: true }),
       );
     this.glowA = mk(this.glowTexA);
     this.glowB = mk(this.glowTexB);

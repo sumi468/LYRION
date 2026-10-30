@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-10-29T07:29:55.062574+00:00",
+  "build": {
+    "version": "0.8.0",
+    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
+    "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+    "uncommittedChanges": true,
+    "builtAt": "2026-10-29T07:21:49.682Z"
+  },
+  "sourceCommit": "136805409455929964faebf99c95fe0f09b7187f",
+  "unitTests": 103,
+  "e2e": {
+    "smoke": 14,
+    "touch": 22,
+    "regression": 25,
+    "flight-upgrade": 8,
+    "combat-landing": 15,
+    "dogfight": 13,
+    "polish": 12,
+    "homecoming": 49,
+    "critical-homecoming": 22,
+    "mission-clarity": 17,
+    "stabilization": 13
+  },
+  "e2eTotal": 210,
+  "visualViews": 5,
+  "sunOcclusionMaxRgbDelta": 0,
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "gpuScenes": 7,
+  "gpuMeanMs": {
+    "normal-exploration": 0.34542560000000005,
+    "homeworld-orbit": 0.3241247999999999,
+    "asterion": 0.3750952000000001,
+    "eva": 0.39366080000000003,
+    "combat": 0.3595832000000001,
+    "low-mobile": 0.050252799999999986,
+    "low-mobile-eva": 0.062482400000000014
+  },
+  "soakSeconds": 120,
+  "resourcePlateau": true,
+  "launcherTests": 10,
+  "unverified": [
+    "physical mobile devices",
+    "Safari / Firefox",
+    "other GPUs",
+    "hours-long play",
+    "audio listening",
+    "monitor presentation FPS"
+  ],
+  "productionDeployed": false
+}

@@ -1,0 +1,259 @@
+{
+  "timestamp": "2026-10-29T07:23:59.188Z",
+  "source": "Integrated stabilization build",
+  "cases": [
+    {
+      "id": "return-assist-intermediate-waypoint",
+      "reproduced": false,
+      "recoveredAt": {
+        "afterSeconds": 13.4,
+        "preBoardHatchDistance": 1.2668063665690648
+      },
+      "finalMode": "docked",
+      "ok": true
+    },
+    {
+      "id": "landing-approach-permits-eva",
+      "reproduced": false,
+      "before": {
+        "landing": "approach",
+        "landed": null
+      },
+      "immediate": {
+        "eva": false,
+        "landing": "approach"
+      },
+      "after": {
+        "eva": false,
+        "landing": "landed",
+        "landed": {
+          "bodyId": "cindra",
+          "normal": [
+            -0.8602448614602828,
+            0.09599555129129883,
+            -0.5007630502178236
+          ]
+        },
+        "oxygen": 346.59999999999695
+      },
+      "ok": true
+    },
+    {
+      "id": "undock-save-has-stale-docked-state",
+      "reproduced": false,
+      "mode": "undocking",
+      "savedDocked": false,
+      "liveDocked": false,
+      "restoredMode": "flight",
+      "ok": true
+    },
+    {
+      "id": "flying-ship-return-assist-hardcoded-waypoint",
+      "reproduced": false,
+      "recovered": {
+        "seconds": 4.2,
+        "preBoardHatchDistance": 1.2624216889491278
+      },
+      "frame": "asterion",
+      "parkedLocal": [
+        99.99999999999983,
+        8.999999999999982,
+        -79.99999999999963
+      ],
+      "ok": true
+    },
+    {
+      "id": "blocked-actions-silent",
+      "reproduced": false,
+      "attempted": [
+        "dock",
+        "land",
+        "dodge"
+      ],
+      "toastCount": 3,
+      "mode": "eva",
+      "ok": true
+    },
+    {
+      "id": "camera-clip-minimum-retains-wall-intersection",
+      "reproduced": false,
+      "focusLocal": [
+        4.1199999999999335,
+        -2.6617597015388128e-14,
+        8.000000000000568
+      ],
+      "cameraLocal": [
+        3.4296049784078044,
+        0.7445473785454364,
+        8.110463203455266
+      ],
+      "hullClearance": 0.32960497840780434,
+      "cameraRequiredRadius": 0.3,
+      "nearPlane": 0.06,
+      "ok": true
+    },
+    {
+      "id": "suit-sphere-allows-boots-through-hull",
+      "reproduced": false,
+      "avatarCentreY": 4.450000000000008,
+      "suitMinY": 3.350537921994269,
+      "suitMaxY": 5.420118190412442,
+      "hullTopY": 3.1,
+      "penetration": -0.25053792199426894,
+      "ok": true
+    },
+    {
+      "id": "wall-contact-discards-tangential-eva-motion",
+      "reproduced": false,
+      "requestedInwardSpeed": -3,
+      "requestedTangentialSpeed": 2,
+      "resultLocalVelocity": [
+        -1.5439038936193583e-16,
+        0.00011885947621498305,
+        1.9973840210253373
+      ],
+      "resultLocalPosition": [
+        4.119999999999821,
+        1.3433698597964394e-14,
+        8.099999999999659
+      ],
+      "ok": true
+    },
+    {
+      "id": "completed-target-steals-nearby-repair-interaction",
+      "reproduced": false,
+      "diagnosisCompleted": true,
+      "diagnosisDistance": 4.067408781946104e-12,
+      "repairDistance": 2.5612496949727377,
+      "active": "antenna-repair",
+      "message": "破損した通信増幅器の作業を開始",
+      "localPosition": [
+        -6.99999999999576,
+        4.60000000000006,
+        -11.000000000001032
+      ],
+      "ok": true
+    },
+    {
+      "id": "planet-contact-return-route-uninitialized",
+      "reproduced": false,
+      "initiated": {
+        "returning": false,
+        "routeLength": 0,
+        "hatchDistance": 88.65771993711995
+      },
+      "after": {
+        "returning": false,
+        "routeLength": 0,
+        "hatchDistance": 88.65771993711995,
+        "displacement": 0.2908882076400838,
+        "towardHatch": -0.10344639002062472,
+        "localVelocity": [
+          0,
+          0,
+          0
+        ]
+      },
+      "ok": true
+    },
+    {
+      "id": "suit-sidewall-and-backpack-clearance",
+      "reproduced": false,
+      "poses": [
+        {
+          "name": "side",
+          "yaw": 0,
+          "pitch": 0,
+          "centreX": 4.1199999999999335,
+          "meshMinX": 3.525686709998804,
+          "hullFaceX": 3.1,
+          "clearance": 0.425686709998804
+        },
+        {
+          "name": "backpack",
+          "yaw": -1.5707963267948966,
+          "pitch": 0,
+          "centreX": 4.1199999999999335,
+          "meshMinX": 3.4190337006885443,
+          "hullFaceX": 3.1,
+          "clearance": 0.3190337006885442
+        },
+        {
+          "name": "diagonal",
+          "yaw": 0.8,
+          "pitch": 0,
+          "centreX": 4.1199999999999335,
+          "meshMinX": 3.2510802913513235,
+          "hullFaceX": 3.1,
+          "clearance": 0.1510802913513234
+        },
+        {
+          "name": "pitched-boot",
+          "yaw": 0.8,
+          "pitch": 1.1,
+          "centreX": 4.197519119596441,
+          "meshMinX": 3.231793756158047,
+          "hullFaceX": 3.1,
+          "clearance": 0.1317937561580469
+        },
+        {
+          "name": "pitched-workhand",
+          "yaw": 0.8,
+          "pitch": -1.1,
+          "centreX": 4.1199999999999335,
+          "meshMinX": 3.264003387421046,
+          "hullFaceX": 3.1,
+          "clearance": 0.16400338742104603
+        }
+      ],
+      "ok": true
+    },
+    {
+      "id": "wayfarer-recorder-planet-envelope-blocks-work",
+      "reproduced": false,
+      "evaStarted": true,
+      "initial": {
+        "returning": false,
+        "routeLength": 0,
+        "distance": 0
+      },
+      "message": "WAYFARER-3 データレコーダーの作業を開始",
+      "maxDistance": 1.5010537766555936e-11,
+      "completed": true,
+      "returning": false,
+      "routeLength": 0,
+      "ok": true
+    },
+    {
+      "id": "planet-obstructed-return-rejects-with-manual-recovery",
+      "reproduced": false,
+      "blocked": {
+        "returning": false,
+        "routeBlocked": true,
+        "message": "シンドラが帰還経路を遮っています。支援を中止しました。手動で回り込み、船が見える位置でY / 帰還を再試行してください。4u以内ならH / 搭乗。",
+        "hatchDistance": 331.98621922285594
+      },
+      "manualMovement": 2.519999999999693,
+      "nearSideAccepted": true,
+      "recovered": {
+        "seconds": 9.8,
+        "preBoardHatchDistance": 1.3730234564060777
+      },
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "graphics": {
+    "vendor": "Google Inc. (NVIDIA)",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "hardware": true
+  },
+  "build": {
+    "version": "0.8.0",
+    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
+    "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+    "uncommittedChanges": true,
+    "builtAt": "2026-10-29T07:21:49.682Z"
+  }
+}
