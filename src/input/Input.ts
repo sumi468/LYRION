@@ -2,9 +2,10 @@ import { emptyInput, type FlightInput } from '../physics/flight';
 import type { EvaInput } from '../systems/eva';
 
 /** 1回押すごとに発火する操作 */
-export type ActionName = 'scan' | 'target' | 'camera' | 'assist' | 'upgrades' | 'log' | 'pause' | 'land' | 'dodge' | 'dock' | 'eva' | 'investigate' | 'return' | 'operations';
+export type ActionName = 'scan' | 'target' | 'camera' | 'assist' | 'upgrades' | 'log' | 'pause' | 'land' | 'dodge' | 'dock' | 'eva' | 'investigate' | 'return' | 'operations' | 'map';
 
 const ACTION_KEYS: Record<string, ActionName> = {
+  KeyM:'map',
   KeyT: 'dock', KeyH: 'eva', KeyY: 'return', KeyB: 'operations',
   KeyR: 'scan',
   KeyG: 'land',
@@ -22,7 +23,7 @@ const ACTION_KEYS: Record<string, ActionName> = {
 const PREVENT = new Set([
   'Space', 'Tab', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
   'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyQ', 'KeyE', 'KeyF', 'KeyX', 'KeyR', 'KeyC', 'KeyZ',
-  'ShiftLeft', 'ShiftRight', 'KeyJ', 'KeyG', 'KeyV', 'KeyT', 'KeyH', 'KeyY', 'KeyB',
+  'ShiftLeft', 'ShiftRight', 'KeyJ', 'KeyG', 'KeyV', 'KeyT', 'KeyH', 'KeyY', 'KeyB', 'KeyM',
 ]);
 
 export interface InputSettings {
@@ -68,7 +69,7 @@ export class Input {
       this.keys.add(e.code);
       const a = this.mode==='eva'&&e.code==='KeyE' ? 'investigate' : ACTION_KEYS[e.code];
       // 一時停止系(Esc/P)は無効時も通知する(メニューを閉じる用途)
-      if (a && (this.enabled || a === 'pause' || a === 'upgrades' || a === 'log' || a === 'operations')) this.onAction(a);
+      if (a && (this.enabled || a === 'pause' || a === 'upgrades' || a === 'log' || a === 'operations' || a==='map')) this.onAction(a);
     });
     on('keyup', (e) => this.keys.delete(e.code));
     on('blur', () => {

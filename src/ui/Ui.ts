@@ -11,8 +11,9 @@ import type { Settings } from '../systems/settings';
 import { clear, fmtDist, fmtNum, fmtTime, h } from './dom';
 import { Hud } from './Hud';
 import { BUILD_INFO } from '../core/build';
+import {starMap} from './StarMap';
 
-type Panel = 'none' | 'loading' | 'main' | 'pause' | 'log' | 'upgrades' | 'settings' | 'complete' | 'operations';
+type Panel = 'none' | 'loading' | 'main' | 'pause' | 'log' | 'upgrades' | 'settings' | 'complete' | 'operations' | 'map';
 
 const CONTROLS: [string, string][] = [
   ['W / S', '前進 / 後退'],
@@ -34,6 +35,7 @@ const CONTROLS: [string, string][] = [
   ['E / Y（船外）', '調査 / 機体へ帰還'],
   ['WASD / Shift（地上）', '歩行2.3 m/s / Shift長押しで速歩3.5 m/s。エネルギー消費なし'],
   ['B', '遠征ボード・基地サービス'],
+  ['M', '星系マップ / 移動先を選んでテレポート'],
   ['Esc / P', '一時停止'],
 ];
 
@@ -43,6 +45,7 @@ export class Ui {
   private panel: Panel = 'loading';
   private screens = new Map<Panel, HTMLElement>();
   private logSel: string | null = null;
+  private mapSel='prime-base';
   private loadBar = h('div', { class: 'load-fill' });
   private loadLabel = h('div', { class: 'load-label' }, '');
   private fatal: HTMLElement;
@@ -54,7 +57,7 @@ export class Ui {
     this.hud = new Hud(root);
     this.hud.setShowFps(game.settings.showFps);
     this.buildLoading();
-    for (const p of ['main', 'pause', 'log', 'upgrades', 'settings', 'complete', 'operations'] as Panel[]) {
+    for (const p of ['main', 'pause', 'log', 'upgrades', 'settings', 'complete', 'operations','map'] as Panel[]) {
       const el = h('div', { class: 'screen', 'data-screen': p });
       this.screens.set(p, el);
       root.append(el);
@@ -79,6 +82,7 @@ export class Ui {
     if (p === 'upgrades') this.renderUpgrades();
     if (p === 'settings') this.renderSettings();
     if (p === 'operations') this.renderOperations();
+    if (p === 'map') this.renderMap();
     this.hud.setVisible(this.game.phase === 'playing');
   }
 
@@ -154,7 +158,8 @@ export class Ui {
       } else if (g.phase === 'menu' && this.panel !== 'main') this.show('main');
       return;
     }
-    const target: Panel = a === 'operations'?'operations':a === 'upgrades' ? 'upgrades' : 'log';
+    if(a==='map'&&this.panel==='map'&&g.phase==='paused'){g.resume();return;}
+    const target: Panel = a==='map'?'map':a === 'operations'?'operations':a === 'upgrades' ? 'upgrades' : 'log';
     if (g.phase === 'playing') {
       g.pause();
       this.show(target);
@@ -242,6 +247,7 @@ export class Ui {
           { class: 'menu-list' },
           this.btn('再開', () => g.resume(), { primary: true }),
           this.btn('遠征ボード・基地', () => this.show('operations')),
+          this.btn('星系マップ / テレポート', () => this.show('map')),
           this.btn('宇宙船アップグレード', () => this.show('upgrades')),
           this.btn('探査記録', () => this.show('log')),
           this.btn('設定', () => this.show('settings')),
@@ -254,6 +260,13 @@ export class Ui {
   private renderOperations(): void {
     const el=this.screens.get('operations')!;clear(el);
     el.append(this.panelShell('MISSION CONTROL / EXPEDITION CAMPAIGN',operationsPanel(this.game,()=>this.renderOperations(),()=>this.game.phase==='menu'?this.show('main'):this.game.resume(),()=>this.show('upgrades'))));
+  }
+
+  private renderMap():void{
+    const el=this.screens.get('map')!;clear(el);
+    el.append(this.panelShell('SYSTEM MAP / 星系マップ',starMap(this.game,this.mapSel,id=>{this.mapSel=id;this.renderMap();this.screens.get('map')?.querySelector<HTMLButtonElement>(`[data-travel-id="${id}"]`)?.focus();},()=>{
+      if(this.game.teleportTo(this.mapSel))this.game.resume();else this.renderMap();
+    })));
   }
 
   private panelShell(title: string, body: Node, extra?: Node): HTMLElement {
@@ -459,6 +472,8 @@ export class Ui {
       slider('視野角 (FOV)', 55, 100, 1, st.fov, 'fov', (v) => `${Math.round(v)}°`),
       toggle('上下反転', st.invertY, (v) => set({ invertY: v })),
       toggle('フライトアシスト', g.state.assist, (v) => { g.state.assist = v; }),
+      toggle('オートエイム', st.autoAim, (v) => {set({autoAim:v});g.combat.clearAimLock();}),
+      h('p',{class:'dim small'},'正面25°以内の敵を自動で捕捉し、移動先を予測して照準を補正します。射撃は左クリック / J / FIRE。'),
     );
     const audio = h('div', { class: 'set-group' },
       h('div', { class: 'label' }, 'AUDIO'),

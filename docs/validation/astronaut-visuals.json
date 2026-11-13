@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-13T04:13:45.734Z",
+  "timestamp": "2026-11-13T09:01:21.065Z",
   "graphics": {
     "vendor": "Google Inc. (NVIDIA)",
     "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
@@ -66,11 +66,11 @@
   ],
   "errors": [],
   "build": {
-    "version": "0.9.0-dev.2",
-    "sourceRevision": "2cf1b25982db69e12db64df73d7961590688f950",
-    "sourceHash": "875ca202fb3b9f5d356d85b7f4d9e0c08ee73c874576d5826420a6b49dffc3c9",
+    "version": "0.9.0-dev.3",
+    "sourceRevision": "9760cb5ddde76d08dba92c242394cd6e5d3a9f95",
+    "sourceHash": "6aee957644e5924a9afa5589388983645d4a0dea2724f5fa2e34cfcbb84e808f",
     "uncommittedChanges": true,
-    "builtAt": "2026-11-13T04:07:47.706Z"
+    "builtAt": "2026-11-13T08:57:07.101Z"
   },
   "sunOcclusion": {
     "region": {
@@ -89,7 +89,7 @@
     "completed": true,
     "working": "maintenance-panel",
     "fov": 70,
-    "fps": 199.92003198720477
+    "fps": 166.66666666666663
   },
   "render": {
     "calls": 64,

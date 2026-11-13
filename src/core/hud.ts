@@ -45,6 +45,8 @@ export interface HudSnapshot {
   dodgeActive: boolean;
   reinforcementsIn: number;
   lead: {x:number;y:number}|null;
+  autoAim:boolean;
+  aimTarget:{id:number;x:number;y:number;distance:number}|null;
   weaponHeat: number;
   overheated: boolean;
   hit: number;

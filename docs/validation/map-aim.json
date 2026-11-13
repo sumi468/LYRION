@@ -1,0 +1,698 @@
+{
+  "time": "2026-11-13T09:03:35.173Z",
+  "build": {
+    "version": "0.9.0-dev.3",
+    "sourceRevision": "9760cb5ddde76d08dba92c242394cd6e5d3a9f95",
+    "sourceHash": "6aee957644e5924a9afa5589388983645d4a0dea2724f5fa2e34cfcbb84e808f",
+    "uncommittedChanges": true,
+    "builtAt": "2026-11-13T08:57:07.101Z"
+  },
+  "browser": "157.0.8103.51",
+  "headless": true,
+  "results": [
+    {
+      "name": "webgl2 実GPUで起動",
+      "ok": true,
+      "data": {
+        "requested": "webgl2",
+        "backend": "webgl2",
+        "reason": null,
+        "adapter": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgl2 未定義の目的地を拒否して現在地を維持",
+      "ok": true,
+      "data": {
+        "reason": "移動先が見つかりません",
+        "rejected": true,
+        "same": true
+      }
+    },
+    {
+      "name": "webgl2 Mでゲームを停止し星系マップを開く",
+      "ok": true
+    },
+    {
+      "name": "webgl2 マップの選択と実ボタンでCINDRAへ移動",
+      "ok": true,
+      "data": {
+        "altitude": 1499.9999999994152,
+        "relativeSpeed": 0,
+        "target": "cindra"
+      }
+    },
+    {
+      "name": "webgl2 テレポートは時間・資源・調査・報酬を直接変更しない",
+      "ok": true
+    },
+    {
+      "name": "webgl2 到着位置を即時保存",
+      "ok": true
+    },
+    {
+      "name": "webgl2 再開してもテレポート到着位置を維持",
+      "ok": true
+    },
+    {
+      "name": "webgl2 全マップ目的地を反復しても安全な有限座標に到着",
+      "ok": true,
+      "data": {
+        "arrivals": [
+          {
+            "id": "prime-base",
+            "accepted": true,
+            "minimumAltitude": 400.0000000051223,
+            "finite": true
+          },
+          {
+            "id": "asterion",
+            "accepted": true,
+            "minimumAltitude": 4100110.000009997,
+            "finite": true
+          },
+          {
+            "id": "lyrion",
+            "accepted": true,
+            "minimumAltitude": 47057123.61014932,
+            "finite": true
+          },
+          {
+            "id": "cindra",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000001241,
+            "finite": true
+          },
+          {
+            "id": "thalassa",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000017235,
+            "finite": true
+          },
+          {
+            "id": "lumen",
+            "accepted": true,
+            "minimumAltitude": 1500.000000001036,
+            "finite": true
+          },
+          {
+            "id": "halcyon",
+            "accepted": true,
+            "minimumAltitude": 88800527.19760104,
+            "finite": true
+          },
+          {
+            "id": "aurelion",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999990687,
+            "finite": true
+          },
+          {
+            "id": "ember",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000027696,
+            "finite": true
+          },
+          {
+            "id": "glacia",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999937322,
+            "finite": true
+          },
+          {
+            "id": "mira",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999972922,
+            "finite": true
+          },
+          {
+            "id": "vesper",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000068073,
+            "finite": true
+          },
+          {
+            "id": "wayfarer",
+            "accepted": true,
+            "minimumAltitude": 120.00000000091886,
+            "finite": true
+          },
+          {
+            "id": "lyrion-prime",
+            "accepted": true,
+            "minimumAltitude": 5000.000000005122,
+            "finite": true
+          },
+          {
+            "id": "lyrion-prime",
+            "accepted": true,
+            "minimumAltitude": 5000.000000005122,
+            "finite": true
+          },
+          {
+            "id": "wayfarer",
+            "accepted": true,
+            "minimumAltitude": 120.00000000091886,
+            "finite": true
+          },
+          {
+            "id": "vesper",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000068073,
+            "finite": true
+          },
+          {
+            "id": "mira",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999972922,
+            "finite": true
+          },
+          {
+            "id": "glacia",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999937322,
+            "finite": true
+          },
+          {
+            "id": "ember",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000027696,
+            "finite": true
+          },
+          {
+            "id": "aurelion",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999990687,
+            "finite": true
+          },
+          {
+            "id": "halcyon",
+            "accepted": true,
+            "minimumAltitude": 88800527.19760104,
+            "finite": true
+          },
+          {
+            "id": "lumen",
+            "accepted": true,
+            "minimumAltitude": 1500.000000001036,
+            "finite": true
+          },
+          {
+            "id": "thalassa",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000017235,
+            "finite": true
+          },
+          {
+            "id": "cindra",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000001241,
+            "finite": true
+          },
+          {
+            "id": "lyrion",
+            "accepted": true,
+            "minimumAltitude": 47057123.61014932,
+            "finite": true
+          },
+          {
+            "id": "asterion",
+            "accepted": true,
+            "minimumAltitude": 4100110.000009997,
+            "finite": true
+          },
+          {
+            "id": "prime-base",
+            "accepted": true,
+            "minimumAltitude": 400.0000000051223,
+            "finite": true
+          }
+        ],
+        "unchanged": true
+      }
+    },
+    {
+      "name": "webgl2 反復移動でも資源やスキャン報酬を捏造しない",
+      "ok": true
+    },
+    {
+      "name": "webgl2 移動時に保持入力・スキャン・残弾・照準ロックを解除",
+      "ok": true,
+      "data": {
+        "accepted": true,
+        "scanStarted": true,
+        "scan": null,
+        "keys": 0,
+        "virtual": {
+          "thrust": 0,
+          "turn": 0,
+          "pitch": 0,
+          "boost": false,
+          "brake": false,
+          "fire": false
+        },
+        "bolts": 0,
+        "lock": null
+      }
+    },
+    {
+      "name": "webgl2 PAD 01上空へ移動し通常のG操作で着陸",
+      "ok": true
+    },
+    {
+      "name": "webgl2 着陸中は理由を表示してテレポートボタンを無効化",
+      "ok": true
+    },
+    {
+      "name": "webgl2 API経由でも着陸モードを迂回できない",
+      "ok": true
+    },
+    {
+      "name": "webgl2 地上探索中の移動を拒否し搭乗を案内",
+      "ok": true,
+      "data": {
+        "active": true,
+        "rejected": true,
+        "same": true,
+        "reason": "船外活動中です。Hで宇宙船へ搭乗してから移動してください"
+      }
+    },
+    {
+      "name": "webgl2 ASTERIONの安全な位置から接岸可能",
+      "ok": true
+    },
+    {
+      "name": "webgl2 EVA中も理由付きでテレポートを拒否",
+      "ok": true
+    },
+    {
+      "name": "webgl2 交戦中は移動不可の理由を明示",
+      "ok": true
+    },
+    {
+      "name": "webgl2 機首から外れた前方の敵を自動捕捉し自動射撃はしない",
+      "ok": true,
+      "data": {
+        "id": 0,
+        "locked": true,
+        "passive": 0,
+        "corrected": true,
+        "hud": "ASTERION STATION473,149 km追撃機 · 交戦中 · 160 HP · 412u▲迎撃機 · 画面外 · 144 HP · 950u▲重戦機 · 画面外 · 200 HP · 1000u▲▲▲▲LX-07 / FLIGHT SYSTEMSNormal · WAVE 1 · 敵 3 · 撃破 0TWIN PULSE · 左クリック / J · 12%AUTO AIM · LOCK 412 m / FIREで射撃V / EVADE READY · 18 ENERGYAUTO LOCK着陸案内で高度・速度・地面を確認 / GHOME → ASTERION / B 遠征ボードB 遠征・補給 / T ドッキング / H 船外活動MISSION 01 — FIRST DEPARTURE最初の出発最初の遠征ブリーフィングを受ける進行状況 0 / 6目的地 ASTERION STATION残り距離 473,149 kmTで接岸。ASTERIONは任務・補給・帰還の拠点ですT / DOCKで接岸し、B / MISSION CONTROLで「受注して追跡」を選びます。DATA0HULL100/100SHIELD60/60ENERGY98%HDG 000°   PIT +0°リリオン・プライム  高度 463,134 km0m/sF 長押し / 加速待機交戦中は近距離ブースト / X 制動ASSIST ON  ·  3RDTARGETASTERION STATIONLYRION PRIME / HOME STATION473,149 km163.9 m/s / T DOCKLANDING GUIDANCEPAD 01 / PORT LYRA高度 4 m / 450 m地表速度 0 / 100 m/s✓ 平坦・障害物なしPAD 01 中心まで水平 0 m · 中央8 mが目安着陸完了 / Hで降機 · Gで離陸後方から 2 機が追跡中20 FPS50.0 msMEDIUM · WebGL 2W/S 推進 / A/D 旋回 / F 加速 / J 射撃 / T 接岸 / H 船外 / M マップ・テレポート / B 遠征クリックして視点操作を有効化"
+      }
+    },
+    {
+      "name": "webgl2 射撃入力時だけ実弾を予測方向へ補正",
+      "ok": true
+    },
+    {
+      "name": "webgl2 HUDでオートエイムの捕捉を確認できる",
+      "ok": true,
+      "data": {
+        "visible": true,
+        "text": "AUTO LOCK"
+      }
+    },
+    {
+      "name": "webgl2 設定のオートエイムは初期ON",
+      "ok": true
+    },
+    {
+      "name": "webgl2 設定OFFを保存",
+      "ok": true
+    },
+    {
+      "name": "webgl2 OFFで捕捉を解除し手動照準へ戻る",
+      "ok": true
+    },
+    {
+      "name": "webgl2 再起動後もオートエイムOFFを維持",
+      "ok": true
+    },
+    {
+      "name": "webgpu 実GPUで起動",
+      "ok": true,
+      "data": {
+        "requested": "webgpu",
+        "backend": "webgpu",
+        "reason": null,
+        "adapter": "nvidia / lovelace",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgpu 未定義の目的地を拒否して現在地を維持",
+      "ok": true,
+      "data": {
+        "reason": "移動先が見つかりません",
+        "rejected": true,
+        "same": true
+      }
+    },
+    {
+      "name": "webgpu Mでゲームを停止し星系マップを開く",
+      "ok": true
+    },
+    {
+      "name": "webgpu マップの選択と実ボタンでCINDRAへ移動",
+      "ok": true,
+      "data": {
+        "altitude": 1499.9999999994152,
+        "relativeSpeed": 0,
+        "target": "cindra"
+      }
+    },
+    {
+      "name": "webgpu テレポートは時間・資源・調査・報酬を直接変更しない",
+      "ok": true
+    },
+    {
+      "name": "webgpu 到着位置を即時保存",
+      "ok": true
+    },
+    {
+      "name": "webgpu 再開してもテレポート到着位置を維持",
+      "ok": true
+    },
+    {
+      "name": "webgpu 全マップ目的地を反復しても安全な有限座標に到着",
+      "ok": true,
+      "data": {
+        "arrivals": [
+          {
+            "id": "prime-base",
+            "accepted": true,
+            "minimumAltitude": 400.0000000051223,
+            "finite": true
+          },
+          {
+            "id": "asterion",
+            "accepted": true,
+            "minimumAltitude": 4100110.000009997,
+            "finite": true
+          },
+          {
+            "id": "lyrion",
+            "accepted": true,
+            "minimumAltitude": 47057123.61014932,
+            "finite": true
+          },
+          {
+            "id": "cindra",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000001241,
+            "finite": true
+          },
+          {
+            "id": "thalassa",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000017235,
+            "finite": true
+          },
+          {
+            "id": "lumen",
+            "accepted": true,
+            "minimumAltitude": 1500.000000001036,
+            "finite": true
+          },
+          {
+            "id": "halcyon",
+            "accepted": true,
+            "minimumAltitude": 88800527.19760104,
+            "finite": true
+          },
+          {
+            "id": "aurelion",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999990687,
+            "finite": true
+          },
+          {
+            "id": "ember",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000027696,
+            "finite": true
+          },
+          {
+            "id": "glacia",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999937322,
+            "finite": true
+          },
+          {
+            "id": "mira",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999972922,
+            "finite": true
+          },
+          {
+            "id": "vesper",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000068073,
+            "finite": true
+          },
+          {
+            "id": "wayfarer",
+            "accepted": true,
+            "minimumAltitude": 120.00000000091886,
+            "finite": true
+          },
+          {
+            "id": "lyrion-prime",
+            "accepted": true,
+            "minimumAltitude": 5000.000000005122,
+            "finite": true
+          },
+          {
+            "id": "lyrion-prime",
+            "accepted": true,
+            "minimumAltitude": 5000.000000005122,
+            "finite": true
+          },
+          {
+            "id": "wayfarer",
+            "accepted": true,
+            "minimumAltitude": 120.00000000091886,
+            "finite": true
+          },
+          {
+            "id": "vesper",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000068073,
+            "finite": true
+          },
+          {
+            "id": "mira",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999972922,
+            "finite": true
+          },
+          {
+            "id": "glacia",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999937322,
+            "finite": true
+          },
+          {
+            "id": "ember",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000027696,
+            "finite": true
+          },
+          {
+            "id": "aurelion",
+            "accepted": true,
+            "minimumAltitude": 1499.9999999990687,
+            "finite": true
+          },
+          {
+            "id": "halcyon",
+            "accepted": true,
+            "minimumAltitude": 88800527.19760104,
+            "finite": true
+          },
+          {
+            "id": "lumen",
+            "accepted": true,
+            "minimumAltitude": 1500.000000001036,
+            "finite": true
+          },
+          {
+            "id": "thalassa",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000017235,
+            "finite": true
+          },
+          {
+            "id": "cindra",
+            "accepted": true,
+            "minimumAltitude": 1500.0000000001241,
+            "finite": true
+          },
+          {
+            "id": "lyrion",
+            "accepted": true,
+            "minimumAltitude": 47057123.61014932,
+            "finite": true
+          },
+          {
+            "id": "asterion",
+            "accepted": true,
+            "minimumAltitude": 4100110.000009997,
+            "finite": true
+          },
+          {
+            "id": "prime-base",
+            "accepted": true,
+            "minimumAltitude": 400.0000000051223,
+            "finite": true
+          }
+        ],
+        "unchanged": true
+      }
+    },
+    {
+      "name": "webgpu 反復移動でも資源やスキャン報酬を捏造しない",
+      "ok": true
+    },
+    {
+      "name": "webgpu 移動時に保持入力・スキャン・残弾・照準ロックを解除",
+      "ok": true,
+      "data": {
+        "accepted": true,
+        "scanStarted": true,
+        "scan": null,
+        "keys": 0,
+        "virtual": {
+          "thrust": 0,
+          "turn": 0,
+          "pitch": 0,
+          "boost": false,
+          "brake": false,
+          "fire": false
+        },
+        "bolts": 0,
+        "lock": null
+      }
+    },
+    {
+      "name": "webgpu PAD 01上空へ移動し通常のG操作で着陸",
+      "ok": true
+    },
+    {
+      "name": "webgpu 着陸中は理由を表示してテレポートボタンを無効化",
+      "ok": true
+    },
+    {
+      "name": "webgpu API経由でも着陸モードを迂回できない",
+      "ok": true
+    },
+    {
+      "name": "webgpu 地上探索中の移動を拒否し搭乗を案内",
+      "ok": true,
+      "data": {
+        "active": true,
+        "rejected": true,
+        "same": true,
+        "reason": "船外活動中です。Hで宇宙船へ搭乗してから移動してください"
+      }
+    },
+    {
+      "name": "webgpu ASTERIONの安全な位置から接岸可能",
+      "ok": true
+    },
+    {
+      "name": "webgpu EVA中も理由付きでテレポートを拒否",
+      "ok": true
+    },
+    {
+      "name": "webgpu 交戦中は移動不可の理由を明示",
+      "ok": true
+    },
+    {
+      "name": "webgpu 機首から外れた前方の敵を自動捕捉し自動射撃はしない",
+      "ok": true,
+      "data": {
+        "id": 0,
+        "locked": true,
+        "passive": 0,
+        "corrected": true,
+        "hud": "ASTERION STATION473,149 km追撃機 · 交戦中 · 160 HP · 412u▲迎撃機 · 画面外 · 144 HP · 950u▲重戦機 · 画面外 · 200 HP · 1000u▲▲▲▲LX-07 / FLIGHT SYSTEMSNormal · WAVE 1 · 敵 3 · 撃破 0TWIN PULSE · 左クリック / J · 12%AUTO AIM · LOCK 412 m / FIREで射撃V / EVADE READY · 18 ENERGYAUTO LOCK着陸案内で高度・速度・地面を確認 / GHOME → ASTERION / B 遠征ボードB 遠征・補給 / T ドッキング / H 船外活動MISSION 01 — FIRST DEPARTURE最初の出発最初の遠征ブリーフィングを受ける進行状況 0 / 6目的地 ASTERION STATION残り距離 473,149 kmTで接岸。ASTERIONは任務・補給・帰還の拠点ですT / DOCKで接岸し、B / MISSION CONTROLで「受注して追跡」を選びます。DATA0HULL100/100SHIELD60/60ENERGY98%HDG 000°   PIT +0°リリオン・プライム  高度 463,134 km0m/sF 長押し / 加速待機交戦中は近距離ブースト / X 制動ASSIST ON  ·  3RDTARGETASTERION STATIONLYRION PRIME / HOME STATION473,149 km163.9 m/s / T DOCKLANDING GUIDANCEPAD 01 / PORT LYRA高度 4 m / 450 m地表速度 0 / 100 m/s✓ 平坦・障害物なしPAD 01 中心まで水平 0 m · 中央8 mが目安着陸完了 / Hで降機 · Gで離陸後方から 2 機が追跡中20 FPS50.0 msMEDIUM · WebGPUW/S 推進 / A/D 旋回 / F 加速 / J 射撃 / T 接岸 / H 船外 / M マップ・テレポート / B 遠征クリックして視点操作を有効化"
+      }
+    },
+    {
+      "name": "webgpu 射撃入力時だけ実弾を予測方向へ補正",
+      "ok": true
+    },
+    {
+      "name": "webgpu HUDでオートエイムの捕捉を確認できる",
+      "ok": true,
+      "data": {
+        "visible": true,
+        "text": "AUTO LOCK"
+      }
+    },
+    {
+      "name": "webgpu 設定のオートエイムは初期ON",
+      "ok": true
+    },
+    {
+      "name": "webgpu 設定OFFを保存",
+      "ok": true
+    },
+    {
+      "name": "webgpu OFFで捕捉を解除し手動照準へ戻る",
+      "ok": true
+    },
+    {
+      "name": "webgpu 再起動後もオートエイムOFFを維持",
+      "ok": true
+    },
+    {
+      "name": "タッチ縦にMAPボタンを表示",
+      "ok": true
+    },
+    {
+      "name": "タッチ縦で移動ボタンが画面内に収まる",
+      "ok": true,
+      "data": {
+        "x": 50.703125,
+        "y": 647.625,
+        "width": 290.59375,
+        "height": 51.09375,
+        "w": 390,
+        "h": 844
+      }
+    },
+    {
+      "name": "タッチ縦のマップから実際に移動",
+      "ok": true
+    },
+    {
+      "name": "タッチ横にMAPボタンを表示",
+      "ok": true
+    },
+    {
+      "name": "タッチ横で移動ボタンが画面内に収まる",
+      "ok": true,
+      "data": {
+        "x": 500.9375,
+        "y": 249.09375,
+        "width": 282.71875,
+        "height": 39.4375,
+        "w": 844,
+        "h": 390
+      }
+    },
+    {
+      "name": "タッチ横のマップから実際に移動",
+      "ok": true
+    },
+    {
+      "name": "ページ・描画エラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": []
+}

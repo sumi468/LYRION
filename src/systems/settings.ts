@@ -8,6 +8,7 @@ export const SETTINGS_KEY = 'lyrion.settings.v1';
 export interface Settings {
   renderer: RendererPreference;
   difficulty: Difficulty;
+  autoAim: boolean;
   quality: QualitySetting;
   sensitivity: number;
   invertY: boolean;
@@ -22,6 +23,7 @@ export interface Settings {
 export const DEFAULT_SETTINGS: Settings = {
   renderer: 'auto',
   difficulty: 'normal',
+  autoAim: true,
   quality: 'auto',
   sensitivity: 1,
   invertY: false,
@@ -41,6 +43,7 @@ export function sanitizeSettings(raw: unknown): Settings {
   const r = raw as Record<string, unknown>;
   if(r.renderer==='auto'||r.renderer==='webgpu'||r.renderer==='webgl2')out.renderer=r.renderer;
   if(isDifficulty(r.difficulty))out.difficulty=r.difficulty;
+  if(typeof r.autoAim==='boolean')out.autoAim=r.autoAim;
   if (typeof r.quality === 'string' && (QUALITIES as string[]).includes(r.quality)) out.quality = r.quality as QualitySetting;
   if (typeof r.sensitivity === 'number' && Number.isFinite(r.sensitivity)) out.sensitivity = Math.min(3, Math.max(0.2, r.sensitivity));
   if (typeof r.invertY === 'boolean') out.invertY = r.invertY;

@@ -65,7 +65,7 @@ export class TouchControls {
       h('div',{class:'tc-eva'},
         hold('上昇','small',()=>input.virtual.pitch=1,()=>input.virtual.pitch=0),hold('下降','small',()=>input.virtual.pitch=-1,()=>input.virtual.pitch=0),
         tap('調査','eva-investigate','investigate'),tap('搭乗','eva-board','eva'),tap('帰還','eva-return','return'),hold('制動','eva-brake',()=>input.virtual.brake=true,()=>input.virtual.brake=false)),
-      h('div', { class: 'tc-top' }, tap('CAM', 'small', 'camera'), tap('II', 'small', 'pause')),
+      h('div', { class: 'tc-top' },tap('CAM', 'small', 'camera'),tap('II', 'small', 'pause'),tap('MAP', 'small map', 'map')),
       h(
         'div',
         { class: 'tc-right' },
@@ -113,6 +113,7 @@ export class TouchControls {
   }
 
   private releaseAll(): void {
+    this.root.querySelectorAll('.tc-btn.down').forEach(el=>el.classList.remove('down'));
     for (const f of this.holds.values()) f();
     this.holds.clear();
     this.stickId = this.lookId = null;

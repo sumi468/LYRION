@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-13T04:13:30.881Z",
+  "timestamp": "2026-11-13T09:01:07.438Z",
   "results": [
     {
       "name": "6任務の一覧と1つの詳細を分けて表示",
@@ -31,7 +31,7 @@
           "completed": 0,
           "objectiveTotal": 6,
           "destination": "ASTERION STATION",
-          "distance": 78.72001018859542,
+          "distance": 78.72001016167921,
           "action": "Tで接岸。ASTERIONは任務・補給・帰還の拠点です"
         },
         "code": "MISSION 01 — FIRST DEPARTURE",
@@ -113,7 +113,7 @@
           "x": 230,
           "y": 145,
           "right": 380,
-          "bottom": 257
+          "bottom": 294
         },
         "fps": {
           "x": 265.34375,
@@ -166,7 +166,7 @@
           "x": 640,
           "y": 108,
           "right": 790,
-          "bottom": 176
+          "bottom": 214
         },
         "fps": {
           "x": 675.34375,
@@ -197,10 +197,10 @@
   ],
   "errors": [],
   "build": {
-    "version": "0.9.0-dev.2",
-    "sourceRevision": "2cf1b25982db69e12db64df73d7961590688f950",
-    "sourceHash": "875ca202fb3b9f5d356d85b7f4d9e0c08ee73c874576d5826420a6b49dffc3c9",
+    "version": "0.9.0-dev.3",
+    "sourceRevision": "9760cb5ddde76d08dba92c242394cd6e5d3a9f95",
+    "sourceHash": "6aee957644e5924a9afa5589388983645d4a0dea2724f5fa2e34cfcbb84e808f",
     "uncommittedChanges": true,
-    "builtAt": "2026-11-13T04:07:47.706Z"
+    "builtAt": "2026-11-13T08:57:07.101Z"
   }
 }

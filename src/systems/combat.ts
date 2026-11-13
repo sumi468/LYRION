@@ -16,7 +16,11 @@ interface Pilot { pos:Vector3; vel:Vector3; quat:Quaternion; energy:number }
 const direction=new Vector3(),offset=new Vector3(),forward=new Vector3(),right=new Vector3(),target=new Vector3();
 const side=new Vector3(),vertical=new Vector3(),desired=new Vector3(),change=new Vector3(),enemyForward=new Vector3();
 const rotation=new Quaternion(),bank=new Quaternion();
+const aimEnd=new Vector3(),aimMuzzle=new Vector3();
 const UP=new Vector3(0,1,0),FRONT=new Vector3(0,0,-1),ROLL=new Vector3(0,0,1);
+export const AUTO_AIM_ACQUIRE_DEGREES=25,AUTO_AIM_RETAIN_DEGREES=30;
+const AUTO_AIM_ACQUIRE_COS=Math.cos(AUTO_AIM_ACQUIRE_DEGREES*Math.PI/180),AUTO_AIM_RETAIN_COS=Math.cos(AUTO_AIM_RETAIN_DEGREES*Math.PI/180);
+const PLAYER_BOLT_SPEED=1150,PLAYER_BOLT_LIFE=1.25;
 
 /** Earliest positive interception time, accounting for projectile inherited velocity. */
 export function interceptTime(relative:Vector3,velocity:Vector3,speed:number):number {
@@ -44,12 +48,16 @@ export class CombatSystem {
   readonly bolts:Bolt[]=Array.from({length:MAX_BOLTS},()=>({active:false,pos:new Vector3(),previous:new Vector3(),vel:new Vector3(),life:0,hostile:false,damage:0}));
   readonly impacts:Impact[]=Array.from({length:12},()=>({pos:new Vector3(),life:0,duration:1,radius:1}));
   heat=0; overheated=false; hitFlash=0; shotPulse=false;
+  /** A passive weapons lock. It never turns the ship or fires for the pilot. */
+  aimTargetId:number|null=null;
+  readonly aimPoint=new Vector3();
   wave=0; pursuers=0; incoming=0; reinforcementsIn=0; dodgeCooldown=0; dodgeTime=0; combo=0;
   private cooldown=0;
   private spawnTimer=12;
   private sinceKill=99;
   private result={damage:0,reward:0,kills:0};
   get count():number {let count=0;for(const enemy of this.enemies)if(enemy.active)count++;return count;}
+  get aimLocked():boolean{return this.aimTargetId!==null;}
   get rollAngle():number {const t=1-this.dodgeTime/DODGE_DURATION;return this.dodgeTime>0?Math.PI*2*t*t*(3-2*t):0;}
   reset(grace=12):void {
     for(const enemy of this.enemies)enemy.active=false;
@@ -58,7 +66,10 @@ export class CombatSystem {
     this.heat=0;this.overheated=false;this.cooldown=0;this.spawnTimer=grace;this.hitFlash=0;
     this.wave=0;this.pursuers=this.incoming=0;this.reinforcementsIn=0;this.combo=0;this.sinceKill=99;
     this.dodgeCooldown=this.dodgeTime=0;
+    this.clearAim();
   }
+  private clearAim():void{this.aimTargetId=null;this.aimPoint.set(0,0,0);}
+  clearAimLock():void{this.clearAim();}
   tryDodge(ship:Pilot):boolean {
     if(this.dodgeCooldown>0||ship.energy<DODGE_ENERGY)return false;
     ship.energy-=DODGE_ENERGY;this.dodgeCooldown=DODGE_COOLDOWN;this.dodgeTime=DODGE_DURATION;return true;
@@ -77,27 +88,59 @@ export class CombatSystem {
     enemy.quat.setFromUnitVectors(FRONT,direction.copy(ship.pos).sub(enemy.pos).normalize());
   }
   spawn(ship:Pilot,difficulty:Difficulty,worlds:readonly WorldCollider[]):void {
+    this.clearAim();
     for(const enemy of this.enemies)enemy.active=false;
     const def=DIFFICULTIES[difficulty];this.wave++;this.reinforcementsIn=def.reinforcement;
     for(let i=0;i<def.count;i++)this.spawnEnemy(i,ship,difficulty,worlds);
   }
   private bolt(pos:Vector3,aim:Vector3,inherited:Vector3,hostile:boolean,damage:number):void {
     const bolt=this.bolts.find(item=>!item.active);if(!bolt)return;
-    bolt.active=true;bolt.pos.copy(pos);bolt.previous.copy(pos);bolt.vel.copy(aim).multiplyScalar(hostile?620:1150).add(inherited);
-    bolt.life=hostile?3:1.25;bolt.hostile=hostile;bolt.damage=damage;
+    bolt.active=true;bolt.pos.copy(pos);bolt.previous.copy(pos);bolt.vel.copy(aim).multiplyScalar(hostile?620:PLAYER_BOLT_SPEED).add(inherited);
+    bolt.life=hostile?3:PLAYER_BOLT_LIFE;bolt.hostile=hostile;bolt.damage=damage;
   }
   private impact(pos:Vector3,destroyed:boolean):void {
     const effect=this.impacts.find(item=>item.life<=0)??this.impacts[0];
     effect.pos.copy(pos);effect.duration=destroyed?.75:.22;effect.life=effect.duration;effect.radius=destroyed?24:5;
   }
-  private firePlayer(ship:Pilot,difficulty:Difficulty):void {
+  /** Returns a centre-alignment score, leaving the predictive relative aim in
+   * target. Reuse this for retention as well as acquisition to prevent stale
+   * locks through worlds, behind the camera, or beyond projectile lifetime. */
+  private aimCandidate(enemy:Enemy,ship:Pilot,worlds:readonly WorldCollider[],minimumCosine:number):number{
+    if(!enemy.active||enemy.hp<=0)return -1;
+    offset.copy(enemy.pos).sub(ship.pos);const distance=offset.length();
+    if(distance<12||distance>WEAPON_RANGE)return -1;
+    const cosine=offset.dot(forward)/distance;if(cosine<minimumCosine)return -1;
+    change.copy(enemy.vel).sub(ship.vel);const lead=interceptTime(offset,change,PLAYER_BOLT_SPEED);
+    if(lead<=0||lead>PLAYER_BOLT_LIFE)return -1;
+    target.copy(offset).addScaledVector(change,lead);const predictedDistance=target.length();
+    // interceptTime also supplies a useful fallback to enemy/legacy aim. A
+    // visible auto lock requires an actual reachable interception instead.
+    if(Math.abs(predictedDistance-PLAYER_BOLT_SPEED*lead)>1||target.dot(forward)/predictedDistance<AUTO_AIM_RETAIN_COS)return -1;
+    aimEnd.copy(ship.pos).add(target);aimMuzzle.copy(ship.pos).addScaledVector(forward,9);
+    for(const body of worlds)if(segmentHitsSphere(ship.pos,enemy.pos,body.pos,body.radius)||segmentHitsSphere(aimMuzzle,aimEnd,body.pos,body.radius))return -1;
+    return cosine;
+  }
+  private updateAutoAim(ship:Pilot,worlds:readonly WorldCollider[],enabled:boolean):void{
+    if(!enabled){this.clearAim();return;}
+    const held=this.aimTargetId===null?null:this.enemies[this.aimTargetId];
+    if(held&&this.aimCandidate(held,ship,worlds,AUTO_AIM_RETAIN_COS)>=0){this.aimPoint.copy(ship.pos).add(target);return;}
+    this.clearAim();let best=-1;
+    for(let i=0;i<this.enemies.length;i++){
+      const score=this.aimCandidate(this.enemies[i],ship,worlds,AUTO_AIM_ACQUIRE_COS);
+      if(score>best){best=score;this.aimTargetId=i;this.aimPoint.copy(ship.pos).add(target);}
+    }
+  }
+  private firePlayer(ship:Pilot,difficulty:Difficulty,autoAim:boolean):void {
     const def=DIFFICULTIES[difficulty];forward.copy(FRONT).applyQuaternion(ship.quat);direction.copy(forward);
-    let best:number=def.assist;
-    for(const enemy of this.enemies)if(enemy.active){
-      offset.copy(enemy.pos).sub(ship.pos);const distance=offset.length();
-      change.copy(enemy.vel).sub(ship.vel);const lead=interceptTime(offset,change,1150);
-      target.copy(offset).addScaledVector(change,lead).normalize();const cosine=target.dot(forward);
-      if(distance<WEAPON_RANGE&&cosine>best){best=cosine;direction.copy(target);}
+    if(autoAim){if(this.aimTargetId!==null)direction.copy(this.aimPoint).sub(ship.pos).normalize();}
+    else{
+      let best:number=def.assist;
+      for(const enemy of this.enemies)if(enemy.active){
+        offset.copy(enemy.pos).sub(ship.pos);const distance=offset.length();
+        change.copy(enemy.vel).sub(ship.vel);const lead=interceptTime(offset,change,PLAYER_BOLT_SPEED);
+        target.copy(offset).addScaledVector(change,lead).normalize();const cosine=target.dot(forward);
+        if(distance<WEAPON_RANGE&&cosine>best){best=cosine;direction.copy(target);}
+      }
     }
     right.set(1,0,0).applyQuaternion(ship.quat);
     for(let sign=-1;sign<=1;sign+=2){target.copy(ship.pos).addScaledVector(forward,9).addScaledVector(right,sign*2.8);this.bolt(target,direction,ship.vel,false,12);}
@@ -153,14 +196,14 @@ export class CombatSystem {
     }
     offset.copy(enemy.pos).sub(ship.pos).normalize();if(distance<1800&&offset.dot(forward)<-.2)this.pursuers++;
   }
-  step(dt:number,ship:Pilot,time:number,fire:boolean,difficulty:Difficulty,worlds:readonly WorldCollider[],safe=false){
+  step(dt:number,ship:Pilot,time:number,fire:boolean,difficulty:Difficulty,worlds:readonly WorldCollider[],safe=false,autoAim=false){
     const result=this.result;result.damage=result.reward=result.kills=0;this.shotPulse=false;this.pursuers=this.incoming=0;
     this.hitFlash=Math.max(0,this.hitFlash-dt*3);this.cooldown=Math.max(0,this.cooldown-dt);this.sinceKill+=dt;
     this.dodgeCooldown=Math.max(0,this.dodgeCooldown-dt);this.dodgeTime=Math.max(0,this.dodgeTime-dt);
     this.heat=Math.max(0,this.heat-dt*.2);if(this.heat<.25)this.overheated=false;
     if(this.sinceKill>6)this.combo=0;
     for(const impact of this.impacts)impact.life=Math.max(0,impact.life-dt);
-    if(safe){if(this.count||this.bolts.some(b=>b.active))this.reset(12);return result;}
+    if(safe){if(this.count||this.bolts.some(b=>b.active))this.reset(12);this.clearAim();return result;}
     if(difficulty==='off'){for(const enemy of this.enemies)enemy.active=false;for(const bolt of this.bolts)if(bolt.hostile)bolt.active=false;}
     const def=DIFFICULTIES[difficulty];
     if(difficulty!=='off'&&this.count===0){this.spawnTimer-=dt;if(this.spawnTimer<=0){this.spawn(ship,difficulty,worlds);this.spawnTimer=difficulty==='easy'?16:5;}}
@@ -169,7 +212,8 @@ export class CombatSystem {
       if(this.reinforcementsIn<=0){const slot=this.enemies.findIndex(enemy=>!enemy.active);if(slot>=0)this.spawnEnemy(slot,ship,difficulty,worlds,true);this.reinforcementsIn=def.reinforcement;}
     }
     forward.copy(FRONT).applyQuaternion(ship.quat);
-    if(fire&&this.cooldown<=0&&!this.overheated&&ship.energy>=2&&this.dodgeTime<=0)this.firePlayer(ship,difficulty);
+    this.updateAutoAim(ship,worlds,autoAim);
+    if(fire&&this.cooldown<=0&&!this.overheated&&ship.energy>=2&&this.dodgeTime<=0)this.firePlayer(ship,difficulty,autoAim);
     for(let i=0;i<this.enemies.length;i++)if(this.enemies[i].active)this.updateEnemy(this.enemies[i],i,ship,time,dt,difficulty,fire,worlds);
     for(const bolt of this.bolts)if(bolt.active){
       bolt.previous.copy(bolt.pos);bolt.pos.addScaledVector(bolt.vel,dt);bolt.life-=dt;
@@ -184,6 +228,7 @@ export class CombatSystem {
         break;
       }
     }
+    this.updateAutoAim(ship,worlds,autoAim);
     return result;
   }
 }

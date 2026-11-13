@@ -1,6 +1,6 @@
 {
   "name": "lyrion-beyond-the-stars",
-  "version": "0.9.0-dev.2",
+  "version": "0.9.0-dev.3",
   "private": true,
   "type": "module",
   "engines": {
@@ -20,6 +20,7 @@
     "test:stabilization": "node tests/e2e/audit-stabilization.mjs && node tests/e2e/mission-clarity.mjs && node tests/e2e/astronaut-visuals.mjs",
     "test:gpu:homecoming": "node tests/e2e/homecoming-gpu.mjs",
     "test:surface": "node tests/e2e/surface-expedition.mjs",
+    "test:map-aim": "node tests/e2e/map-aim.mjs",
     "test:renderer": "node tests/e2e/renderer-native.mjs",
     "test:gpu:stabilization": "node tests/e2e/stabilization-gpu.mjs",
     "test:critical": "node tests/e2e/critical-homecoming.mjs",

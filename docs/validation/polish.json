@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-13T04:12:07.535Z",
+  "timestamp": "2026-11-13T08:59:54.295Z",
   "url": "http://127.0.0.1:4188/?debug&renderer=webgl2",
   "results": [
     {
@@ -8,9 +8,9 @@
       "data": {
         "enabled": true,
         "visible": true,
-        "text": "200 FPS5.0 msHIGH · WebGL 2",
-        "fps": 200,
-        "frameMs": 5
+        "text": "176 FPS5.7 msHIGH · WebGL 2",
+        "fps": 175.99999999999997,
+        "frameMs": 5.681818181818183
       }
     },
     {
@@ -76,10 +76,10 @@
             "left": 230,
             "top": 145,
             "right": 380,
-            "bottom": 257
+            "bottom": 294
           },
           {
-            "left": 283.421875,
+            "left": 230.640625,
             "top": 110,
             "right": 378,
             "bottom": 146
@@ -114,10 +114,10 @@
             "left": 640,
             "top": 108,
             "right": 790,
-            "bottom": 176
+            "bottom": 214
           },
           {
-            "left": 529.421875,
+            "left": 468.640625,
             "top": 6,
             "right": 630,
             "bottom": 42

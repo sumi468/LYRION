@@ -25,6 +25,7 @@ export class Hud {
   private heatBar = h('div', { class: 'weapon-heat-fill' });
   private combatLabel = h('div', { class: 'combat-label' });
   private weaponLabel = h('div', { class: 'weapon-label' });
+  private aimLabel=h('div',{class:'aim-label'});
   private dodgeLabel = h('div', { class:'dodge-label' });
   private leadMarker = h('div',{class:'lead-marker',hidden:true},h('i'),h('span',{},'LEAD'));
   private landingLabel = h('div', { class: 'landing-label' });
@@ -128,7 +129,7 @@ export class Hud {
       this.reticle,
       this.enemyLayer,
       this.cockpit,
-      h('div',{class:'hud-combat'},this.combatLabel,this.weaponLabel,h('div',{class:'weapon-heat'},this.heatBar),this.dodgeLabel),
+      h('div',{class:'hud-combat'},this.combatLabel,this.weaponLabel,h('div',{class:'weapon-heat'},this.heatBar),this.aimLabel,this.dodgeLabel),
       this.leadMarker,
       this.landingLabel,
       this.ops,
@@ -177,15 +178,18 @@ export class Hud {
     this.opsFill.style.transform=`scaleX(${s.operations.progress})`;
     this.ops.classList.toggle('eva',s.operations.mode==='eva');
     this.ops.classList.toggle('critical',s.operations.mode==='eva'&&(s.operations.oxygen<60||s.operations.distance>350));
-    setText(this.keys,s.operations.mode==='surface'?'WASD 歩行 / Space 跳ぶ / Shift 速歩 / E 調査 / H 搭乗 / B 任務':s.operations.mode==='eva'?'WASD 移動 / Space・Shift 上下 / E 調査 / H 搭乗 / Y 帰還 / Z 姿勢安定 / B 遠征':'W/S 推進 / A/D 旋回 / F 巡航・ブースト / J 射撃 / T 接岸 / H 船外 / B 遠征 / Esc メニュー');
+    setText(this.keys,s.operations.mode==='surface'?'WASD 歩行 / Space 跳ぶ / Shift 速歩 / E 調査 / H 搭乗 / M マップ':s.operations.mode==='eva'?'WASD 移動 / Space・Shift 上下 / E 調査 / H 搭乗 / Y 帰還 / Z 姿勢安定 / M マップ':'W/S 推進 / A/D 旋回 / F 加速 / J 射撃 / T 接岸 / H 船外 / M マップ・テレポート / B 遠征');
     this.shieldBar.style.transform=`scaleX(${Math.max(0,Math.min(1,s.shield/s.shieldMax))})`;
     setText(this.shieldVal,`${Math.round(s.shield)}/${s.shieldMax}`);
     setText(this.hullVal,`${Math.ceil(s.hull)}/${s.hullMax}`);
     setText(this.combatLabel,s.difficulty==='敵なし'?`敵なし · 撃破 ${s.kills}`:`${s.difficulty} · WAVE ${s.wave} · 敵 ${s.enemies.length} · 撃破 ${s.kills}`);
     setText(this.dodgeLabel,s.dodgeActive?'EVASIVE ROLL':s.dodgeCooldown>0?`V / EVADE · ${s.dodgeCooldown.toFixed(1)}s`:'V / EVADE READY · 18 ENERGY');
     this.dodgeLabel.classList.toggle('ready',s.dodgeCooldown===0);
-    this.leadMarker.hidden=!s.lead;
-    if(s.lead)this.leadMarker.style.transform=`translate(${s.lead.x.toFixed(1)}px,${s.lead.y.toFixed(1)}px)`;
+    const aim=s.aimTarget??s.lead;this.leadMarker.hidden=!aim;
+    if(aim)this.leadMarker.style.transform=`translate(${aim.x.toFixed(1)}px,${aim.y.toFixed(1)}px)`;
+    this.leadMarker.classList.toggle('auto-lock',!!s.aimTarget);setText(this.leadMarker.children[1] as HTMLElement,s.aimTarget?'AUTO LOCK':'LEAD');
+    setText(this.aimLabel,!s.autoAim?'AUTO AIM OFF':s.aimTarget?`AUTO AIM · LOCK ${Math.round(s.aimTarget.distance)} m / FIREで射撃`:'AUTO AIM ON · 正面25°・1300 m以内で捕捉');
+    this.aimLabel.classList.toggle('locked',!!s.aimTarget);
     setText(this.weaponLabel,s.overheated?'砲身冷却中':`TWIN PULSE · 左クリック / J · ${Math.round(s.weaponHeat*100)}%`);
     this.heatBar.style.transform=`scaleX(${s.weaponHeat})`;
     this.heatBar.classList.toggle('hot',s.overheated);
@@ -210,6 +214,7 @@ export class Hud {
       el.style.transform=`translate(${enemy.x.toFixed(1)}px,${enemy.y.toFixed(1)}px)`;
       el.classList.toggle('offscreen',!enemy.onScreen);
       el.classList.toggle('firing',enemy.windup>0);
+      el.classList.toggle('aim-locked',enemy.id===s.aimTarget?.id);
       const state=enemy.windup>0?'射撃予告':enemy.mode==='evade'?'回避中':enemy.mode==='break'?'再接近':enemy.onScreen?'交戦中':'画面外';
       setText(el.firstElementChild as HTMLElement,`${enemy.role} · ${state} · ${Math.ceil(enemy.hp)} HP · ${Math.round(enemy.distance)}u`);
       (el.children[1].firstElementChild as HTMLElement).style.transform=`scaleX(${enemy.hp/enemy.maxHp})`;

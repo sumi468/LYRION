@@ -464,6 +464,24 @@ body.touch .toast-title { display:-webkit-box; -webkit-box-orient:vertical; -web
 }
 .operations-guidance-reason { grid-column:1/-1; margin:0; color:#88a8b5; font-size:10px; line-height:1.6; }.mission-selection-help { color:#88a8b5; font-size:10px; margin:4px 0 12px; }
 
+.screen[data-screen='map'] { background:#030913aa; }
+.map-body { line-height:1.65; }.map-intro { margin:0 0 14px; color:#b2c5d1; font-size:12px; }
+.map-layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(240px,1fr); gap:22px; }
+.star-chart { height:280px; position:relative; overflow:hidden; border:1px solid #294451; background:radial-gradient(ellipse at center,#163c5266,#030c17 75%); }
+.map-orbit { position:absolute; left:50%; top:50%; border:1px solid #76b5c326; border-radius:50%; transform:translate(-50%,-50%); pointer-events:none; }
+.map-node { position:absolute; transform:translate(-50%,-50%); display:flex; align-items:center; gap:5px; min-height:32px; background:#091827e8; color:#a8c8d7; border:1px solid transparent; padding:3px 6px; font:inherit; font-size:9px; cursor:pointer; white-space:nowrap; }
+.map-node i { width:9px; height:9px; border-radius:50%; background:#87bed3; box-shadow:0 0 8px #568da8; }.map-node.star i { background:#ffd999; box-shadow:0 0 16px #ffaa44; }
+.map-node.selected,.map-node:hover,.map-node:focus-visible { border-color:#8be1dd; color:white; outline:none;z-index:2; }
+.map-scale { position:absolute; bottom:7px; left:10px; font-size:9px; color:#7698ad; }
+.map-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; max-height:230px; overflow:auto; margin-top:10px; padding:2px; }
+.map-destination { display:flex; align-items:center; justify-content:space-between; gap:7px; text-align:left; min-height:46px; background:#0b1b29; color:#bbcdda; border:1px solid #284251; padding:7px 9px; font:inherit; font-size:11px; cursor:pointer; }
+.map-destination small { color:#7a9daf; flex-shrink:0; font-size:8px; }.map-destination.selected,.map-destination:focus-visible { border-color:#88d8d9; background:#143444; outline:none; }
+.map-detail { border-left:2px solid #69b8c6; background:#0e243388; padding:18px; align-self:start; }.map-detail h2 { font-size:20px; letter-spacing:.04em; margin:9px 0 15px; }.map-detail p { font-size:12px; }
+.map-distance { color:#b5e1e4; font-variant-numeric:tabular-nums; }.map-travel-reason { padding:10px; border:1px solid #538f85; color:#a8e4cd; }.map-travel-reason.blocked { color:#f3bf89; border-color:#9a7750; }
+.aim-label { font-size:10px; line-height:1.5; color:#91b4bf; margin:7px 0; }.aim-label.locked { color:#96f3d0; }.lead-marker.auto-lock { color:#93f0ce; border-color:#93f0ce; }.enemy-marker.aim-locked { outline:1px solid #96edc9; outline-offset:4px; }
+@media(max-width:650px) { .map-layout { grid-template-columns:1fr; gap:13px; }.star-chart { height:220px; }.map-detail { padding:12px; }.map-detail h2 { font-size:17px; }.map-list { max-height:175px; }.map-node { font-size:8px; padding:3px; }.map-detail p { font-size:11px; } }
+@media(max-height:500px) and (min-width:651px) { .map-layout { gap:12px; }.star-chart { height:170px; }.map-list { max-height:110px; }.map-detail { padding:10px; }.map-detail h2 { margin:2px 0 8px; font-size:16px; }.map-detail p { font-size:10px; margin:5px 0; } }
+
 /* Landing and propulsion expose the same limits used by the simulation. */
 .hud-landing-guide { left:24px; bottom:26px; width:min(310px,31vw); padding:12px 14px; border-left:2px solid var(--warn); background:rgba(5,16,25,.88); line-height:1.5; }
 .landing-site { font-size:14px; letter-spacing:.05em; margin:4px 0 7px; color:#e0eeee; }

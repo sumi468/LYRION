@@ -21,6 +21,7 @@ import { DIFFICULTIES, ENEMY_ROLE_LABELS, SHIELD_MAX } from '../data/combat';
 import { CombatSystem, interceptTime } from '../systems/combat';
 import { LandingSystem } from '../systems/landing';
 import {createPropulsion,updatePropulsion,CRUISE_CLEARANCE,BOOST_RESTART_FRACTION} from '../systems/propulsion';
+import {TravelPose,TRAVEL_DESTINATIONS,travelBlockReason,bodyArrival,baseArrival,stationArrival} from '../systems/travel';
 import { CombatView } from '../render/CombatView';
 import { LandingView } from '../render/LandingView';
 import { GameAudio } from '../audio/GameAudio';
@@ -180,6 +181,7 @@ export class Game {
   private worlds = BODY_DEFS.filter(d=>d.radius>0).map(d=>({pos:this.positions[d.id],radius:d.radius}));
   private refVel = new Vector3();
   private readonly flightFrom=new Vector3();
+  private readonly travelPose=new TravelPose();
   private camWorld = new Vector3();
   private evaCameraFocus = new Vector3();
   private flightInput = emptyInput();
@@ -876,7 +878,7 @@ export class Game {
     this.sinceDamage += dt;
     if(!landingActive&&!controlled)this.collide(dt);
     const previousEnemies=this.combat.count;
-    const fight=this.combat.step(dt,s,s.time,this.input.firing&&!controlled,this.settings.difficulty,this.worlds,landingActive||this.home.protected||cruise>3);
+    const fight=this.combat.step(dt,s,s.time,this.input.firing&&!controlled,this.settings.difficulty,this.worlds,landingActive||this.home.protected||cruise>3,this.settings.autoAim);
     if(this.combat.count>previousEnemies)this.ev.emit('toast',{kind:'warn',title:'敵の哨戒機が接近',text:'照準を合わせ、左クリック / J または FIRE で射撃'});
     if(this.combat.shotPulse)this.audio.cue('weapon');
     if(fight.damage>0){
@@ -1390,11 +1392,19 @@ export class Game {
       const overPanel=projected.y<300&&(projected.x<350||projected.x>w-280);
       if(score>leadScore&&!overPanel&&enemy.pos.distanceTo(s.pos)<1300&&projected.x>20&&projected.x<w-20&&projected.y>30&&projected.y<h-80){leadScore=score;lead={x:projected.x,y:projected.y};}
     }
+    const locked=this.settings.autoAim&&this.combat.aimTargetId!==null?this.combat.enemies[this.combat.aimTargetId]:null;
+    let aimTarget:HudSnapshot['aimTarget']=null;
+    if(locked?.active&&!this.surface.active&&!this.home.eva.active&&this.landing.mode==='flight'&&this.home.mode==='flight'){
+      const projected={x:0,y:0,behind:false};
+      this.project(this.combat.aimPoint,projected);
+      if(!projected.behind)aimTarget={id:this.combat.aimTargetId!,x:projected.x,y:projected.y,distance:locked.pos.distanceTo(s.pos)};
+    }
     const site=this.landing.assess(s,this.positions,this.velocities);
     const landingGuide=!this.surface.active&&!this.home.eva.active&&this.home.docking.mode==='flight'&&site.body&&(site.altitude<120000||this.targetId===PRIME_BASE_ID)?{site:site.onPad?'PAD 01 / PORT LYRA':site.body.homeworld?'PORT LYRA / 周辺の陸地':`${site.body.nameJa} / 地表`,ready:site.ready,altitude:site.altitude,relativeSpeed:site.relativeSpeed,padDistance:site.body.homeworld?site.padDistance:Infinity,terrain:site.terrain,reason:site.reason}:null;
     const landingText=this.surface.active?'地上探索中 · [H] 搭乗 / [E] 調査':this.landing.mode==='landed'?'着陸中 · [H] 地上探索 / [G] 離陸':this.landing.mode==='approach'?'自動着陸中 · [G] 中止':site.ready?'[G] 着陸可能 · 緑の着陸案内を確認':'着陸案内で高度・速度・地面を確認 / G';
     return {
       stationTarget,
+      autoAim:this.settings.autoAim,aimTarget,
       baseTarget:this.targetId===PRIME_BASE_ID?{name:SETTLEMENT_NAME,distance:this.baseFrame.position.distanceTo(this.surface.active?this.surface.pose.position:s.pos)}:null,
       landingGuide,
       propulsion:this.propulsionSnapshot(),
@@ -1465,6 +1475,34 @@ export class Game {
   private surfaceMissionSnapshot():NonNullable<HudSnapshot['mission']>{
     const p=this.state.surfaceProgress,step=FIRST_STEPS[p.step],done=p.step===FIRST_STEPS.length;
     return {code:'SURFACE CAMPAIGN — FIRST STEPS',title:done?'最初の一歩 / 完了':'最初の一歩',objective:step?.text??`地上探査と軌道への帰還に成功。報酬 +${FIRST_STEPS_REWARD} DATA`,hint:step?.hint??'Bで次の遠征を選択できます',index:0,total:1,completed:p.step,objectiveTotal:FIRST_STEPS.length,destination:step?.target==='orbit'?'PRIME / ORBIT':step?.target==='ship'?'LX-07 / HATCH':BASE_FACILITIES.find(f=>f.id===step?.target)?.name??'PORT LYRA / PAD 01',distance:done?undefined:step?.target==='orbit'?Math.max(0,120000-this.surfaceDistance(BODY_BY_ID[HOMEWORLD_ID])):this.surfaceGoalDistance(),action:this.surfaceResearch.active?`作業中 ${Math.round(this.surfaceResearch.progress*100)}%`:this.surface.active&&[4,5,6].includes(p.step)&&this.surfaceGoalDistance()<3.5?'E / 調査で作業を開始':undefined};
+  }
+
+  travelBlockReason(id:string):string|null{
+    return travelBlockReason(id,{phase:this.phase,onFoot:this.surface.active,eva:this.home.eva.active,landing:this.landing.mode,docking:this.home.docking.mode,enemies:this.combat.count});
+  }
+  travelPosition(id:string):Readonly<Vector3>|null{return id===PRIME_BASE_ID?this.baseFrame.position:id===STATION_ID?this.home.frames.asterion.position:this.positions[id]??null;}
+
+  teleportTo(id:string):boolean{
+    const reason=this.travelBlockReason(id);if(reason){this.notify(reason);return false;}
+    const s=this.state,pose=this.travelPose;this.updateBodies(s.time);
+    if(id===PRIME_BASE_ID)baseArrival(this.baseFrame,pose);
+    else if(id===STATION_ID)stationArrival(this.home.frames.asterion,pose);
+    else{const def=BODY_BY_ID[id];bodyArrival(def,s.time,this.positions[id],this.velocities[id],pose);}
+    // Validate against every actual surface before mutating the saved pose.
+    for(const def of BODY_DEFS)if(def.radius>0&&def.kind!=='anomaly'){
+      const clearance=surfaceAltitude(def,pose.position,this.positions[def.id],s.time);
+      if(clearance<(def.kind==='star'?700:20)){this.notify('現在の軌道配置では移動先の安全を確認できません。別の目的地を選んでください');return false;}
+    }
+    this.input.reset();cancelScan(this.scan);resetAttitude(this.attitude);this.surfaceResearch.cancel();this.home.investigations.cancel();
+    this.landing.restore(null);s.landed=null;s.homecoming.docked=false;s.homecoming.wasEva=false;
+    s.pos.copy(pose.position);s.vel.copy(pose.velocity);s.quat.copy(pose.rotation);
+    this.home.restore(s);this.home.measure(s);this.syncControlMode();this.combat.reset(15);
+    this.refVel.copy(s.vel);this.flightFrom.copy(s.pos);this.origin.copy(s.pos);this.chase.snap();
+    this.boost01=0;this.thrustLevel=0;Object.assign(this.propulsion,createPropulsion());this.warning=null;
+    this.setTarget(id);const destination=TRAVEL_DESTINATIONS.find(d=>d.id===id)!;
+    if(BODY_BY_ID[id])s.detected.add(id);
+    this.updateNearest();this.saveNow();this.audio.cue('upgrade');this.notify(`${destination.name}へ到着しました。${id===PRIME_BASE_ID?'Gで着陸':id===STATION_ID?'Tで接岸':'調査・着陸は通常の操作で行います'}`);
+    return true;
   }
 
   // ---------------------------------------------------------------- 破棄・デバッグ
