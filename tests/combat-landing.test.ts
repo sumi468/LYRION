@@ -8,6 +8,8 @@ import { deserialize, serialize } from '../src/systems/save';
 import { sanitizeSettings } from '../src/systems/settings';
 import { BODY_BY_ID, BODY_DEFS } from '../src/data/starSystem';
 import { createPositionTable, updateBodyPositions, updateBodyVelocities } from '../src/physics/orbits';
+import {solidHeight,surfaceAltitude,PRIME_BASE_NORMAL} from '../src/physics/terrain';
+import {bodyRotation,bodyPointVelocity} from '../src/physics/worldScale';
 
 const pilot=()=>({pos:new Vector3(),vel:new Vector3(),quat:new Quaternion(),energy:100});
 describe('戦闘',()=>{
@@ -98,7 +100,7 @@ describe('追撃と回避アクション',()=>{
 const landingSetup=()=>{
   const state=createNewState(),positions=createPositionTable(BODY_DEFS),scratch=createPositionTable(BODY_DEFS),velocities=createPositionTable(BODY_DEFS);
   updateBodyPositions(BODY_DEFS,0,positions);updateBodyVelocities(BODY_DEFS,0,positions,scratch,velocities);
-  const def=BODY_BY_ID.cindra;state.pos.copy(positions.cindra).add(new Vector3(def.radius+80,0,0));state.vel.copy(velocities.cindra);
+  const def=BODY_BY_ID.cindra,direction=new Vector3(1,0,0),height=solidHeight(def,direction);direction.applyQuaternion(bodyRotation(def,0,new Quaternion()));state.pos.copy(positions.cindra).addScaledVector(direction,def.radius+height+80);bodyPointVelocity(def,state.pos,positions.cindra,velocities.cindra,state.vel);
   return {state,positions,velocities,landing:new LandingSystem(),scratch};
 };
 describe('着陸とセーブ互換',()=>{
@@ -111,11 +113,11 @@ describe('着陸とセーブ互換',()=>{
     const {state,positions,velocities,landing,scratch}=landingSetup();landing.request(state,positions,velocities);
     for(let i=0;i<1200;i++){state.time+=1/60;updateBodyPositions(BODY_DEFS,state.time,positions);updateBodyVelocities(BODY_DEFS,state.time,positions,scratch,velocities);landing.update(1/60,state,positions,velocities);}
     expect(landing.mode).toBe('landed');expect(state.landings.has('cindra')).toBe(true);
-    expect(state.pos.distanceTo(positions.cindra)-BODY_BY_ID.cindra.radius).toBeCloseTo(3.65,5);
+    expect(surfaceAltitude(BODY_BY_ID.cindra,state.pos,positions.cindra,state.time)).toBeCloseTo(3.65,5);
     expect(state.pos.toArray().every(Number.isFinite)).toBe(true);expect(state.quat.length()).toBeCloseTo(1);
     const restored=deserialize(serialize(state))!;expect(restored.landed?.bodyId).toBe('cindra');
-    landing.request(state,positions,velocities);expect(landing.mode).toBe('flight');expect(state.landed).toBe(null);
-    expect(state.pos.distanceTo(positions.cindra)).toBeGreaterThan(BODY_BY_ID.cindra.radius+50);
+    const parked=state.pos.clone();landing.request(state,positions,velocities);expect(landing.mode).toBe('flight');expect(state.landed).toBe(null);
+    expect(state.pos.distanceTo(parked)).toBeLessThan(1e-7);expect(state.vel.clone().sub(velocities.cindra).dot(landing.up)).toBeGreaterThan(29);
   });
   it('旧v1セーブの探査を保ち、新規項目を補い、不正な着陸記録を拒否',()=>{
     const raw:Record<string,unknown>={...serialize(createNewState()),version:1,data:123};
@@ -124,11 +126,14 @@ describe('着陸とセーブ互換',()=>{
     raw.version=2;raw.landed={bodyId:'lyrion',normal:[1,0,0]};expect(deserialize(raw)!.landed).toBe(null);
     raw.landed={bodyId:'cindra',normal:[0,0,0]};expect(deserialize(raw)!.landed).toBe(null);
   });
-  it('着陸可能な全7天体で接地できる',()=>{
-    const defs=BODY_DEFS.filter(canLand);expect(defs).toHaveLength(7);
+  it('ホームワールドを含む全8天体で接地できる',()=>{
+    const defs=BODY_DEFS.filter(canLand);expect(defs).toHaveLength(8);
     for(const def of defs){
       const {state,positions,velocities,landing}=landingSetup();
-      state.pos.copy(positions[def.id]).add(new Vector3(def.radius+40,0,0));state.vel.copy(velocities[def.id]);
+      let normal=def.homeworld?PRIME_BASE_NORMAL.clone():new Vector3(1,0,0);
+      // Pick actual land on the ocean world rather than requesting a water landing.
+      for(let i=0;def.surface?.program==='terran'&&solidHeight(def,normal)<1&&i<100;i++)normal.set(Math.sin(i),Math.cos(i*.8),Math.sin(i*.63)).normalize();
+      const height=solidHeight(def,normal);normal.applyQuaternion(bodyRotation(def,0,new Quaternion()));state.pos.copy(positions[def.id]).addScaledVector(normal,def.radius+height+40);bodyPointVelocity(def,state.pos,positions[def.id],velocities[def.id],state.vel);
       landing.request(state,positions,velocities);
       for(let i=0;i<600;i++)landing.update(1/60,state,positions,velocities);
       expect(landing.mode).toBe('landed');expect(state.landed?.bodyId).toBe(def.id);

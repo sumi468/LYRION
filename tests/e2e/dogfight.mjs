@@ -40,7 +40,7 @@ try{
  check('冷却中のV連打で二重にコストを取らない',await page.evaluate(value=>window.__lyrion.state.energy===value,dodge.energy));
  await page.evaluate(()=>window.__lyrion.pause());await step(page,20);
  check('一時停止中は回避の時間と冷却も停止',await page.evaluate(time=>window.__lyrion.combat.dodgeTime===time,dodge.time));
- await page.evaluate(()=>{const g=window.__lyrion;g.resume();g.stop();g.state.pos.set(40000,10000,40000);g.state.vel.set(0,0,0);g.state.quat.identity();g.state.hull=100;g.state.shield=60;g.state.energy=100;g.combat.reset(0);g.tick(.05);});
+ await page.evaluate(()=>{const g=window.__lyrion;g.resume();g.stop();g.state.pos.set(400000000,100000000,400000000);g.state.vel.set(0,0,0);g.state.quat.identity();g.state.hull=100;g.state.shield=60;g.state.energy=100;g.combat.reset(0);g.tick(.05);});
  await page.keyboard.down('KeyF');await step(page,40);await page.keyboard.up('KeyF');await page.keyboard.down('KeyW');await step(page,140);await page.keyboard.up('KeyW');
  const chase=await page.evaluate(()=>{const g=window.__lyrion;return {speed:g.state.vel.length(),count:g.combat.count,rear:g.combat.pursuers,minDistance:Math.min(...g.combat.enemies.filter(e=>e.active).map(e=>e.pos.distanceTo(g.state.pos)))};});
  check('ブースト逃走後も追撃機が消えず、高速の自機へ追いつく',chase.speed>200&&chase.count>0&&chase.minDistance<1800,chase);

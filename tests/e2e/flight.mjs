@@ -25,7 +25,7 @@ try{
   await sleep(400);
  await page.evaluate(()=>window.__lyrion.stop());
  // Isolate lateral thrust from the new start's inherited orbital velocity.
- await page.evaluate(()=>{const g=window.__lyrion;g.state.pos.set(40000,10000,40000);g.state.vel.set(0,0,0);g.refVel.set(0,0,0);g.state.assist=false;});
+ await page.evaluate(()=>{const g=window.__lyrion;g.state.pos.set(400000000,100000000,400000000);g.state.vel.set(0,0,0);g.refVel.set(0,0,0);g.state.assist=false;});
  const initial=await page.evaluate(()=>window.__lyrion.state.pos.toArray());
  await page.keyboard.down('KeyA');
  await page.evaluate(()=>{for(let i=0;i<60;i++)window.__lyrion.tick(1/60);});

@@ -100,11 +100,11 @@ try{
  }));
  record('planet-obstructed-return-rejects-with-manual-recovery',await page.evaluate(()=>{
   const g=window.__lyrion;g.startNew();g.stop();g.debugTeleport('cindra',80);g.tick(0);g.handlePlayAction('eva');const h=g.home,e=h.eva,frame=h.frames.get(e.frameId),radius=g.views.get('cindra').def.radius;
-  let normal=g.state.pos.clone().sub(g.positions.cindra).normalize();e.position.copy(g.positions.cindra).addScaledVector(normal,-(radius+2));frame.toLocal(e.position,e.localPosition);e.localVelocity.set(0,0,0);e.sync(g.state,frame);g.tick(0);
+  let normal=g.state.pos.clone().sub(g.positions.cindra).normalize();e.position.copy(g.positions.cindra).addScaledVector(normal,-(radius+2));frame.toLocal(e.position,e.localPosition);e.localVelocity.set(0,0,0);e.sync(g.state,frame);h.measure(g.state);
   let message='';const off=g.ev.on('toast',t=>message=t.title);g.handlePlayAction('return');off();
   const blocked={returning:e.returning,routeBlocked:e.routeBlocked,message,hatchDistance:e.position.distanceTo(e.hatchPosition)};
   const before=e.localPosition.clone();g.input.keys.add('KeyD');for(let i=0;i<20;i++)g.tick(.05);g.input.reset();const manualMovement=e.localPosition.distanceTo(before);
-  normal=g.state.pos.clone().sub(g.positions.cindra).normalize();e.position.copy(g.positions.cindra).addScaledVector(normal,radius+10);frame.toLocal(e.position,e.localPosition);e.localVelocity.set(0,0,0);e.sync(g.state,frame);g.tick(0);g.handlePlayAction('return');const nearSideAccepted=e.returning;
+  e.board(true);h.toggleEva(g.state);normal=g.state.pos.clone().sub(g.positions.cindra).normalize();e.position.copy(g.state.pos).addScaledVector(normal,-20);frame.toLocal(e.position,e.localPosition);e.localVelocity.set(0,0,0);e.sync(g.state,frame);g.tick(0);g.handlePlayAction('return');const nearSideAccepted=e.returning;
   let recovered=null;for(let i=0;i<1200&&e.active;i++){const hatchDistance=e.position.distanceTo(e.hatchPosition);g.tick(.05);if(!e.active)recovered={seconds:(i+1)*.05,preBoardHatchDistance:hatchDistance};}
   return {reproduced:blocked.returning||!blocked.routeBlocked||!message.includes('シンドラ')||manualMovement<.1||!nearSideAccepted||recovered===null||recovered.preBoardHatchDistance>1.4,blocked,manualMovement,nearSideAccepted,recovered};
  }));

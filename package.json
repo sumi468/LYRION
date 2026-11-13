@@ -1,14 +1,16 @@
 {
   "name": "lyrion-beyond-the-stars",
-  "version": "0.8.0",
+  "version": "0.9.0-dev.2",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.12.0" },
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "description": "LYRION — Beyond the Stars: a browser-based 3D space exploration game (TypeScript + Three.js + Vite)",
   "scripts": {
     "dev": "node scripts/write-build-info.mjs && vite",
     "start": "node scripts/serve.mjs --open",
-    "build": "node scripts/write-build-info.mjs && tsc --noEmit && vite build",
+    "build": "node scripts/write-build-info.mjs && tsc --noEmit && vite build && node scripts/write-service-worker.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "pretypecheck": "node scripts/write-build-info.mjs",
@@ -17,6 +19,8 @@
     "test:e2e": "node tests/e2e/smoke.mjs && node tests/e2e/touch.mjs && node tests/e2e/regression.mjs && node tests/e2e/flight.mjs && node tests/e2e/combat-landing.mjs && node tests/e2e/dogfight.mjs && node tests/e2e/polish.mjs && node tests/e2e/homecoming.mjs && node tests/e2e/critical-homecoming.mjs && npm run test:stabilization",
     "test:stabilization": "node tests/e2e/audit-stabilization.mjs && node tests/e2e/mission-clarity.mjs && node tests/e2e/astronaut-visuals.mjs",
     "test:gpu:homecoming": "node tests/e2e/homecoming-gpu.mjs",
+    "test:surface": "node tests/e2e/surface-expedition.mjs",
+    "test:renderer": "node tests/e2e/renderer-native.mjs",
     "test:gpu:stabilization": "node tests/e2e/stabilization-gpu.mjs",
     "test:critical": "node tests/e2e/critical-homecoming.mjs",
     "test:homecoming": "node tests/e2e/homecoming.mjs",
@@ -28,11 +32,13 @@
     "test:launcher": "node tests/e2e/launcher.mjs"
   },
   "dependencies": {
-    "three": "^0.170.0"
+    "three": "0.186.0"
   },
   "devDependencies": {
-    "@types/three": "^0.170.0",
+    "@types/three": "0.186.0",
+    "@webgpu/types": "0.1.74",
     "playwright": "^1.64.1",
+    "terser": "5.51.2",
     "typescript": "^5.6.3",
     "vite": "^7.3.7",
     "vitest": "^4.1.12"

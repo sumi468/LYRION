@@ -6,6 +6,7 @@ import { INVESTIGATIONS } from '../src/data/homeworld';
 import { createPositionTable,updateBodyPositions,updateBodyVelocities } from '../src/physics/orbits';
 import { HomecomingSystem } from '../src/systems/homecoming';
 import { emptyEvaInput } from '../src/systems/eva';
+import {surfaceAltitude} from '../src/physics/terrain';
 
 function fixture(){
   const state=createNewState(),home=new HomecomingSystem();
@@ -16,13 +17,14 @@ function fixture(){
 
 describe('EVA collision and investigation integration',()=>{
   it('preserves planetary surface sliding without enabling an unplanned return route',()=>{
-    const {state,home,positions,velocities}=fixture(),radius=BODY_BY_ID.cindra.radius;
+    const {state,home,positions,velocities}=fixture(),nominal=BODY_BY_ID.cindra.radius;
+    const radius=nominal-surfaceAltitude(BODY_BY_ID.cindra,positions.cindra.clone().add(new Vector3(0,nominal,0)),positions.cindra,state.time);
     state.pos.copy(positions.cindra).add(new Vector3(0,radius+40,0));state.vel.copy(velocities.cindra);home.measure(state);home.toggleEva(state);
     const eva=home.eva,frame=home.frames.get(eva.frameId);
     eva.position.copy(positions.cindra).add(new Vector3(0,radius+.5,0));frame.toLocal(eva.position,eva.localPosition);eva.localVelocity.set(2,-3,1);eva.stabilized=false;eva.sync(state,frame);
     home.step(0,state,emptyEvaInput());
     expect(eva.active).toBe(true);expect(eva.returning).toBe(false);expect(eva.returnRoute.length).toBe(0);
-    expect(eva.position.distanceTo(positions.cindra)).toBeGreaterThanOrEqual(radius+1.35);
+    expect(surfaceAltitude(BODY_BY_ID.cindra,eva.position,positions.cindra,state.time)).toBeGreaterThan(1.349999);
     const relative=eva.velocity.clone().sub(velocities.cindra);
     expect(relative.y).toBeCloseTo(0,8);expect(relative.x).toBeCloseTo(2,8);expect(relative.z).toBeCloseTo(1,8);
   });

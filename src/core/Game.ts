@@ -3,14 +3,14 @@ import {
   AmbientLight,
   Color,
   DirectionalLight,
+  HemisphereLight,
   Quaternion,
   Scene,
   SRGBColorSpace,
   Vector3,
-  WebGLRenderer,
 } from 'three';
 import { EXPEDITIONS } from '../data/expeditions';
-import { INVESTIGATION_BY_ID, STATION_SOLIDS, SHIP_SOLIDS, STATION_ID, HOMEWORLD_ID } from '../data/homeworld';
+import { INVESTIGATION_BY_ID, STATION_SOLIDS, SHIP_SOLIDS, SHIP_HATCH, STATION_ID, HOMEWORLD_ID } from '../data/homeworld';
 import { HomecomingSystem } from '../systems/homecoming';
 import { emptyEvaInput, EVA_OXYGEN } from '../systems/eva';
 import { acceptExpedition, activeExpedition, currentObjective, reportExpedition } from '../systems/expeditions';
@@ -20,6 +20,7 @@ import { BODY_BY_ID, BODY_DEFS, STAR_ID } from '../data/starSystem';
 import { DIFFICULTIES, ENEMY_ROLE_LABELS, SHIELD_MAX } from '../data/combat';
 import { CombatSystem, interceptTime } from '../systems/combat';
 import { LandingSystem } from '../systems/landing';
+import {createPropulsion,updatePropulsion,CRUISE_CLEARANCE,BOOST_RESTART_FRACTION} from '../systems/propulsion';
 import { CombatView } from '../render/CombatView';
 import { LandingView } from '../render/LandingView';
 import { GameAudio } from '../audio/GameAudio';
@@ -43,6 +44,7 @@ import {
   QUALITY_LADDER,
   bakeWidthFor,
   startLevelFor,
+  settlementDetailDistance,
   type QualityProfile,
 } from '../render/quality';
 import { resolveSphereCollision, impactDamage, heatDamagePerSecond } from '../systems/collision';
@@ -54,6 +56,20 @@ import { FrameStats } from '../systems/frameStats';
 import { computeShipStats, purchaseUpgrade, upgradeCost, type ShipStats } from '../systems/upgrades';
 import { Emitter } from './events';
 import { BUILD_INFO } from './build';
+import { RendererRuntime } from '../render/RendererRuntime';
+import {PlanetTerrain} from '../render/PlanetTerrain';
+import {SurfaceSky} from '../render/SurfaceSky';
+import {SurfaceSystem,WALK_SPEED,FAST_WALK_SPEED,SUIT_CENTRE_HEIGHT} from '../systems/surface';
+import {AstronautModel} from '../render/AstronautModel';
+import {PrimeBase} from '../render/PrimeBase';
+import {ReferenceFrame} from '../physics/frames';
+import {updateSurfaceFrame} from '../physics/surfaceFrame';
+import {BASE_FACILITIES,BASE_SOLIDS,FIRST_STEPS,FIRST_STEPS_REWARD,PRIME_BASE_ID} from '../data/surfaceCampaign';
+import {SETTLEMENT_NAME,settlementDeckHeight} from '../data/settlement';
+import {SurfaceResearch,advanceSurfaceCampaign} from '../systems/surfaceCampaign';
+import {collideEvaCapsule,sweepLocalBoxes} from '../physics/localCollision';
+import {bodyPointVelocity,bodyRotation} from '../physics/worldScale';
+import {solidHeight,surfaceAltitude,PRIME_BASE_NORMAL} from '../physics/terrain';
 import { destinationLabel, missionProgress } from '../systems/missionPresentation';
 import { guidanceAction } from '../systems/guidance';
 import { createNewState, HULL_MAX, type CameraMode, type GameState } from './state';
@@ -73,6 +89,7 @@ export type GameEvents = {
   loading: { progress: number; label: string };
   rebuilding: { progress: number; label: string };
   fatal: { message: string };
+  panel:'operations'|'upgrades'|'log';
 };
 
 const SHIP_RADIUS = 5;
@@ -113,6 +130,13 @@ export class Game {
   readonly combat = new CombatSystem();
   readonly landing = new LandingSystem();
   readonly home = new HomecomingSystem();
+  readonly surface=new SurfaceSystem();
+  readonly surfaceResearch=new SurfaceResearch();
+  readonly baseFrame=new ReferenceFrame();
+  readonly basePoints:Record<string,Vector3>=Object.fromEntries(BASE_FACILITIES.map(f=>[f.id,new Vector3()]));
+  private readonly surfaceGoalPoint=new Vector3();
+  private readonly primeBase=new PrimeBase();
+  private readonly surfaceAstronaut=new AstronautModel();
   private evaInput = emptyEvaInput();
   private controlMode = '';
   private expeditionView = new ExpeditionView();
@@ -128,13 +152,16 @@ export class Game {
   /** 毎フレーム描画後に呼ばれる(HUD 更新用) */
   afterFrame: (() => void) | null = null;
 
-  private renderer!: WebGLRenderer;
+  private renderer!: RendererRuntime;
   private scene = new Scene();
   private chase!: ChaseCamera;
   private baker!: TextureBaker;
   private sky = new Sky();
   private sun!: SunView;
   private views = new Map<string, BodyView>();
+  private readonly terrains=new Map<string,PlanetTerrain>();
+  private readonly surfaceSky=new SurfaceSky();
+  private readonly terrainRotation=new Quaternion();
   private belt!: AsteroidBelt;
   private dust = new SpaceDust();
   private shipModel = new ShipModel();
@@ -142,6 +169,7 @@ export class Game {
   private landingView = new LandingView();
   private sunLight = new DirectionalLight(0xfff0d8, 3);
   private ambient = new AmbientLight(0x56657f, 1.0);
+  private skyLight=new HemisphereLight(0xc0d8ee,0x7c806d,0);
   /** Broad, shadowless bounce from the apparent disk of a nearby world. */
   private planetLight = new DirectionalLight(0xb5c9e5, 0);
 
@@ -151,16 +179,18 @@ export class Game {
   private scratch = createPositionTable(BODY_DEFS);
   private worlds = BODY_DEFS.filter(d=>d.radius>0).map(d=>({pos:this.positions[d.id],radius:d.radius}));
   private refVel = new Vector3();
+  private readonly flightFrom=new Vector3();
   private camWorld = new Vector3();
   private evaCameraFocus = new Vector3();
   private flightInput = emptyInput();
   private readonly idleFlightInput = emptyInput();
+  private readonly cruiseStats=computeShipStats(this.state.upgrades);
   private attitude = createAttitude();
   private displayQuat = new Quaternion();
 
   private targetId: string | null = null;
   private scan = createScanState();
-  private boostLocked = false;
+  private readonly propulsion=createPropulsion();
   private boost01 = 0;
   private relSpeed = 0;
   private thrustLevel = 0;
@@ -194,18 +224,13 @@ export class Game {
     this.canvas = canvas;
     this.settings = loadSettings(safeLocalStorage());
 
-    let renderer: WebGLRenderer;
-    try {
-      renderer = new WebGLRenderer({
-        canvas,
-        antialias: !this.isMobile,
-        powerPreference: 'high-performance',
-        stencil: false,
-      });
-    } catch {
-      throw new Error('WebGL を初期化できませんでした。ブラウザのハードウェアアクセラレーションが有効か確認してください。');
-    }
+    const query=new URLSearchParams(location.search),forced=query.has('debug')?query.get('renderer'):null;
+    if(forced==='auto'||forced==='webgpu'||forced==='webgl2')this.settings.renderer=forced;
+    this.ev.emit('loading',{progress:.01,label:'描画バックエンドを初期化しています'});
+    const renderer=await RendererRuntime.create(canvas,this.settings.renderer,!this.isMobile);
     this.renderer = renderer;
+    this.canvas=renderer.domElement;
+    renderer.onFailure=message=>this.restartRenderer('webgl2',message);
     renderer.outputColorSpace = SRGBColorSpace;
     renderer.toneMapping = ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
@@ -222,7 +247,10 @@ export class Game {
 
     // --- シーン構築(重いテクスチャのベイクはフレームをまたいで分散し、進捗を通知) ---
     this.scene.add(this.combatView.group,this.landingView.group,this.expeditionView.group);
-    this.scene.add(this.sky.group, this.dust.object, this.shipModel.group, this.sunLight, this.ambient, this.planetLight);
+    this.scene.add(this.surfaceSky.mesh);
+    this.scene.add(this.surfaceAstronaut.group);
+    this.scene.add(this.primeBase.group);
+    this.scene.add(this.sky.group, this.dust.object, this.shipModel.group, this.sunLight, this.ambient, this.planetLight,this.skyLight);
     this.scene.add(this.sunLight.target, this.planetLight.target);
     this.ev.emit('loading', { progress: 0.05, label: '宇宙を生成しています' });
     await nextFrame();
@@ -246,9 +274,12 @@ export class Game {
         (fraction) => this.ev.emit('loading', { progress: 0.15 + (0.8 * (i + fraction)) / bodies.length, label: `${d.nameJa} を生成中` }));
       this.views.set(d.id, v);
       this.scene.add(v.group);
+      if((d.kind==='planet'||d.kind==='moon')&&d.surface&&d.surface.program!=='gas'){
+        const terrain=new PlanetTerrain(d);this.terrains.set(d.id,terrain);this.scene.add(terrain.group);
+      }
     }
 
-    this.input.attach(canvas);
+    this.input.attach(this.canvas);
     this.input.onLockChange = (locked) => {
       if (!locked && this.phase === 'playing') {
         this.lastLockLoss = performance.now();
@@ -263,7 +294,17 @@ export class Game {
     this.enterMenu();
     this.ev.emit('loading', { progress: 1, label: '準備完了' });
     this.start();
+    const fallback=sessionStorage.getItem('lyrion.renderer-fallback');sessionStorage.removeItem('lyrion.renderer-fallback');
+    if(renderer.status.reason||fallback)this.notify(renderer.status.reason??fallback!);
   }
+
+  private restartRenderer(preference:Settings['renderer'],reason?:string):void{
+    this.saveNow();this.settings={...this.settings,renderer:preference};saveSettings(safeLocalStorage(),this.settings);
+    if(reason)sessionStorage.setItem('lyrion.renderer-fallback',`${reason}。進行を保存しWebGL 2で再起動しました`);
+    const url=new URL(location.href);url.searchParams.delete('renderer');location.replace(url.href);
+  }
+  get renderCanvas():HTMLCanvasElement{return this.canvas;}
+  get rendererStatus(){return this.renderer?.status??null;}
 
   private bindWindowEvents(): void {
     const on = <T extends EventTarget>(t: T, name: string, fn: EventListener) => {
@@ -361,6 +402,7 @@ export class Game {
 
   /** メインメニュー: セーブ(なければ新規)の状態を背景に表示する */
   enterMenu(): void {
+    this.surface.reset();
     resetAttitude(this.attitude);
     this.input.releaseLock();
     cancelScan(this.scan);
@@ -368,7 +410,7 @@ export class Game {
     this.menuHasSave = saved !== null;
     this.state = saved ?? createNewState();
     this.combat.reset();this.landing.restore(this.state.landed);
-    this.updateBodies(this.state.time); this.home.restore(this.state); this.syncControlMode();
+    this.updateBodies(this.state.time);this.landing.recoverObstructedSave(this.state,this.positions,this.velocities); this.home.restore(this.state); this.syncControlMode();
     this.stats = computeShipStats(this.state.upgrades);
     this.menuClock = 0;
     this.targetId = null;
@@ -389,23 +431,26 @@ export class Game {
   }
 
   private begin(s: GameState): void {
+    this.surface.reset();
     resetAttitude(this.attitude);
     this.state = s;
     this.combat.reset();this.landing.restore(s.landed);
     this.stats = computeShipStats(s.upgrades);
     s.energy = Math.min(s.energy, this.stats.energyMax);
-    this.updateBodies(s.time); this.home.restore(s); this.syncControlMode();
+    this.updateBodies(s.time);const recoveredLanding=this.landing.recoverObstructedSave(s,this.positions,this.velocities); this.home.restore(s); this.syncControlMode();
     this.origin.copy(s.pos);
     this.refVel.copy(s.vel);
-    this.boostLocked = false;
+    Object.assign(this.propulsion,createPropulsion());
     this.boost01 = 0;
     cancelScan(this.scan);
     this.syncMissionTarget();
-    if(s.homecoming.tracked)this.targetId=STATION_ID;
+    if(s.surfaceProgress.active)this.targetId=PRIME_BASE_ID;
+    else if(s.homecoming.tracked)this.targetId=STATION_ID;
     this.autosaveTimer = 0;
     this.chase.snap();
     this.setPhase('playing');
     this.input.requestLock(this.canvas);
+    if(recoveredLanding){this.notify('保存位置と街の設備が重なったため、安全な上空に復帰しました。探査進捗・所持データは維持しています');this.saveNow();}
   }
 
   pause(): void {
@@ -438,12 +483,26 @@ export class Game {
   handlePlayAction(a: ActionName): void {
     // pause / upgrades / log は UI が処理する。ここではプレイ中の操作のみ扱う
     if (this.phase !== 'playing') return;
+    if(this.surface.active){
+      if(a==='eva'){
+        if(this.surface.board()){this.syncControlMode();this.chase.snap();this.saveNow();this.notify('LX-07へ搭乗しました。G / LANDで離陸します');}
+        else this.notify('機体左側のハッチへ戻ってください。5 m以内でH / 搭乗できます');
+      }else if(a==='camera')this.setCameraMode(this.state.cameraMode==='third'?'first':'third');
+      else if(a==='return')this.notify(`LX-07のハッチまで ${this.surface.pose.position.distanceTo(this.surface.pose.hatchPosition).toFixed(1)} m。地上では歩いて帰還します`);
+      else if(a==='investigate')this.surfaceInteract();
+      else this.notify('地上ではWASDで歩行、Spaceでジャンプ、Eで調査、Hで搭乗します');
+      return;
+    }
     if(a==='dock'){
       if(this.home.eva.active){this.notify('船外活動中は接岸を操作できません。Y / 帰還でLX-07の機内へ戻ってください');return;}
       if(this.landing.mode!=='flight'){this.notify('着陸・降下中は接岸できません。G / LANDで離陸または降下を中止してください');return;}
       this.notify(this.home.docking.request(this.state,this.home.frames.asterion));this.home.persist(this.state);this.syncControlMode();this.saveNow();return;
     }
     if (a==='eva') {
+      if(this.landing.mode==='landed'){
+        this.surface.launch(this.state,this.landing.referenceFrame);this.syncControlMode();this.chase.snap();this.saveNow();
+        this.notify('地上探索開始。WASDで歩行、Spaceでジャンプ、Eで調査、Hで搭乗');return;
+      }
       const before=this.home.eva.active;
       if(!before&&this.landing.mode!=='flight'){this.notify('着陸・降下中は船外に出られません。G / LANDで離陸または降下を中止してください');return;}
       if(!before&&!this.home.protected&&this.combat.count>0){this.notify('交戦中は船外に出られません。敵から離脱するか、基地へ帰還してください');return;}
@@ -489,22 +548,23 @@ export class Game {
 
   private notify(title: string): void { this.ev.emit('toast',{kind:'info',title}); }
   private syncControlMode(): void {
-    const mode=this.home.eva.active?'eva':'flight';
-    if(this.controlMode!==this.home.mode){this.input.reset();this.input.mode=mode;this.controlMode=this.home.mode;this.ev.emit('mode',this.home.mode);}
+    const current=this.surface.active?'surface':this.home.mode;
+    const mode=this.surface.active||this.home.eva.active?'eva':'flight';
+    if(this.controlMode!==current){this.input.reset();this.input.mode=mode;this.controlMode=current;this.ev.emit('mode',current);}
   }
   selectExpedition(id: string): boolean {
-    if(this.home.mode!=='docked')return false;
+    if(!this.missionControlAvailable)return false;
     const ok=acceptExpedition(this.state.homecoming,id);
-    if(ok){this.home.progress(this.state,0);this.saveNow();}return ok;
+    if(ok){this.state.surfaceProgress.active=false;this.home.progress(this.state,0);this.saveNow();}return ok;
   }
   reportExpedition(): boolean {
-    const mission=reportExpedition(this.state.homecoming,this.home.context(this.state),this.state.time);
+    const mission=reportExpedition(this.state.homecoming,{...this.home.context(this.state),atBase:this.nearFacility('control')},this.state.time);
     if(!mission)return false;
     this.state.data+=mission.reward;this.state.totalData+=mission.reward;this.audio.cue('mission');
     this.notify(`${mission.title} 完了 / +${mission.reward} DATA。${mission.conclusion}`);this.saveNow();return true;
   }
   stationService(): boolean {
-    if(this.home.mode!=='docked')return false;
+    if(this.home.mode!=='docked'&&!this.nearFacility('repair'))return false;
     this.state.hull=HULL_MAX;this.state.shield=SHIELD_MAX;this.state.energy=this.stats.energyMax;this.saveNow();return true;
   }
   navigateHome(): void {
@@ -512,6 +572,42 @@ export class Game {
     else if(this.phase==='paused')this.resume();
     this.setTarget(STATION_ID);
     this.notify('ASTERION STATIONを選択しました。誘導マーカーを追って母星へ帰還してください');
+  }
+
+  get missionControlAvailable():boolean{return this.home.mode==='docked'||this.nearFacility('control');}
+  nearFacility(id:string):boolean{return this.surface.active&&!!this.basePoints[id]&&this.surface.pose.position.distanceTo(this.basePoints[id])<4.5;}
+  startFirstSteps():boolean{
+    if(this.phase==='menu'&&!this.menuHasSave)return false;
+    this.state.surfaceProgress.active=true;this.state.homecoming.tracked=false;this.targetId=PRIME_BASE_ID;this.saveNow();return true;
+  }
+  trackExpeditionMissions(on:boolean):void{
+    this.state.surfaceProgress.active=false;this.state.homecoming.tracked=on;
+    if(on){const target=currentObjective(this.state.homecoming)?.target;this.targetId=target&&BODY_BY_ID[target]?target:STATION_ID;}
+    else this.syncMissionTarget();
+    this.saveNow();
+  }
+  navigateSurfaceBase():void{this.setTarget(PRIME_BASE_ID);this.notify('PORT LYRA / PAD 01を選択しました。接近したらFを離してXで減速。緑の着陸案内でGを押してください');}
+  private surfaceGoalDistance():number{
+    return this.surfaceGoalWorld().distanceTo(this.surface.active?this.surface.pose.position:this.state.pos);
+  }
+  private surfaceGoalWorld():Vector3{
+    const goal=FIRST_STEPS[this.state.surfaceProgress.step]?.target;
+    if(goal==='ship')return this.surfaceGoalPoint.fromArray(SHIP_HATCH).applyQuaternion(this.state.quat).add(this.state.pos);
+    if(goal==='orbit'){
+      const body=BODY_BY_ID[HOMEWORLD_ID],center=this.positions[HOMEWORLD_ID],altitude=surfaceAltitude(body,this.state.pos,center,this.state.time);
+      _v1.copy(this.state.pos).sub(center).normalize();
+      return this.surfaceGoalPoint.copy(this.state.pos).addScaledVector(_v1,Math.max(0,120000-altitude));
+    }
+    return goal?this.basePoints[goal]??this.baseFrame.position:this.baseFrame.position;
+  }
+  private surfaceInteract():void{
+    const progress=this.state.surfaceProgress;
+    if(progress.active&&[4,5,6].includes(progress.step)&&this.surfaceGoalDistance()<4){this.notify(this.surfaceResearch.request(progress,true,this.surfaceGoalDistance()));return;}
+    if(this.nearFacility('control')){this.ev.emit('panel','operations');return;}
+    if(this.nearFacility('research')){this.ev.emit('panel','log');return;}
+    if(this.nearFacility('comms')){this.ev.emit('panel','upgrades');return;}
+    if(this.nearFacility('repair')){this.stationService();this.notify('LX-07の機体・シールド・電力を補給しました');return;}
+    this.notify(progress.active?this.surfaceResearch.request(progress,true,this.surfaceGoalDistance()):'端末または調査地点の3.5 m以内でE。BでFIRST STEPSの手順を確認できます');
   }
 
   setCameraMode(m: CameraMode): void {
@@ -525,6 +621,7 @@ export class Game {
 
   toggleLanding(): void {
     if(this.phase!=='playing')return;
+    if(this.surface.active){this.notify('地上探索中です。ハッチへ戻ってHで搭乗してから離陸してください');return;}
     if(this.home.eva.active||this.home.docking.mode!=='flight'){this.notify('着陸装置は機内で飛行中に使用します。船外から戻り、基地の係留を解除してください');return;}
     const before=this.landing.mode;
     const message=this.landing.request(this.state,this.positions,this.velocities);
@@ -533,7 +630,7 @@ export class Game {
   }
 
   cycleTarget(): void {
-    const list = [STATION_ID,...BODY_DEFS.filter((d) => this.state.detected.has(d.id)).map(d=>d.id)];
+    const list = [STATION_ID,PRIME_BASE_ID,...BODY_DEFS.filter((d) => this.state.detected.has(d.id)).map(d=>d.id)];
     if (!list.length) return;
     const i = list.indexOf(this.targetId??'');
     this.targetId = list[(i + 1) % list.length];
@@ -594,6 +691,7 @@ export class Game {
   // ---------------------------------------------------------------- 設定・画質
 
   applySettings(s: Settings, silent = false): void {
+    const previousRenderer=this.settings.renderer;
     const prevQuality = this.settings.quality;
     if(s.difficulty!==this.settings.difficulty)this.combat.reset(12);
     this.settings = s;
@@ -602,6 +700,7 @@ export class Game {
     this.input.settings.invertY = s.invertY;
     this.chase.baseFov = s.fov;
     saveSettings(safeLocalStorage(), s);
+    if(!silent&&s.renderer!==previousRenderer){this.restartRenderer(s.renderer);return;}
     if (silent || s.quality === prevQuality) return;
 
     // 画質の切り替え
@@ -632,7 +731,7 @@ export class Game {
     this.sun.applyProfile(p);
     for (const v of this.views.values()) v.applyProfile(p);
     // 使われなくなった分割数のジオメトリを破棄
-    pruneSphereGeos([48, ...new Set([p, prev].flatMap((q) => q.segments))]);
+    pruneSphereGeos([48,128, ...new Set([p, prev].flatMap((q) => q.segments))]);
     // 再度必要になるジオメトリは sphereGeo() が再生成する
   }
 
@@ -697,6 +796,8 @@ export class Game {
     updateBodyPositions(BODY_DEFS, time, this.positions);
     updateBodyVelocities(BODY_DEFS, time, this.positions, this.scratch, this.velocities);
     this.home.update(time,this.positions,this.velocities); this.home.measure(this.state);
+    const body=BODY_BY_ID[HOMEWORLD_ID];updateSurfaceFrame(body,PRIME_BASE_NORMAL,time,this.positions[HOMEWORLD_ID],this.velocities[HOMEWORLD_ID],this.baseFrame);
+    for(const facility of BASE_FACILITIES)this.baseFrame.toWorld(_v1.fromArray(facility.position),this.basePoints[facility.id]);
   }
 
   /** メニュー/一時停止中: 時間だけゆっくり進め、背景の船を漂わせる */
@@ -717,7 +818,7 @@ export class Game {
       const dy = Math.max(0, Math.abs(p.y) - def.belt.halfThickness);
       return Math.hypot(dr, dy);
     }
-    return this.state.pos.distanceTo(this.positions[def.id]) - def.radius;
+    return surfaceAltitude(def,this.state.pos,this.positions[def.id],this.state.time);
   }
 
   private simulate(dt: number): void {
@@ -727,22 +828,25 @@ export class Game {
     this.updateBodies(s.time);
 
     // --- 入力と飛行 ---
-    const evaActive=this.home.eva.active;
-    const input = evaActive ? Object.assign(this.flightInput,this.idleFlightInput) : this.input.poll(dt, this.flightInput);
-    if(evaActive)this.input.pollEva(dt,this.evaInput);
+    const evaActive=this.home.eva.active,groundActive=this.surface.active;
+    const input = evaActive||groundActive ? Object.assign(this.flightInput,this.idleFlightInput) : this.input.poll(dt, this.flightInput);
+    if(evaActive||groundActive)this.input.pollEva(dt,this.evaInput);
     this.updateReferenceFrame(dt);
 
-    if (s.energy <= 0.5) this.boostLocked = true;
-    else if (s.energy > this.stats.energyMax * 0.15) this.boostLocked = false;
     const landingActive=this.landing.mode!=='flight';
-    const controlled=evaActive||this.home.docking.mode!=='flight';
-    const wantBoost = !landingActive && input.boost && !this.boostLocked && s.energy > 0;
-    input.boost = wantBoost;
+    const controlled=evaActive||groundActive||this.home.docking.mode!=='flight';
     const touchedDown=this.landing.update(dt,s,this.positions,this.velocities);
     if(touchedDown){resetAttitude(this.attitude);this.saveNow();this.audio.cue('upgrade');this.ev.emit('toast',{kind:'reward',title:'着陸完了',text:'修理・補給中。G または LAND で離陸'});}
-    const res = landingActive||controlled ? {boosting:false,relSpeed:0} : stepFlight(s, input, this.stats, s.assist, this.refVel, wantBoost, dt, this.attitude);
+    let clearance=Math.min(this.home.stationDistance,this.home.distances.wayfarer??Infinity,this.home.distances.deep??Infinity,this.home.distances.satellite??Infinity);
+    for(const body of BODY_DEFS)if(body.radius>0&&body.kind!=='anomaly')clearance=Math.min(clearance,this.surfaceDistance(body));
+    updatePropulsion(this.propulsion,s.energy,this.stats.energyMax,input.boost,input.brake,!landingActive&&!controlled,clearance,this.combat.count,this.stats.boostDrain);
+    const wantBoost=this.propulsion.active,cruise=this.propulsion.cruise;
+    input.boost=wantBoost;
+    Object.assign(this.cruiseStats,this.stats);this.cruiseStats.maxSpeed*=cruise;this.cruiseStats.thrust*=cruise;
+    this.flightFrom.copy(s.pos);
+    const res = landingActive||controlled ? {boosting:false,relSpeed:0} : stepFlight(s, input, this.cruiseStats, s.assist, this.refVel, wantBoost, dt, this.attitude);
 
-    if (res.boosting) s.energy = Math.max(0, s.energy - this.stats.boostDrain * dt);
+    if (res.boosting) s.energy = Math.max(0, s.energy - this.propulsion.drain * dt);
     else s.energy = Math.min(this.stats.energyMax, s.energy + this.stats.energyRegen * dt);
     this.boost01 += ((res.boosting ? 1 : 0) - this.boost01) * (1 - Math.exp(-dt * 4));
     this.relSpeed = res.relSpeed;
@@ -751,13 +855,28 @@ export class Game {
     this.audio.update(dt, this.thrustLevel, this.boost01, this.scan.id !== null);
 
     const operation=this.home.step(dt,s,this.evaInput);
+    if(groundActive&&this.landing.anchor){
+      const body=BODY_BY_ID[this.landing.anchor.bodyId];this.home.measure(s);
+      this.surface.update(dt,s,this.evaInput,body,this.positions[body.id],this.landing.referenceFrame,this.home.shipFrame);
+      this.baseFrame.toLocal(this.surface.pose.position,_v1);
+      const deck=body.homeworld?settlementDeckHeight(_v1.x,_v1.z)+SUIT_CENTRE_HEIGHT:-Infinity;
+      if(_v1.y<deck){
+        _v1.y=deck;this.baseFrame.toWorld(_v1,this.surface.pose.position);this.surface.frame.toLocal(this.surface.pose.position,this.surface.localPosition);this.surface.localVelocity.y=0;this.surface.grounded=true;
+      }
+      if(collideEvaCapsule(this.baseFrame,this.surface.pose.position,this.surface.pose.velocity,this.surface.bodyRotation,BASE_SOLIDS))this.surface.frame.toLocal(this.surface.pose.position,this.surface.localPosition);
+    }
+    const research=this.surfaceResearch.update(dt,s.surfaceProgress,this.surface.active,this.surfaceGoalDistance());if(research){this.notify(research);this.saveNow();}
+    const priorStep=s.surfaceProgress.step,primeAltitude=this.surfaceDistance(BODY_BY_ID[HOMEWORLD_ID]);
+    const surfaceReward=advanceSurfaceCampaign(s.surfaceProgress,{nearPrime:primeAltitude<10_000_000,altitude:primeAltitude,landedPrime:s.landed?.bodyId===HOMEWORLD_ID,onFoot:this.surface.active,grounded:this.surface.grounded,walked:this.surface.walked});
+    if(surfaceReward){s.data+=surfaceReward;s.totalData+=surfaceReward;this.notify(`FIRST STEPS完了 / +${surfaceReward} DATA`);this.audio.cue('mission');}
+    if(priorStep!==s.surfaceProgress.step)this.saveNow();
     if(operation){this.notify(operation.message??'調査完了');if(operation.reward)this.audio.cue('scan');this.saveNow();}
     this.syncControlMode();
     // --- 衝突・熱 ---
     this.sinceDamage += dt;
     if(!landingActive&&!controlled)this.collide(dt);
     const previousEnemies=this.combat.count;
-    const fight=this.combat.step(dt,s,s.time,this.input.firing&&!controlled,this.settings.difficulty,this.worlds,landingActive||this.home.protected);
+    const fight=this.combat.step(dt,s,s.time,this.input.firing&&!controlled,this.settings.difficulty,this.worlds,landingActive||this.home.protected||cruise>3);
     if(this.combat.count>previousEnemies)this.ev.emit('toast',{kind:'warn',title:'敵の哨戒機が接近',text:'照準を合わせ、左クリック / J または FIRE で射撃'});
     if(this.combat.shotPulse)this.audio.cue('weapon');
     if(fight.damage>0){
@@ -802,17 +921,20 @@ export class Game {
       }
     }
     _v1.set(0, 0, 0);
-    if (best) _v1.copy(this.velocities[best.id]);
+    if (best){
+      if(bestD<100000)bodyPointVelocity(best,p,this.positions[best.id],this.velocities[best.id],_v1);
+      else _v1.copy(this.velocities[best.id]);
+    }
     this.refVel.lerp(_v1, 1 - Math.exp(-dt * 2.5));
   }
 
   private updateNearest(): void {
-    const p = this.state.pos;
+    const p = this.surface.active?this.surface.pose.position:this.home.eva.active?this.home.eva.position:this.state.pos;
     let best: BodyDef | null = null;
     let bestD = Infinity;
     for (const d of BODY_DEFS) {
       if (d.kind === 'belt') continue;
-      const sd = p.distanceTo(this.positions[d.id]) - d.radius;
+      const sd = surfaceAltitude(d,p,this.positions[d.id],this.state.time);
       if (sd < bestD) {
         bestD = sd;
         best = d;
@@ -825,7 +947,7 @@ export class Game {
     const sunSd = p.length() - STAR.radius;
     if (sunSd < HEAT_ZONE) this.warning = '恒星に接近しすぎています — 船体が高温になっています';
     else if (s.hull < 30) this.warning = '船体の損傷が深刻です';
-    else if (this.boostLocked && s.energy < 1) this.warning = 'エネルギー枯渇 — ブースト不可';
+    else if (this.propulsion.locked) this.warning = 'ブースト再充電中 — ENERGY 15%で再使用できます';
     else if(this.combat.incoming>0)this.warning='敵が射撃準備中 — V / EVADE で回避';
     else if(this.combat.pursuers>0)this.warning=`後方から ${this.combat.pursuers} 機が追跡中`;
     else this.warning = null;
@@ -837,8 +959,17 @@ export class Game {
 
     for (const d of BODY_DEFS) {
       if (d.radius <= 0) continue;
-      const r = resolveSphereCollision(s.pos, s.vel, this.positions[d.id], this.velocities[d.id], d.radius, SHIP_RADIUS);
+      const center=this.positions[d.id];_v1.copy(s.pos).sub(center);const distance=_v1.length();
+      _v1.multiplyScalar(1/Math.max(1,distance)).applyQuaternion(bodyRotation(d,s.time,this.terrainRotation).invert());
+      const radius=d.radius+solidHeight(d,_v1);
+      bodyPointVelocity(d,s.pos,center,this.velocities[d.id],_v2);
+      const r = resolveSphereCollision(s.pos, s.vel, center, _v2, radius, SHIP_RADIUS);
       if (r.hit) worst = Math.max(worst, r.impact);
+    }
+
+    if(s.pos.distanceToSquared(this.baseFrame.position)<1800**2){
+      const contact=sweepLocalBoxes(this.baseFrame,this.flightFrom,s.pos,s.vel,SHIP_RADIUS,BASE_SOLIDS);
+      if(contact>=0)worst=Math.max(worst,contact);
     }
 
     // 小惑星帯(帯の中にいるときだけ判定)
@@ -988,7 +1119,7 @@ export class Game {
     const visualTime = s.time + (this.phase === 'menu' ? this.menuClock * 6 : 0);
 
     // Floating Origin: 船が原点から離れたら原点を移し替える(描画座標は常に原点付近)
-    const eva=this.home.eva;
+    const eva=this.surface.active?this.surface.pose:this.home.eva;
     maybeRebaseOrigin(this.origin, eva.active?eva.position:s.pos, 1200);
 
     // カメラ
@@ -1005,8 +1136,10 @@ export class Game {
       _v1.set(s.cameraMode==='first'?0:.72,s.cameraMode==='first'?.74:.88,s.cameraMode==='first'?-.12:4.5).applyQuaternion(eva.rotation);
       this.camWorld.copy(eva.position).add(_v1);
       this.evaCameraFocus.copy(eva.position).add(_v1.set(0,.72,0).applyQuaternion(eva.rotation));
-      clipCameraToBoxes(this.evaCameraFocus,this.camWorld,this.home.frames.asterion,STATION_SOLIDS);
+      if(!this.surface.active)clipCameraToBoxes(this.evaCameraFocus,this.camWorld,this.home.frames.asterion,STATION_SOLIDS);
+      else clipCameraToBoxes(this.evaCameraFocus,this.camWorld,this.baseFrame,BASE_SOLIDS);
       clipCameraToBoxes(this.evaCameraFocus,this.camWorld,this.home.shipFrame,SHIP_SOLIDS,.3);
+      if(this.surface.active&&this.landing.anchor){const body=BODY_BY_ID[this.landing.anchor.bodyId],center=this.positions[body.id],alt=surfaceAltitude(body,this.camWorld,center,s.time);if(alt<.2)this.camWorld.addScaledVector(_v2.copy(this.camWorld).sub(center).normalize(),.2-alt);}
       camera.quaternion.copy(eva.rotation);camera.position.copy(this.camWorld).sub(this.origin);
     } else {
       const speedFrac = this.relSpeed / this.stats.maxSpeed;
@@ -1027,11 +1160,15 @@ export class Game {
     this.shipModel.setSteering(this.attitude.yawRate, this.attitude.pitchRate);
     this.shipModel.setLandingGear(this.landing.mode!=='flight',dt);
     this.combatView.group.visible=this.phase!=='menu';this.combatView.update(this.combat,this.origin);
-    this.landingView.group.visible=!!this.landing.anchor;
+    this.landingView.group.visible=!!this.landing.anchor&&this.landing.anchor.bodyId!==HOMEWORLD_ID;
     if(this.landing.anchor){this.landingView.fitSurface(BODY_BY_ID[this.landing.anchor.bodyId].radius);this.landingView.group.position.copy(this.landing.surface).sub(this.origin);this.landingView.group.quaternion.copy(this.landing.quaternion);}
     this.shipModel.setHullVisible(eva.active || this.phase === 'menu' || this.chase.firstPersonAmount < 0.85);
     this.expeditionView.update(this.home,s.homecoming,this.origin,this.camWorld,s.time,this.profile);
     this.expeditionView.astronaut.visible=this.expeditionView.astronautModel.visualActive&&s.cameraMode!=='first';
+    this.surfaceAstronaut.updateSurface(this.surface.pose,this.surfaceResearch.active,s.time,this.profile);
+    this.surfaceAstronaut.group.position.copy(this.surface.pose.position).sub(this.origin);this.surfaceAstronaut.group.quaternion.copy(this.surface.bodyRotation);
+    this.surfaceAstronaut.group.visible=this.surfaceAstronaut.visualActive&&s.cameraMode!=='first';
+    this.primeBase.update(this.baseFrame,this.origin,this.camWorld,settlementDetailDistance(this.profile));
 
     // 恒星
     this.sun.update(this.positions[STAR_ID], this.origin, camera, visualTime);
@@ -1058,14 +1195,23 @@ export class Game {
       if(amount>bounce){bounce=amount;this.planetLight.position.copy(_v1).multiplyScalar(-100);}
     }
     this.planetLight.intensity=bounce;
+    // Atmospheric diffuse skylight: exterior walls and suits receive the same
+    // sky/ground fill as the terrain, oriented to the actual planet normal.
+    const prime=BODY_BY_ID[HOMEWORLD_ID],primeCenter=this.positions[HOMEWORLD_ID];
+    _v1.copy(focus).sub(primeCenter);const primeAltitude=_v1.length()-prime.radius;_v1.normalize();
+    _v2.copy(this.positions[STAR_ID]).sub(primeCenter).normalize();
+    this.skyLight.position.copy(_v1).multiplyScalar(100);
+    this.skyLight.intensity=Math.max(0,1-Math.max(0,primeAltitude)/70000)*Math.max(.04,Math.min(1,_v1.dot(_v2)*3+.3))*.9;
 
     const ctx: ViewContext = { origin: this.origin, camera, sunPos, time: visualTime, profile: this.profile };
     for (const [id, v] of this.views) v.update(ctx, this.positions[id]);
+    for(const [id,terrain] of this.terrains)this.views.get(id)!.setTerrainVisible(terrain.update(this.positions[id],this.camWorld,this.origin,s.time,this.profile));
 
     this.belt.update(visualTime, this.origin);
     this.belt.group.visible = this.profile.belt > 0;
 
     this.sky.update(camera);
+    this.surfaceSky.update(this.scene,camera,this.camWorld,this.positions[HOMEWORLD_ID],BODY_BY_ID[HOMEWORLD_ID],this.positions[STAR_ID]);
     const velScene = s.vel;
     this.dust.update(s.pos, velScene, camera.position, Math.max(0, this.relSpeed));
     this.dust.object.visible = playing;
@@ -1093,10 +1239,10 @@ export class Game {
   }
 
   private marker(kind: 'target' | 'guide', id: string): MarkerInfo | null {
-    if(id===STATION_ID){
-      const p={x:0,y:0,behind:false},world=this.home.frames.asterion.position;
+    if(id===STATION_ID||id===PRIME_BASE_ID){
+      const p={x:0,y:0,behind:false},world=id===PRIME_BASE_ID?this.baseFrame.position:this.home.frames.asterion.position;
       this.project(world,p);const w=window.innerWidth,h=window.innerHeight;
-      return {kind,id,label:'ASTERION STATION',dist:world.distanceTo(this.state.pos),x:Math.max(45,Math.min(w-45,p.x)),y:Math.max(130,Math.min(h-185,p.y)),onScreen:!p.behind&&p.x>45&&p.x<w-45&&p.y>130&&p.y<h-185,angle:Math.atan2(p.y-h/2,p.x-w/2),unknown:false,scanned:false};
+      return {kind,id,label:id===PRIME_BASE_ID?'PAD 01 / PORT LYRA':'ASTERION STATION',dist:world.distanceTo(this.surface.active?this.surface.pose.position:this.state.pos),x:Math.max(45,Math.min(w-45,p.x)),y:Math.max(130,Math.min(h-185,p.y)),onScreen:!p.behind&&p.x>45&&p.x<w-45&&p.y>130&&p.y<h-185,angle:Math.atan2(p.y-h/2,p.x-w/2),unknown:false,scanned:false};
     }
     const def = BODY_BY_ID[id];
     if (!def) return null;
@@ -1183,6 +1329,14 @@ export class Game {
     const objective=expedition?currentObjective(s.homecoming):null;
     const def = this.targetId ? BODY_BY_ID[this.targetId] : null;
     const markers: MarkerInfo[] = [];
+    const showPad=this.targetId===PRIME_BASE_ID||(!this.surface.active&&!this.home.eva.active&&this.state.pos.distanceTo(this.baseFrame.position)<120000);
+    const surfaceBaseGoal=s.surfaceProgress.active&&FIRST_STEPS[s.surfaceProgress.step]?.target==='base';
+    if(showPad&&!surfaceBaseGoal&&!(s.surfaceProgress.active&&this.surface.active)){const baseMarker=this.marker('target',PRIME_BASE_ID);if(baseMarker)markers.push(baseMarker);}
+    if(s.surfaceProgress.active&&s.surfaceProgress.step<FIRST_STEPS.length){
+      const step=FIRST_STEPS[s.surfaceProgress.step],goal=this.surfaceGoalWorld();
+      const p={x:0,y:0,behind:false};this.project(goal,p);const w=window.innerWidth,h=window.innerHeight;
+      markers.push({kind:'guide',id:'first-steps-goal',label:step.target==='ship'?'LX-07 / HATCH':step.target==='orbit'?'PRIME / ORBIT':BASE_FACILITIES.find(f=>f.id===step.target)?.name??'PAD 01 / PORT LYRA',dist:this.surfaceGoalDistance(),x:Math.max(45,Math.min(w-45,p.x)),y:Math.max(150,Math.min(h-180,p.y)),onScreen:!p.behind&&p.x>45&&p.x<w-45&&p.y>150&&p.y<h-180,angle:Math.atan2(p.y-h/2,p.x-w/2),unknown:false,scanned:false});
+    }
     let target: HudSnapshot['target'] = null;
     const stationTarget=this.targetId===STATION_ID?{name:'ASTERION STATION',distance:this.home.stationDistance,relativeSpeed:this.home.docking.relativeSpeed,mode:this.home.mode}:null;
     if(stationTarget&&objective?.kind!=='dock'){const marker=this.marker('target',STATION_ID);if(marker)markers.push(marker);}
@@ -1202,7 +1356,7 @@ export class Game {
         progress: this.scan.id === def.id ? this.scan.progress : 0,
       };
     }
-    if (mission && !s.homecoming.tracked && this.phase !== 'menu') {
+    if (mission && !s.homecoming.tracked && !s.surfaceProgress.active && this.phase !== 'menu') {
       const gid = missionTarget(this.missionCtx());
       if (gid && gid !== this.targetId) {
         const m = this.marker('guide', gid);
@@ -1215,7 +1369,8 @@ export class Game {
     if(goal&&goalId&&(goalId!==this.targetId||objective?.kind==='dock')){const p={x:0,y:0,behind:false};this.project(goal,p);const w=window.innerWidth,h=window.innerHeight;
       markers.push({kind:'guide',id:`exp-${goalId}`,label:INVESTIGATION_BY_ID[goalId]?.name??(goalId==='asterion'?'ASTERION':goalId==='nav'?'航法ウェイポイント':BODY_BY_ID[goalId]?.nameJa??'遠方の信号'),dist:goal.distanceTo(this.home.eva.active?this.home.eva.position:s.pos),x:Math.max(40,Math.min(w-40,p.x)),y:Math.max(130,Math.min(h-190,p.y)),onScreen:!p.behind&&p.x>40&&p.x<w-40&&p.y>130&&p.y<h-190,angle:Math.atan2(p.y-h/2,p.x-w/2),unknown:false,scanned:false});}
     // 方位(黄道面での向き)とピッチ
-    _fwd.set(0, 0, -1).applyQuaternion(s.quat);
+    _fwd.set(0, 0, -1).applyQuaternion(this.surface.active?this.surface.pose.rotation:this.home.eva.active?this.home.eva.rotation:s.quat);
+    if(this.surface.active)_fwd.applyQuaternion(this.terrainRotation.copy(this.surface.frame.rotation).invert());
     const heading = ((Math.atan2(_fwd.x, -_fwd.z) * 180) / Math.PI + 360) % 360;
     const pitch = (Math.asin(Math.max(-1, Math.min(1, _fwd.y))) * 180) / Math.PI;
 
@@ -1235,16 +1390,19 @@ export class Game {
       const overPanel=projected.y<300&&(projected.x<350||projected.x>w-280);
       if(score>leadScore&&!overPanel&&enemy.pos.distanceTo(s.pos)<1300&&projected.x>20&&projected.x<w-20&&projected.y>30&&projected.y<h-80){leadScore=score;lead={x:projected.x,y:projected.y};}
     }
-    const landable=this.landing.nearest(s,this.positions);
-    const landAltitude=landable?this.surfaceDistance(landable):Infinity;
-    const landingText=this.landing.mode==='landed'?'着陸中 · 修理 / 補給 · [G] 離陸':this.landing.mode==='approach'?'自動着陸中 · [G] 中止':landable&&landAltitude<=450?`${landable.nameJa} · [G] 着陸`:'岩石・氷の天体に接近すると [G] で着陸';
+    const site=this.landing.assess(s,this.positions,this.velocities);
+    const landingGuide=!this.surface.active&&!this.home.eva.active&&this.home.docking.mode==='flight'&&site.body&&(site.altitude<120000||this.targetId===PRIME_BASE_ID)?{site:site.onPad?'PAD 01 / PORT LYRA':site.body.homeworld?'PORT LYRA / 周辺の陸地':`${site.body.nameJa} / 地表`,ready:site.ready,altitude:site.altitude,relativeSpeed:site.relativeSpeed,padDistance:site.body.homeworld?site.padDistance:Infinity,terrain:site.terrain,reason:site.reason}:null;
+    const landingText=this.surface.active?'地上探索中 · [H] 搭乗 / [E] 調査':this.landing.mode==='landed'?'着陸中 · [H] 地上探索 / [G] 離陸':this.landing.mode==='approach'?'自動着陸中 · [G] 中止':site.ready?'[G] 着陸可能 · 緑の着陸案内を確認':'着陸案内で高度・速度・地面を確認 / G';
     return {
       stationTarget,
+      baseTarget:this.targetId===PRIME_BASE_ID?{name:SETTLEMENT_NAME,distance:this.baseFrame.position.distanceTo(this.surface.active?this.surface.pose.position:s.pos)}:null,
+      landingGuide,
+      propulsion:this.propulsionSnapshot(),
       shield:s.shield,shieldMax:SHIELD_MAX,kills:s.kills,enemies,difficulty:DIFFICULTIES[this.settings.difficulty].label,
       weaponHeat:this.combat.heat,overheated:this.combat.overheated,hit:this.combat.hitFlash,
       landingText,landingMode:this.landing.mode,
       wave:this.combat.wave,pursuers:this.combat.pursuers,incoming:this.combat.incoming,dodgeCooldown:this.combat.dodgeCooldown,dodgeActive:this.combat.dodgeTime>0,reinforcementsIn:this.combat.reinforcementsIn,lead,
-      speed: this.relSpeed,
+      speed: this.surface.active?this.surface.localVelocity.length():this.relSpeed,
       speedFrac: this.relSpeed / this.stats.maxSpeed,
       boosting: this.boost01 > 0.5,
       hull: s.hull,
@@ -1256,7 +1414,7 @@ export class Game {
       camera: s.cameraMode,
       locked: this.input.locked || this.input.touchMode,
       operations: this.operationsSnapshot(),
-      mission: expedition
+      mission: s.surfaceProgress.active?this.surfaceMissionSnapshot():expedition
         ? {title:expedition.title,code:`MISSION ${expedition.number} — ${expedition.codeName}`,objective:objective?.text??'遠征完了。基地で次の任務を選択',hint:objective?.hint??'自由探査も続けられます',index:EXPEDITIONS.indexOf(expedition),total:EXPEDITIONS.length,...this.expeditionGuidance(expedition)}
         : mission
         ? { title: mission.title, objective: mission.objective, hint: mission.hint, index: s.missionIndex, total: MISSIONS.length }
@@ -1268,7 +1426,7 @@ export class Game {
       pitch,
       fps: this.frameStats.fps,
       frameMs: this.frameStats.frameMs,
-      qualityLabel: this.qualityLabel,
+      qualityLabel: `${this.qualityLabel} · ${this.renderer.status.backend === 'webgpu' ? 'WebGPU' : 'WebGL 2'}`,
       nearest: this.nearest,
       warning: this.warning,
     };
@@ -1282,7 +1440,9 @@ export class Game {
   }
 
   private operationsSnapshot(): HudSnapshot['operations'] {
+    if(this.surface.active)return {mode:'surface',text:'LYRION PRIME / 地上探索',detail:this.surfaceResearch.active?`作業中 ${Math.round(this.surfaceResearch.progress*100)}%`:this.surface.blockReason||'WASD 歩行 / E 調査 / H 搭乗 / B ミッション',progress:this.surfaceResearch.progress,oxygen:EVA_OXYGEN,oxygenMax:EVA_OXYGEN,distance:this.surface.pose.distance};
     const h=this.home,s=this.state,e=h.eva;
+    if(!e.active&&h.mode==='flight'&&s.pos.distanceToSquared(this.baseFrame.position)<1800**2)return{mode:'flight',text:'PORT LYRA / PRIME 地上港',detail:this.landing.mode==='landed'?'Hで降機 → 西側のMISSION CONTROLで任務・成果報告':this.landing.mode==='approach'?'PAD 01へ降下中 / Gで中止':'PAD 01の青いマーカーへ / Fを離してXで減速 → G LAND',progress:0,oxygen:EVA_OXYGEN,oxygenMax:EVA_OXYGEN,distance:s.pos.distanceTo(this.baseFrame.position)};
     const nearest=h.investigations.nearest(s.homecoming,h.distances);
     const label=nearest?`${nearest.name} · ${Math.round(h.distances[nearest.id])}u`:'';
     const text=e.active ? `船外活動 / O₂ ${Math.ceil(e.oxygen)}秒 / 機体まで ${Math.round(e.distance)}u` : h.mode==='docked'?'ASTERION STATION / 係留中':h.stationDistance<1600?`ASTERION · ${Math.round(h.docking.distance)}u / 相対速度 ${h.docking.relativeSpeed.toFixed(1)}u/s`:'HOME → ASTERION / B 遠征ボード';
@@ -1291,10 +1451,28 @@ export class Game {
     return {mode:h.mode,text,detail,progress:h.investigations.progress,oxygen:e.oxygen,oxygenMax:EVA_OXYGEN,distance:e.distance};
   }
 
+  private propulsionSnapshot():HudSnapshot['propulsion']{
+    const p=this.propulsion,s=this.state,key=this.input.touchMode?'BOOST':'F 長押し';
+    if(this.surface.active){const fast=this.evaInput.up<0;return{mode:fast?'fast-walk':'walk',title:`${fast?'速歩':'歩行'} / ${fast?FAST_WALK_SPEED:WALK_SPEED} m/s`,detail:`${this.input.touchMode?'速歩ボタン':'Shift 長押し'}で速歩 · 宇宙服の安全速度 / 消費なし`};}
+    if(this.home.eva.active)return{mode:'eva',title:'EVA / 姿勢制御',detail:'Space・Shiftで上下 / 地上の速歩とは操作が異なります'};
+    if(p.mode==='parked')return{mode:p.mode,title:this.landing.mode==='landed'?'駐機 / H 降機 · G 離陸':'自動操縦 / 加速停止',detail:'加速は機内で飛行中に使用できます'};
+    if(p.mode==='braking')return{mode:p.mode,title:'BRAKE / 加速を解除して制動中',detail:'X / BRAKEが推進・ブーストより優先されます'};
+    if(p.locked)return{mode:p.mode,title:`再充電 / ${Math.floor(s.energy/this.stats.energyMax*100)} → ${BOOST_RESTART_FRACTION*100}%`,detail:`${key}で再使用 · 通常時は毎秒${this.stats.energyRegen.toFixed(0)} ENERGY回復`};
+    if(p.active)return{mode:p.mode,title:p.cruise>1?`CRUISE ×${p.cruise.toFixed(1)} / 長距離巡航`:'BOOST / 近距離加速',detail:`上限 ${Math.round(this.stats.maxSpeed*this.stats.boostSpeedMul*p.cruise).toLocaleString()} m/s · ${p.drain.toFixed(0)} ENERGY/s · 残り約${Math.ceil(s.energy/p.drain)}秒 / X 制動`};
+    return{mode:'idle',title:`${key} / 加速待機`,detail:this.combat.count>0?'交戦中は近距離ブースト / X 制動':p.clearance>CRUISE_CLEARANCE?'周囲5 km以上で長距離巡航 / 接近で倍率低下 / X 制動':`周囲5 km以内は近距離ブースト / ${this.stats.boostDrain.toFixed(0)} ENERGY/s / X 制動`};
+  }
+
+  private surfaceMissionSnapshot():NonNullable<HudSnapshot['mission']>{
+    const p=this.state.surfaceProgress,step=FIRST_STEPS[p.step],done=p.step===FIRST_STEPS.length;
+    return {code:'SURFACE CAMPAIGN — FIRST STEPS',title:done?'最初の一歩 / 完了':'最初の一歩',objective:step?.text??`地上探査と軌道への帰還に成功。報酬 +${FIRST_STEPS_REWARD} DATA`,hint:step?.hint??'Bで次の遠征を選択できます',index:0,total:1,completed:p.step,objectiveTotal:FIRST_STEPS.length,destination:step?.target==='orbit'?'PRIME / ORBIT':step?.target==='ship'?'LX-07 / HATCH':BASE_FACILITIES.find(f=>f.id===step?.target)?.name??'PORT LYRA / PAD 01',distance:done?undefined:step?.target==='orbit'?Math.max(0,120000-this.surfaceDistance(BODY_BY_ID[HOMEWORLD_ID])):this.surfaceGoalDistance(),action:this.surfaceResearch.active?`作業中 ${Math.round(this.surfaceResearch.progress*100)}%`:this.surface.active&&[4,5,6].includes(p.step)&&this.surfaceGoalDistance()<3.5?'E / 調査で作業を開始':undefined};
+  }
+
   // ---------------------------------------------------------------- 破棄・デバッグ
 
   /** デバッグ・検証用: 天体の近くへ移動する(通常プレイでは使わない) */
   debugTeleport(id: string, surfaceDistance: number): void {
+    this.surface.reset();
+    this.surfaceResearch.cancel();
     resetAttitude(this.attitude);
     const d = BODY_BY_ID[id];
     if (!d) return;
@@ -1316,8 +1494,10 @@ export class Game {
     _v1.normalize(); // 恒星方向
     // 恒星と天体の間(昼側)に、やや斜めから配置
     _v2.set(-_v1.z, 0.25, _v1.x).normalize();
-    this.state.pos.copy(c).addScaledVector(_v1, d.radius + surfaceDistance).addScaledVector(_v2, (d.radius + surfaceDistance) * 0.35);
-    this.state.vel.copy(this.velocities[id]);
+    _v1.addScaledVector(_v2,.35).normalize();
+    _v2.copy(_v1).applyQuaternion(bodyRotation(d,this.state.time,this.terrainRotation).invert());
+    this.state.pos.copy(c).addScaledVector(_v1,d.radius+solidHeight(d,_v2)+surfaceDistance);
+    bodyPointVelocity(d,this.state.pos,c,this.velocities[id],this.state.vel);
     this.state.quat.setFromUnitVectors(_fwd.set(0, 0, -1), _v3.copy(c).sub(this.state.pos).normalize());
     this.origin.copy(this.state.pos);
     this.home.measure(this.state);
@@ -1326,6 +1506,22 @@ export class Game {
 
   get rendererInfo() {
     return this.renderer.info;
+  }
+
+  /** Deterministic browser QA entry: places the ship above real base terrain;
+   * landing and research must still use normal gameplay APIs. */
+  debugSurface(altitude=400,offsetX=0,offsetZ=0):void{
+    if(!new URLSearchParams(location.search).has('debug'))return;
+    const body=BODY_BY_ID[HOMEWORLD_ID],center=this.positions[body.id];
+    this.home.eva.reset();this.home.docking.mode='flight';this.state.homecoming.docked=false;
+    this.landing.restore(null);this.state.landed=null;
+    this.surface.reset();this.surfaceResearch.cancel();
+    this.baseFrame.toWorld(_v2.set(offsetX,0,offsetZ),_v1).sub(center).normalize();
+    _v2.copy(_v1).applyQuaternion(bodyRotation(body,this.state.time,this.terrainRotation).invert());
+    this.state.pos.copy(center).addScaledVector(_v1,body.radius+solidHeight(body,_v2)+altitude);
+    bodyPointVelocity(body,this.state.pos,center,this.velocities[body.id],this.state.vel);
+    this.state.quat.setFromUnitVectors(_fwd.set(0,0,-1),_v1.clone().negate());
+    this.refVel.copy(this.state.vel);this.origin.copy(this.state.pos);this.chase.snap();this.syncControlMode();this.combat.reset(60);
   }
 
   dispose(): void {
@@ -1342,8 +1538,12 @@ export class Game {
     this.input.dispose();
     this.audio.dispose();
     this.expeditionView.dispose();
+    this.surfaceAstronaut.dispose();
+    this.primeBase.dispose();
     for (const v of this.views.values()) v.dispose();
     this.views.clear();
+    for(const terrain of this.terrains.values())terrain.dispose();this.terrains.clear();
+    this.surfaceSky.dispose();
     this.sun.dispose();
     this.belt.dispose();
     this.sky.dispose();

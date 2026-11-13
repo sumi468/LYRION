@@ -1,0 +1,19 @@
+{
+  "results": [
+    {
+      "name": "マニフェストと全アイコンの実寸",
+      "ok": true,
+      "data": "standalone"
+    },
+    {
+      "name": "ローカル配信物をオフライン保存",
+      "ok": true,
+      "data": 16
+    },
+    {
+      "name": "オフライン再起動でゲームとセーブを復帰",
+      "ok": true
+    }
+  ],
+  "errors": []
+}

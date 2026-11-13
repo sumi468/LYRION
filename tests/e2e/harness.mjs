@@ -9,7 +9,7 @@ mkdirSync(SHOTS, { recursive: true });
 export const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export async function serve(port) {
   const server = await preview({ preview: { host: '127.0.0.1', port, strictPort: true } });
-  return { url: `http://127.0.0.1:${port}/?debug`, close: () => server.httpServer.close() };
+  return { url: `http://127.0.0.1:${port}/?debug&renderer=webgl2`, close: () => server.httpServer.close() };
 }
 export const launchOptions = () => ({
   headless: process.env.HEADED !== '1',

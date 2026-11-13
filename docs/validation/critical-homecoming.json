@@ -1,15 +1,15 @@
 {
-  "timestamp": "2026-10-29T07:23:49.324Z",
+  "timestamp": "2026-11-13T04:13:08.814Z",
   "results": [
     {
       "name": "実際に配信したビルドと作業ソースの識別情報が一致",
       "ok": true,
       "data": {
-        "version": "0.8.0",
-        "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
-        "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+        "version": "0.9.0-dev.2",
+        "sourceRevision": "2cf1b25982db69e12db64df73d7961590688f950",
+        "sourceHash": "875ca202fb3b9f5d356d85b7f4d9e0c08ee73c874576d5826420a6b49dffc3c9",
         "uncommittedChanges": true,
-        "builtAt": "2026-10-29T07:21:49.682Z"
+        "builtAt": "2026-11-13T04:07:47.706Z"
       }
     },
     {
@@ -81,7 +81,7 @@
       "ok": true
     },
     {
-      "name": "旧セーブは位置・向き・DATA・戦闘・既存ミッションを維持",
+      "name": "旧セーブを新座標へ移行し向き・DATA・戦闘・既存ミッションを維持",
       "ok": true
     },
     {
@@ -100,10 +100,10 @@
   ],
   "errors": [],
   "build": {
-    "version": "0.8.0",
-    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
-    "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+    "version": "0.9.0-dev.2",
+    "sourceRevision": "2cf1b25982db69e12db64df73d7961590688f950",
+    "sourceHash": "875ca202fb3b9f5d356d85b7f4d9e0c08ee73c874576d5826420a6b49dffc3c9",
     "uncommittedChanges": true,
-    "builtAt": "2026-10-29T07:21:49.682Z"
+    "builtAt": "2026-11-13T04:07:47.706Z"
   }
 }

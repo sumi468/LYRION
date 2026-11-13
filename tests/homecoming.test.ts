@@ -26,7 +26,7 @@ describe('Homecoming foundation',()=>{
     expect(HOMEWORLD.surface?.program).toBe('terran');expect(HOMEWORLD.atmosphere).toBeDefined();expect(HOMEWORLD.clouds).toBeDefined();
     expect(CATALOG_IDS).toHaveLength(11);expect(CATALOG_IDS).not.toContain('lyrion-prime');expect(MISSIONS).toHaveLength(8);
     const parent=BODY_DEFS.find(d=>d.id===HOMEWORLD.orbit!.parent);expect(parent).toBeDefined();
-    expect(HOMEWORLD.orbit!.radius+STATION_ORBIT.radius+360).toBeLessThan(12500);
+    expect(BODY_DEFS.find(d=>d.homeworld)!.orbit!.radius+STATION_ORBIT.radius+360).toBeLessThan(BODY_DEFS.find(d=>d.belt)!.belt!.inner);
   });
   it('station orbit and attachment transforms are deterministic after long time jumps',()=>{
     for(const time of [0,1234,86400,1e7]){
@@ -147,10 +147,10 @@ describe('Save migration and resources',()=>{
     const raw={...serialize(s),version:3,scanned:{prime:7,cindra:8},detected:['prime','cindra']};const restored=deserialize(raw)!;
     expect(restored.scanned.get('lyrion-prime')).toBe(7);expect(restored.scanned.has('prime')).toBe(false);expect(restored.detected.has('lyrion-prime')).toBe(true);expect(restored.kills).toBe(7);expect(restored.homecoming.completed['first-departure']).toBe(10);expect(restored.homecoming.investigated['maintenance-panel']).toBe(12);
   });
-  it('reads v1/v2 without moving the spacecraft or losing scans, upgrades, missions or currency',()=>{
+  it('migrates v1/v2 into the metric world without losing scans, upgrades, missions or currency',()=>{
     const state=createNewState();state.pos.set(123,456,789);state.quat.copy(new Quaternion().setFromAxisAngle(new Vector3(0,1,0),.7));state.data=123;state.scanned.set('lumen',20);state.upgrades.engine=2;state.missionIndex=5;
     for(const version of [1,2]){const restored=deserialize({...serialize(state),version,homecoming:undefined})!;
-      expect(restored.pos.equals(state.pos)).toBe(true);expect(restored.quat.angleTo(state.quat)).toBeLessThan(1e-7);expect(restored.data).toBe(123);expect(restored.upgrades.engine).toBe(2);expect(restored.missionIndex).toBe(5);expect(restored.scanned.has('lumen')).toBe(true);expect(restored.homecoming.tracked).toBe(false);}
+      expect(restored.pos.length()).toBeGreaterThan(BODY_DEFS[0].radius+12);expect(restored.pos.toArray().every(Number.isFinite)).toBe(true);expect(restored.quat.angleTo(state.quat)).toBeLessThan(1e-7);expect(restored.data).toBe(123);expect(restored.upgrades.engine).toBe(2);expect(restored.missionIndex).toBe(5);expect(restored.scanned.has('lumen')).toBe(true);expect(restored.homecoming.tracked).toBe(false);}
   });
   it('saves v3 EVA research and safely recovers aboard, retaining optional homeworld scans',()=>{
     const s=createNewState();s.homecoming.wasEva=true;s.homecoming.investigated['maintenance-panel']=5;s.scanned.set('lyrion-prime',2);

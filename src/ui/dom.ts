@@ -30,11 +30,7 @@ export function setText(el: HTMLElement, text: string): void {
   if (el.textContent !== text) el.textContent = text;
 }
 
-export function fmtDist(u: number): string {
-  if (u >= 10000) return `${(u / 1000).toFixed(1)}k`;
-  if (u >= 1000) return `${(u / 1000).toFixed(2)}k`;
-  return `${Math.round(u)}`;
-}
+export {formatDistance as fmtDist} from '../physics/worldScale';
 
 export function fmtNum(n: number): string {
   return Math.round(n).toLocaleString('ja-JP');

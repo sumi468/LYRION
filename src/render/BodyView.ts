@@ -1,3 +1,4 @@
+import {sceneShader} from './shaderRegistry';
 import {
   AdditiveBlending,
   BackSide,
@@ -33,6 +34,8 @@ import {
 import { PROGRAM_CLOUD, PROGRAM_ID, createGlowTexture, createRingTexture, type BakedTexture, type TextureBaker } from './bake';
 import type { QualityProfile } from './quality';
 import { ProbeModel } from './ProbeModel';
+import {CELESTIAL_SCALE} from '../physics/worldScale';
+import {terrainTexture} from './terrainTexture';
 
 export interface ViewContext {
   /** Floating Origin(倍精度のワールド座標)。描画座標 = ワールド座標 - origin */
@@ -72,7 +75,7 @@ const SUN_COLOR = new Color(1.0, 0.93, 0.8);
 
 /** 太陽光の強さ。距離で緩やかに減衰させる(完全な逆二乗だと外縁が暗すぎて遊べない) */
 export function sunIntensity(distance: number): number {
-  return 1.5 * Math.pow(Math.min(Math.max(7000 / Math.max(distance, 1), 0.0), 4), 0.35);
+  return 1.5 * Math.pow(Math.min(Math.max(7000*CELESTIAL_SCALE / Math.max(distance, 1), 0.0), 4), 0.35);
 }
 
 const _v = new Vector3();
@@ -121,7 +124,7 @@ export class BodyView {
     }
     if (!d.surface) return;
 
-    this.planetMat = new ShaderMaterial({
+    this.planetMat = sceneShader('planet',{
       vertexShader: PLANET_VERT,
       fragmentShader: PLANET_FRAG,
       defines: {
@@ -163,7 +166,8 @@ export class BodyView {
     this.spin.add(this.lod);
 
     if (d.clouds) {
-      this.cloudMat = new ShaderMaterial({
+      this.cloudMat = sceneShader('cloud',{
+        side:DoubleSide,
         vertexShader: PLANET_VERT,
         fragmentShader: CLOUD_FRAG,
         transparent: true,
@@ -185,7 +189,7 @@ export class BodyView {
 
     if (d.atmosphere) {
       const a = d.atmosphere;
-      this.atmoMat = new ShaderMaterial({
+      this.atmoMat = sceneShader('atmosphere',{
         vertexShader: ATMO_VERT,
         fragmentShader: ATMO_FRAG,
         transparent: true,
@@ -214,7 +218,7 @@ export class BodyView {
       const mu = (this.planetMat.uniforms.uRingInv.value as Matrix3).setFromMatrix4(new Matrix4().makeRotationZ(-r.tilt));
       void mu;
       this.planetMat.uniforms.uRingTex.value = this.ringTex;
-      this.ringMat = new ShaderMaterial({
+      this.ringMat = sceneShader('ring',{
         vertexShader: RING_VERT,
         fragmentShader: RING_FRAG,
         transparent: true,
@@ -277,7 +281,8 @@ export class BodyView {
     const next: BakedTexture[] = [];
     const parts = d.clouds && this.cloudMat ? 2 : 1;
     try {
-      next.push(await baker.bakeAsync(PROGRAM_ID[d.surface.program],
+      if(d.homeworld){const texture=await terrainTexture(d,width,fraction=>progress?.(fraction/parts));next.push({texture,dispose:()=>texture.dispose()});}
+      else next.push(await baker.bakeAsync(PROGRAM_ID[d.surface.program],
         { seed: d.surface.seed, colors: d.surface.colors, sea: d.surface.sea ?? 0.5 }, width, true,
         (value) => progress?.(value / parts)));
       if (d.clouds && this.cloudMat) {
@@ -305,12 +310,14 @@ export class BodyView {
       for (let i = 0; i < 3; i++) this.lodMeshes[i].geometry = sphereGeo(p.segments[i]);
     }
     if (this.cloudMesh) {
-      this.cloudMesh.geometry = sphereGeo(p.segments[1]);
+      // A 12 km shell around a 3,100 km world cannot use a 20-segment sphere:
+      // its chords would sink beneath the terrain. Keep chord error below 1 km.
+      this.cloudMesh.geometry = sphereGeo(Math.max(128,p.segments[0]));
       this.cloudMesh.visible = p.clouds;
     }
     if (this.planetMat && d.surface) {
       // Keep relief below the 8-bit height map's quantisation scale on screen.
-      this.planetMat.uniforms.uBump.value = p.bump ? d.radius * 0.008 * d.surface.bump : 0;
+      this.planetMat.uniforms.uBump.value = p.bump ? Math.min(d.radius * 0.008,30) * d.surface.bump : 0;
     }
     if (this.cloudMat) this.cloudMat.uniforms.uBump.value = p.bump ? d.radius * 0.0015 : 0;
   }
@@ -352,7 +359,7 @@ export class BodyView {
 
     // 遠方の小天体は描画しない(描画距離設定)
     if (d.kind === 'moon' || d.kind === 'anomaly') {
-      this.group.visible = this.distance - d.radius < ctx.profile.cullDistance;
+      this.group.visible = this.distance - d.radius < ctx.profile.cullDistance*CELESTIAL_SCALE;
       if (!this.group.visible) return;
     }
 
@@ -392,6 +399,10 @@ export class BodyView {
 
     if (this.atmoMat && this.atmoMesh) {
       const au = this.atmoMat.uniforms;
+      // The ground sky owns the inner column; avoid double scattering and
+      // cancellation when subtracting squared planet-scale ray distances.
+      const groundBlend=d.homeworld?Math.max(0,Math.min(1,(this.distance-d.radius-20000)/60000)):1;
+      au.uStrength.value=d.atmosphere!.density*groundBlend;
       au.uCenter.value.copy(this.group.position);
       au.uSunDirW.value.copy(_sunDirW);
       // カメラが大気の殻の内側に入ったら裏面を描く(連続的に見えるよう計算はレイ基準)
@@ -413,6 +424,8 @@ export class BodyView {
   setVisible(v: boolean): void {
     this.group.visible = v;
   }
+
+  setTerrainVisible(visible:boolean):void{if(this.lod)this.lod.visible=!visible;}
 
   dispose(): void {
     for (const b of this.baked) b.dispose();

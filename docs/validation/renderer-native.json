@@ -1,0 +1,68 @@
+{
+  "time": "2026-10-31T11:07:27.203Z",
+  "results": [
+    {
+      "name": "実デバイスでWebGPU初期化",
+      "ok": true,
+      "details": {
+        "requested": "webgpu",
+        "backend": "webgpu",
+        "reason": null,
+        "adapter": "nvidia / lovelace",
+        "hardware": true,
+        "nativeBackendUsesRequestedDevice": true
+      }
+    },
+    {
+      "name": "WebGPUで実ゲームを描画",
+      "ok": true,
+      "details": {
+        "status": {
+          "requested": "webgpu",
+          "backend": "webgpu",
+          "reason": null,
+          "adapter": "nvidia / lovelace",
+          "hardware": true
+        },
+        "info": {
+          "render": {
+            "calls": 26,
+            "triangles": 121405,
+            "points": 0,
+            "lines": 100
+          },
+          "memory": {
+            "geometries": 31,
+            "textures": 19
+          }
+        }
+      }
+    },
+    {
+      "name": "GLSL移行材質の霧設定を維持",
+      "ok": true
+    },
+    {
+      "name": "デバイス喪失からWebGL 2で復帰",
+      "ok": true
+    },
+    {
+      "name": "アダプター取得失敗時のフォールバック",
+      "ok": true,
+      "details": {
+        "requested": "auto",
+        "backend": "webgl2",
+        "reason": "WebGPUの初期化に失敗したためWebGL 2へ切り替えました：使用できるGPUアダプターがありません",
+        "adapter": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardware": true
+      }
+    },
+    {
+      "name": "描画エラーなし",
+      "ok": true,
+      "details": []
+    }
+  ],
+  "errors": [],
+  "lossDiagnostics": []
+}

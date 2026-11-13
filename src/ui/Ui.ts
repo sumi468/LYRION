@@ -8,7 +8,7 @@ import type { BodyDef, UpgradeDef } from '../data/types';
 import { computeShipStats, upgradeCost } from '../systems/upgrades';
 import type { QualitySetting } from '../render/quality';
 import type { Settings } from '../systems/settings';
-import { clear, fmtNum, fmtTime, h } from './dom';
+import { clear, fmtDist, fmtNum, fmtTime, h } from './dom';
 import { Hud } from './Hud';
 import { BUILD_INFO } from '../core/build';
 
@@ -20,18 +20,19 @@ const CONTROLS: [string, string][] = [
   ['Space / Shift', '機首を上げる / 下げる'],
   ['マウス', '機首の向き(矢印キーでも可)'],
   ['Q / E', 'ロール(左 / 右)'],
-  ['F / 右クリック', 'ブースト(エネルギー消費)'],
-  ['X', 'ブレーキ'],
+  ['F / 右クリック（長押し）', '近距離ブースト。周囲5 km外・非交戦時は長距離巡航（HUDに倍率・消費・残り秒数）'],
+  ['X', '制動を優先し、推進・ブーストを解除。加速後も慣性が残るため早めに減速'],
   ['Z', 'フライトアシスト ON / OFF'],
   ['C', '視点切替(三人称 / コックピット)'],
   ['Tab', 'ターゲット切替'],
   ['R', 'スキャン開始 / 中断'],
   ['左クリック / J', '連装パルス砲（押し続けて連射）'],
-  ['G', '自動着陸 / 離陸 / 降下中止'],
+  ['G', '緑の着陸案内で降下 / 離陸 / 中止。高度450 m以下・地表速度100 m/s以下・平坦な陸地'],
   ['V', '回避ロール（エネルギー18・冷却6秒）'],
   ['U / L', 'アップグレード / 探査記録'],
   ['T / H', '接岸・離脱 / 船外活動・搭乗'],
   ['E / Y（船外）', '調査 / 機体へ帰還'],
+  ['WASD / Shift（地上）', '歩行2.3 m/s / Shift長押しで速歩3.5 m/s。エネルギー消費なし'],
   ['B', '遠征ボード・基地サービス'],
   ['Esc / P', '一時停止'],
 ];
@@ -88,6 +89,7 @@ export class Ui {
 
   private bindGame(): void {
     const g = this.game;
+    g.ev.on('panel',panel=>{g.pause();this.show(panel);});
     g.ev.on('loading', ({ progress, label }) => {
       this.loadBar.style.transform = `scaleX(${progress.toFixed(3)})`;
       this.loadLabel.textContent = label;
@@ -337,8 +339,8 @@ export class Ui {
   private scaleNote(d: BodyDef): HTMLElement {
     const txt =
       d.kind === 'belt' && d.belt
-        ? `ゲーム内: 内縁 ${fmtNum(d.belt.inner)} u / 外縁 ${fmtNum(d.belt.outer)} u(設定値とは別のゲーム内スケール)`
-        : `ゲーム内スケール: 半径 ${d.radius} u${d.orbit ? ` / 軌道半径 ${fmtNum(d.orbit.radius)} u` : ''}  — 見やすさのため実寸より誇張・圧縮しています`;
+        ? `ゲーム内: 内縁 ${fmtDist(d.belt.inner)} / 外縁 ${fmtDist(d.belt.outer)}（設定資料の実天体とは別の縮尺）`
+        : `ゲーム内: 半径 ${fmtDist(d.radius)}${d.orbit ? ` / 軌道半径 ${fmtDist(d.orbit.radius)}` : ''} · 機体と宇宙服の1単位は1 m`;
     return h('div', { class: 'scale-note' }, txt);
   }
 
@@ -369,13 +371,13 @@ export class Ui {
     const lines: [string, number, number, string][] = {
       engine: [
         ['推進力', now.thrust, nxt.thrust, ''],
-        ['巡航速度', now.maxSpeed, nxt.maxSpeed, ' u/s'],
+        ['巡航速度', now.maxSpeed, nxt.maxSpeed, ' m/s'],
       ],
       boost: [
-        ['ブースト最高速', now.maxSpeed * now.boostSpeedMul, nxt.maxSpeed * nxt.boostSpeedMul, ' u/s'],
+        ['ブースト最高速', now.maxSpeed * now.boostSpeedMul, nxt.maxSpeed * nxt.boostSpeedMul, ' m/s'],
         ['消費', now.boostDrain, nxt.boostDrain, '/s'],
       ],
-      scan: [['スキャン距離', now.scanRange, nxt.scanRange, ' u']],
+      scan: [['スキャン距離', now.scanRange, nxt.scanRange, ' m']],
       energy: [
         ['容量', now.energyMax, nxt.energyMax, ''],
         ['回復', now.energyRegen, nxt.energyRegen, '/s'],
@@ -438,6 +440,13 @@ export class Ui {
       'div',
       { class: 'set-group' },
       h('div', { class: 'label' }, 'GRAPHICS'),
+      h('div', { class: 'segs' }, ...(['auto', 'webgpu', 'webgl2'] as const).map(renderer => h('button', {
+        class: `seg${st.renderer === renderer ? ' on' : ''}`,
+        onclick: () => set({ renderer }),
+        title: '進行を保存して描画方式を切り替えます',
+      }, renderer === 'auto' ? 'Auto' : renderer === 'webgpu' ? 'WebGPU' : 'WebGL 2'))),
+      h('div', { class: 'dim small' }, `使用中: ${g.rendererStatus?.backend === 'webgpu' ? 'WebGPU' : 'WebGL 2'} · ${g.rendererStatus?.adapter ?? ''}`),
+      ...(g.rendererStatus?.reason ? [h('div', { class: 'dim small' }, g.rendererStatus.reason)] : []),
       h('div', { class: 'segs' }, qualityBtn('low', 'Low', '解像度 65% · 軽量(モバイル向け)'), qualityBtn('medium', 'Medium', '解像度 90% · バランス'), qualityBtn('high', 'High', '解像度 100% · 高精細テクスチャ'), qualityBtn('auto', 'Auto', 'フレームレートを測定して自動調整')),
       h('div', { class: 'dim small' }, st.quality === 'auto' ? `現在の段階: ${g.qualityLabel}  (実測 fps に応じて段階的に調整)` : `現在の設定: ${g.qualityLabel}  ·  解像度・描画距離・星の数・小惑星・雲・凹凸を調整`),
       toggle('FPS 表示', st.showFps, (v) => set({ showFps: v })),

@@ -1,3 +1,4 @@
+import {sceneShader} from './shaderRegistry';
 import { BufferAttribute, BufferGeometry, AdditiveBlending, LineSegments, ShaderMaterial, Vector3 } from 'three';
 import { DUST_FRAG, DUST_VERT } from './shaders';
 
@@ -35,7 +36,7 @@ export class SpaceDust {
     this.geo.setAttribute('position', new BufferAttribute(new Float32Array(MAX_DUST * 2 * 3), 3));
     this.geo.setAttribute('aSeed', new BufferAttribute(seed, 3));
     this.geo.setAttribute('aEnd', new BufferAttribute(end, 1));
-    this.mat = new ShaderMaterial({
+    this.mat = sceneShader('dust',{
       vertexShader: DUST_VERT,
       fragmentShader: DUST_FRAG,
       transparent: true,

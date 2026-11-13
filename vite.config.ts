@@ -6,7 +6,12 @@ export default defineConfig({
   base: './',
   resolve: { preserveSymlinks: true },
   build: {
-    target: 'es2022',
+    // Native esbuild's large-input async file path terminates on this Windows
+    // host. Terser handles the larger modern Three.js modules without that path.
+    // All supported rendering browsers already support the emitted ES modules.
+    target: 'esnext',
+    minify: 'terser',
+    terserOptions: {ecma:2022,compress:{passes:1},format:{comments:false}},
     chunkSizeWarningLimit: 900,
     rollupOptions: {
       output: {

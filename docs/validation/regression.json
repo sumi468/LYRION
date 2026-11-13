@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-29T07:22:35.055Z",
-  "browser": "156.0.8078.73",
+  "timestamp": "2026-11-13T04:11:35.246Z",
+  "browser": "157.0.8103.51",
   "graphics": {
     "vendor": "Google Inc. (NVIDIA)",
     "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
@@ -18,10 +18,10 @@
       "data": {
         "state": "running",
         "active": true,
-        "rms": 0.012106951598976718,
-        "sources": 9,
-        "musicNotesScheduled": 4,
-        "musicRms": 0.009629927861373186
+        "rms": 0.00731541452723731,
+        "sources": 10,
+        "musicNotesScheduled": 5,
+        "musicRms": 0.017312759424710323
       }
     },
     {

@@ -27,6 +27,12 @@ export interface QualityProfile {
   glare: boolean;
 }
 
+/** Spherical terrain budgets use the existing quality ladder as their single control. */
+export function terrainQuality(profile:QualityProfile):{patches:number;grid:number}{
+  return {patches:profile.segments[0]>=72?240:profile.segments[0]>=40?180:120,grid:profile.segments[0]>=56?16:12};
+}
+export function settlementDetailDistance(profile:QualityProfile):number{return profile.segments[0]>=56?3500:profile.segments[0]>=40?2200:1200;}
+
 /** 低→高 の 6 段階。Auto はこのラダーを上下する */
 export const QUALITY_LADDER: QualityProfile[] = [
   { label: 'L0', renderScale: 0.5, maxDpr: 1, stars: 1500, belt: 600, dust: 60, segments: [24, 16, 10], clouds: false, bump: false, cullDistance: 12000, glare: false },

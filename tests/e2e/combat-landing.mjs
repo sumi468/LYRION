@@ -60,7 +60,8 @@ try {
  const memory=await page.evaluate(()=>{
    const g=window.__lyrion;g.applySettings({...g.settings,difficulty:'hard'});g.combat.spawn(g.state,'hard',g.worlds);g.tick(.05);
    const before={...g.rendererInfo.memory};
-   for(let i=0;i<20;i++){g.combat.reset();g.combat.spawn(g.state,'hard',g.worlds);g.tick(.05);}
+   // Freeze motion/LOD while isolating the combat pool's allocation behavior.
+   for(let i=0;i<20;i++){g.combat.reset();g.combat.spawn(g.state,'hard',g.worlds);g.tick(0);}
    return {before,after:{...g.rendererInfo.memory}};
  });
  check('敵20回再生成でもGPUリソース数が増えない',memory.after.geometries===memory.before.geometries&&memory.after.textures===memory.before.textures,memory);

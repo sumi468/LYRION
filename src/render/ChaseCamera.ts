@@ -29,7 +29,7 @@ export class ChaseCamera {
   private ready = false;
 
   constructor(aspect: number) {
-    this.camera = new PerspectiveCamera(70, aspect, 0.6, 160000);
+    this.camera = new PerspectiveCamera(70, aspect, 0.12, 2_000_000_000);
   }
 
   /** 次の update でスムージングなしに目標へ瞬間移動する(開始・ロード・テレポート時) */

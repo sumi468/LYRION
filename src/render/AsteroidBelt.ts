@@ -48,8 +48,12 @@ export class AsteroidBelt {
   private surface: CanvasTexture;
   private mat: MeshStandardMaterial;
   private angle = 0;
+  private readonly localMatrices:Float32Array;
+  private readonly renderMatrix=new Matrix4();
+  private readonly spinMatrix=new Matrix4();
 
   constructor(readonly def: BeltDef, maxCount: number) {
+    this.localMatrices=new Float32Array(maxCount*16);
     const r = rng(777);
     this.geo = new IcosahedronGeometry(1, 1);
     // 頂点を乱数で押し引きして岩らしい不整形にする
@@ -120,6 +124,7 @@ export class AsteroidBelt {
       dummy.scale.set(sx, sy, sz);
       dummy.updateMatrix();
       this.mesh.setMatrixAt(i, dummy.matrix);
+      dummy.matrix.toArray(this.localMatrices,i*16);
       const tone = 0.32 + r() * 0.3;
       col.setRGB(tone * (0.95 + r() * 0.1), tone * (0.9 + r() * 0.1), tone * (0.82 + r() * 0.12));
       this.mesh.setColorAt(i, col);
@@ -143,9 +148,15 @@ export class AsteroidBelt {
 
   update(time: number, origin: Vector3): void {
     this.angle = (Math.PI * 2 * time) / this.def.period;
-    this.group.rotation.y = this.angle;
-    // ベルトの中心(恒星)はワールド原点
-    this.group.position.set(-origin.x, -origin.y, -origin.z);
+    this.group.position.set(0,0,0);this.group.rotation.set(0,0,0);
+    this.spinMatrix.makeRotationY(this.angle);const c=Math.cos(this.angle),s=Math.sin(this.angle);
+    for(let i=0;i<this.mesh.count;i++){
+      const rock=this.rocks[i],m=this.renderMatrix.fromArray(this.localMatrices,i*16).premultiply(this.spinMatrix);
+      // Subtract the double-precision origin before the Float32 instance upload.
+      m.elements[12]=rock.x*c+rock.z*s-origin.x;m.elements[13]=rock.y-origin.y;m.elements[14]=-rock.x*s+rock.z*c-origin.z;
+      this.mesh.setMatrixAt(i,m);
+    }
+    this.mesh.instanceMatrix.needsUpdate=true;
   }
 
   /** ベルト座標の岩のワールド位置(回転を反映)を out に書き込む */

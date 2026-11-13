@@ -55,6 +55,7 @@ export function acceptExpedition(progress: HomecomingProgress, id: string): bool
 }
 
 export interface ExpeditionContext {
+  atBase?:boolean;
   eva: boolean;
   docking: DockingMode;
   stationDistance: number;
@@ -101,7 +102,7 @@ export function advanceExpedition(progress: HomecomingProgress, ctx: ExpeditionC
 
 export function reportExpedition(progress: HomecomingProgress, ctx: ExpeditionContext, time: number): ExpeditionDef | null {
   const mission = activeExpedition(progress), objective = currentObjective(progress);
-  if (!mission || !objective || objective.kind !== 'report' || ctx.eva || ctx.docking !== 'docked' || progress.completed[mission.id] !== undefined) return null;
+  if (!mission || !objective || objective.kind !== 'report' || ctx.eva || ctx.docking !== 'docked'&&!ctx.atBase || progress.completed[mission.id] !== undefined) return null;
   progress.objectives.push(objective.id); progress.completed[mission.id] = time;
   progress.tracked = true;
   return mission;

@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-10-31T11:12:10.7157876Z",
+  "build": {
+    "version": "0.9.0-dev.1",
+    "sourceRevision": "4a298a05fdbc38dc5f731eaa0f268753dcab0384",
+    "sourceHash": "ee15587d332c1c0275fe112285b69db488f72d275eacf173429d0a3b6efd8725",
+    "uncommittedChanges": true,
+    "builtAt": "2026-10-31T11:08:55.347Z"
+  },
+  "branch": "codex/planetary-exploration",
+  "milestone": "PRIME vertical slice; incomplete next-generation roadmap",
+  "typecheck": true,
+  "unitTests": 120,
+  "legacyE2E": "passed entire existing suite",
+  "rendererChecks": 6,
+  "rendererPassed": true,
+  "campaignChecks": 27,
+  "campaignPassed": true,
+  "campaignBackends": [
+    "webgl2",
+    "webgpu"
+  ],
+  "touchPassed": true,
+  "pwaPassed": true,
+  "continuousDescentPassed": true,
+  "soakPassed": true,
+  "soakSeconds": 121.111,
+  "performanceMeasurementSource": "644b33a6e4878b7912aed3960c5cc74c03299e682e56de021800f1902b2592fc",
+  "performanceSamples": 16,
+  "performanceErrors": 0,
+  "productionDeployed": false,
+  "publicVersion": "0.8.0"
+}

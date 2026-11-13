@@ -1,3 +1,4 @@
+import {sceneShader} from './shaderRegistry';
 import {
   AdditiveBlending,
   CanvasTexture,
@@ -28,7 +29,7 @@ export class SunView {
   distance = 0;
 
   constructor(readonly def: BodyDef, profile: QualityProfile) {
-    this.mat = new ShaderMaterial({
+    this.mat = sceneShader('sun',{
       vertexShader: SUN_VERT,
       fragmentShader: SUN_FRAG,
       uniforms: {

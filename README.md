@@ -1,6 +1,23 @@
-# LYRION — Beyond the Stars · v0.8.0
+# LYRION — Beyond the Stars · v0.9.0-dev.2
 
-**[LYRION v0.8.0をプレイ](https://lyrion-lilac.vercel.app)** · [GitHub](https://github.com/sumi468/LYRION)
+**[LYRION v0.9.0-dev.2をプレイ](https://lyrion-lilac.vercel.app)** · [GitHub](https://github.com/sumi468/LYRION)
+
+次世代探査アップデートの開発版です。地上探査・PORT LYRA・着陸案内を実装し、従来の飛行・戦闘・遠征も維持しています。実装範囲、実画面、検証条件と未完了項目は[検証記録](docs/SETTLEMENT-QUALITY.md)を参照してください。建物の内装・住民AIは未実装、スマホ実機と数時間規模の動作は未検証です。
+
+2026-11-13: 港町PORT LYRA、PAD 01の着陸案内、建物との衝突、加速・速歩の表示、地形の暗い継ぎ目を改善しました。[操作・再現した不具合・実画面・検証結果](docs/SETTLEMENT-QUALITY.md)。Bから「PRIME地上基地へ誘導」を選び、青いPAD 01へ接近してください。Fは長押しで加速、Xは制動を優先します。高度450 m以下・地表速度100 m/s以下で着陸案内が緑になったらG / LANDです。
+
+## 地上探査の開発版
+
+- BのMISSION CONTROLで **FIRST STEPSを開始・追跡** → PRIME地上基地のマーカーへ飛行 → 高度450 m以内・地表相対速度100 m/s以下でG / LAND。
+- 着陸後にHで降機。WASDで歩き、マウス・矢印で向きを変え、Spaceで跳び、Shiftで速歩。露頭の3.5 m以内でEを押して調査・採取し、コントロール端末へ報告します。
+- 機体左側のハッチから5 m以内でHを押して搭乗。Gで離陸し、機首を空へ向け、W / Fで上昇。高度120 kmへの帰還で報酬150 DATAを一度だけ受領します。
+- Fは周辺の地形・機材から離れるほど巡航速度を上げます。戦闘中は通常のブーストです。Xは相対速度の制動。実際の位置を移動し、惑星間を瞬間移動しません。
+- 1単位=1 m。PRIME半径は3,100 km。球面チャンクLODと共通の高さ関数を着陸・歩行・衝突・EVA経路に使用し、描画座標では原点を差し引きます。天体の公転・自転周期も距離と合わせて変換しています。
+- 描画設定はAuto / WebGPU / WebGL 2。WebGPUはアダプターと実デバイスを初期化し、GLSL効果をTSLの材質で描画します。初期化失敗時・デバイス喪失時はWebGL 2へ復帰し、理由を表示します。FPS欄に実バックエンドも表示します。
+- セーブv5は旧v1〜v4を読み込みます。旧データを最初に上書きする前に `lyrion.save.before-metric-v5` へ原文を保存します。地上探索中に再開すると駐機したLX-07の機内へ安全に戻り、完了した調査や進行を維持します。
+- アイコン・フォント・音・描画資産はローカル配信。アプリ用マニフェストとビルド単位のオフラインキャッシュを追加しています。
+
+実測・画面・未完了項目は [次世代版の検証記録](docs/NEXTGEN-VALIDATION.md) と [実装計画・設計](docs/NEXT-GENERATION-PLAN.md) に記録します。モバイル実機、Safari、別GPU、長時間プレイ、地形LOD境界の全周確認は未検証です。現時点を全フェーズの最終完成とは扱いません。
 
 架空のリリオン星系を探検するブラウザ3Dゲーム。母星LYRION PRIMEと軌道基地ASTERIONから旅立ち、接岸・船外活動・科学調査を通じて6つの遠征を進めます。従来の11天体の図鑑、8つの探査ミッション、戦闘・着陸・機体強化も維持しています。TypeScript / Three.js / Vite。外部の画像・音声配信には依存しません。
 
@@ -16,7 +33,7 @@ Node.js **22.12以降**が必要です。この配布物には `dist/` を含め
 
 Mac / Linux では `node scripts/serve.mjs` を実行し、表示されたURLを開きます（これらのOSでの実機検証は未実施）。
 
-## 今回の修正
+## v0.8安定化の記録
 
 v0.8では既存のゲーム進行を安定させ、ミッション案内と宇宙服を作り直しました。再現手順・原因・影響範囲は[不具合の監査記録](docs/STABILIZATION-AUDIT.md)、実行結果と未検証項目は[今回の検証レポート](docs/STABILIZATION-VALIDATION.md)にまとめています。
 
@@ -203,3 +220,5 @@ Floating Originで描画座標を原点相対に保ち、天体位置は時刻�
 ## フォントのライセンス
 
 OxaniumとM PLUS 1はSIL Open Font License 1.1。利用文字を含むWOFF2を同梱しています。原典: [Oxanium](https://github.com/google/fonts/tree/main/ofl/oxanium) / [M PLUS 1](https://github.com/google/fonts/tree/main/ofl/mplus1)。著作権表示・ライセンスは `public/fonts/*-OFL.txt` に保持しています。
+
+ランタイムのThree.jsの権利表示は [THREE-LICENSE.txt](public/THREE-LICENSE.txt)、同梱フォントは public/fonts/ 内のOFLを参照してください。新アイコンと地形・スーツの資産はプロジェクト内で生成しています。

@@ -3,7 +3,7 @@ import { INVESTIGATIONS, INVESTIGATION_BY_ID, NAV_WAYPOINT, DOCK_SHIP, STATION_S
 import { ExpeditionFrames, ReferenceFrame } from '../physics/frames';
 import { collideLocalBoxes, collideEvaCapsule } from '../physics/localCollision';
 import { EVA_ROUTE_RADIUS } from '../physics/evaRoute';
-import { segmentIntersectsSphere } from '../physics/segmentSphere';
+import {segmentIntersectsTerrain} from '../physics/terrainSegment';
 import type { PositionTable } from '../physics/orbits';
 import type { GameState } from '../core/state';
 import { DockingSystem } from './docking';
@@ -11,9 +11,12 @@ import { EvaSystem, type EvaInput } from './eva';
 import { advanceExpedition, currentObjective, type ExpeditionContext } from './expeditions';
 import { InvestigationSystem } from './investigations';
 import { BODY_DEFS } from '../data/starSystem';
+import {surfaceAltitude} from '../physics/terrain';
+import {bodyPointVelocity} from '../physics/worldScale';
 
 const point = new Vector3(), nav = new Vector3().fromArray(NAV_WAYPOINT), dock = new Vector3().fromArray(DOCK_SHIP);
 const returnStart=new Vector3(),returnEnd=new Vector3();
+const contactVelocity=new Vector3();
 const hardwareFrames=['wayfarer','satellite','deep'] as const;
 
 /** Coordinates the new modes; rendering, DOM and legacy mission state remain outside. */
@@ -28,11 +31,13 @@ export class HomecomingSystem {
   stationDistance = Infinity;
   private positions: PositionTable = {};
   private velocities: PositionTable = {};
+  private currentTime=0;
   constructor() { for (const d of INVESTIGATIONS) this.points[d.id] = new Vector3(); }
   get mode(): 'eva' | 'flight' | 'aligning' | 'docked' | 'undocking' { return this.eva.active ? 'eva' : this.docking.mode; }
   get protected(): boolean { return this.stationDistance < STATION_SAFE_RADIUS || this.mode !== 'flight'; }
 
   update(time: number, positions: PositionTable, velocities: PositionTable): void {
+    this.currentTime=time;
     this.positions=positions;
     this.velocities=velocities;
     this.frames.update(time, positions, velocities);
@@ -49,6 +54,7 @@ export class HomecomingSystem {
     for (const id in this.points) this.distances[id] = focus.distanceTo(this.points[id]);
     this.distances.wayfarer = focus.distanceTo(this.frames.wayfarer.position);
     this.distances.deep = focus.distanceTo(this.frames.deep.position);
+    this.distances.satellite=focus.distanceTo(this.frames.satellite.position);
     this.shipFrame.position.copy(s.pos); this.shipFrame.rotation.copy(s.quat); this.shipFrame.velocity.copy(s.vel);
     if(this.eva.active)this.shipFrame.angularVelocity.copy(this.frames.get(this.eva.frameId).angularVelocity);else this.shipFrame.angularVelocity.set(0,0,0);
   }
@@ -86,7 +92,7 @@ export class HomecomingSystem {
       frame.toWorld(this.eva.returnRoute.points[i],returnEnd);
       for(const body of BODY_DEFS){
         if(body.radius<=0||body.kind==='anomaly')continue;
-        if(segmentIntersectsSphere(returnStart,returnEnd,this.positions[body.id],body.radius+EVA_ROUTE_RADIUS))return this.blockReturn(body.nameJa);
+        if(segmentIntersectsTerrain(returnStart,returnEnd,body,this.positions[body.id],this.currentTime,EVA_ROUTE_RADIUS))return this.blockReturn(body.nameJa);
       }
       returnStart.copy(returnEnd);
     }
@@ -116,11 +122,11 @@ export class HomecomingSystem {
           // push an EVA worker away from accessible recorder/control panels.
           if(body.radius<=0||body.kind==='anomaly')continue;
           point.copy(this.eva.position).sub(this.positions[body.id]);
-          const radius=body.radius+EVA_ROUTE_RADIUS,distance=point.length();
+          const distance=point.length(),radius=distance-surfaceAltitude(body,this.eva.position,this.positions[body.id],s.time)+EVA_ROUTE_RADIUS;
           if(distance<radius){
             if(distance<1e-6)point.set(0,1,0);else point.multiplyScalar(1/distance);
             this.eva.position.copy(this.positions[body.id]).addScaledVector(point,radius);
-            const v=this.eva.velocity,bodyVelocity=this.velocities[body.id];
+            const v=this.eva.velocity,bodyVelocity=bodyPointVelocity(body,this.eva.position,this.positions[body.id],this.velocities[body.id],contactVelocity);
             const inward=(v.x-bodyVelocity.x)*point.x+(v.y-bodyVelocity.y)*point.y+(v.z-bodyVelocity.z)*point.z;
             if(inward<0)v.addScaledVector(point,-inward);
             if(this.eva.returning&&this.eva.emergency===0)message=this.blockReturn(body.nameJa);

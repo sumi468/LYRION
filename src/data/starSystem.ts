@@ -1,5 +1,6 @@
 import type { BodyDef } from './types';
 import { HOMEWORLD } from './homeworld';
+import {metricBodies} from '../physics/worldScale';
 
 /**
  * 架空の恒星系「リリオン星系」。
@@ -16,7 +17,7 @@ const TAU = Math.PI * 2;
 
 export const STAR_ID = 'lyrion';
 
-export const BODY_DEFS: BodyDef[] = [
+export const LEGACY_BODY_DEFS: BodyDef[] = [
   {
     id: 'lyrion',
     name: 'LYRION',
@@ -294,7 +295,9 @@ export const BODY_DEFS: BodyDef[] = [
   },
 ];
 
-BODY_DEFS.push(HOMEWORLD);
+LEGACY_BODY_DEFS.push(HOMEWORLD);
+/** Metres throughout simulation and rendering. Compact definitions remain for save migration only. */
+export const BODY_DEFS=metricBodies(LEGACY_BODY_DEFS);
 export const BODY_BY_ID: Record<string, BodyDef> = Object.fromEntries(BODY_DEFS.map((b) => [b.id, b]));
 
 /** Keep the original catalog and all eight mission indices stable across the expansion. */

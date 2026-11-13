@@ -31,8 +31,13 @@ async function boot(): Promise<void> {
     ui.showFatal(e instanceof Error ? e.message : String(e));
     return;
   }
-  new TouchControls(root, game, canvas, dispatch);
+  new TouchControls(root, game, game.renderCanvas, dispatch);
   if (new URLSearchParams(location.search).has('debug')) window.__lyrion = game;
 }
 
 boot();
+
+const launchQuery=new URLSearchParams(location.search);
+if(import.meta.env.PROD&&'serviceWorker' in navigator&&(!launchQuery.has('debug')||launchQuery.has('pwa'))){
+  window.addEventListener('load',()=>{void navigator.serviceWorker.register('./sw.js').catch(()=>{});});
+}

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-29T07:23:15.843Z",
+  "timestamp": "2026-11-13T04:12:25.533Z",
   "results": [
     {
       "name": "故郷の軌道で開始し、既存探査を維持",
@@ -166,12 +166,12 @@
       "ok": true,
       "data": {
         "before": {
-          "geometries": 89,
-          "textures": 24
+          "geometries": 85,
+          "textures": 25
         },
         "after": {
-          "geometries": 89,
-          "textures": 24
+          "geometries": 85,
+          "textures": 25
         },
         "mode": "docked"
       }

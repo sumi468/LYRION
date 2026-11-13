@@ -13,7 +13,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
-    "types": ["vite/client"]
+    "types": ["vite/client", "@webgpu/types"]
   },
   "include": ["src", "tests", "vite.config.ts"]
 }

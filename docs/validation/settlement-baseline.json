@@ -1,0 +1,20 @@
+{
+  "approach": {
+    "landing": "リリオン・プライム · [G] 着陸",
+    "markers": [
+      "PRIME / HOME BASE",
+      "PRIME / HOME BASE",
+      "シンドラ"
+    ]
+  },
+  "brakeConflict": {
+    "speed": 287.99999995394114,
+    "boosting": true
+  },
+  "overRoof": {
+    "landing": "リリオン・プライム · [G] 着陸",
+    "accepted": true
+  },
+  "baseMeshes": 7,
+  "errors": []
+}

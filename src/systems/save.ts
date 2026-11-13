@@ -1,14 +1,21 @@
 import { Quaternion, Vector3 } from 'three';
 import { SHIELD_MAX } from '../data/combat';
 import { canLand, type LandingRecord } from './landing';
-import { BODY_BY_ID, INITIAL_DETECTED } from '../data/starSystem';
+import { BODY_BY_ID, BODY_DEFS, LEGACY_BODY_DEFS, INITIAL_DETECTED } from '../data/starSystem';
+import {LEGACY_STATION_ORBIT,STATION_ORBIT,LEGACY_SATELLITE_ORBIT,SATELLITE_ORBIT,LEGACY_DEEP_ORBIT,DEEP_ORBIT} from '../data/homeworld';
+import {createPositionTable,updateBodyPositions,updateBodyVelocities} from '../physics/orbits';
+import {ReferenceFrame,orbitalFrame} from '../physics/frames';
+import {migrateCompactPose,bodyRotation,type MigrationAnchor} from '../physics/worldScale';
+import {surfaceAltitude,terrainHeight} from '../physics/terrain';
+import {sanitizeSurfaceProgress,type SurfaceProgress} from './surfaceCampaign';
 import { MISSIONS } from '../data/missions';
 import { UPGRADE_BY_ID, UPGRADE_IDS } from '../data/upgrades';
 import { createNewState, HULL_MAX, type GameState } from '../core/state';
 import { sanitizeHomecoming, type HomecomingProgress } from './expeditions';
 
 export const SAVE_KEY = 'lyrion.save.v1';
-export const SAVE_VERSION = 4;
+export const SAVE_VERSION = 5;
+export const SAVE_BACKUP_KEY='lyrion.save.before-metric-v5';
 
 /** localStorage 互換の最小インターフェース(テストで差し替え可能) */
 export interface StorageLike {
@@ -41,6 +48,7 @@ export interface SaveData {
   assist: boolean;
   cameraMode: 'third' | 'first';
   homecoming: HomecomingProgress;
+  surfaceProgress:SurfaceProgress;
 }
 
 export function serialize(s: GameState, now = Date.now()): SaveData {
@@ -68,6 +76,7 @@ export function serialize(s: GameState, now = Date.now()): SaveData {
     assist: s.assist,
     cameraMode: s.cameraMode,
     homecoming: sanitizeHomecoming(s.homecoming),
+    surfaceProgress:sanitizeSurfaceProgress(s.surfaceProgress),
   };
 }
 
@@ -140,6 +149,32 @@ export function deserialize(raw: unknown): GameState | null {
   s.homecoming = sanitizeHomecoming(d.version >= 3 ? d.homecoming : null);
   // EVA saves store the parked spacecraft pose. Recover aboard without losing research.
   s.homecoming.wasEva = false;
+  s.surfaceProgress=sanitizeSurfaceProgress(d.surfaceProgress);
+  if(d.version<5){
+    const oldTable=createPositionTable(LEGACY_BODY_DEFS),table=createPositionTable(BODY_DEFS);
+    const oldVelocity=createPositionTable(LEGACY_BODY_DEFS),velocity=createPositionTable(BODY_DEFS);
+    updateBodyPositions(LEGACY_BODY_DEFS,s.time,oldTable);updateBodyPositions(BODY_DEFS,s.time,table);
+    updateBodyVelocities(LEGACY_BODY_DEFS,s.time,oldTable,createPositionTable(LEGACY_BODY_DEFS),oldVelocity);
+    updateBodyVelocities(BODY_DEFS,s.time,table,createPositionTable(BODY_DEFS),velocity);
+    const anchors:MigrationAnchor[]=[];
+    for(const [id,oldOrbit,orbit,range] of [['asterion',LEGACY_STATION_ORBIT,STATION_ORBIT,1100],['satellite',LEGACY_SATELLITE_ORBIT,SATELLITE_ORBIT,250],['deep',LEGACY_DEEP_ORBIT,DEEP_ORBIT,450]] as const){
+      const previous=new ReferenceFrame(),current=new ReferenceFrame();orbitalFrame(previous,oldOrbit,s.time,oldTable,oldVelocity);orbitalFrame(current,orbit,s.time,table,velocity);
+      anchors.push({id,oldPosition:previous.position,position:current.position,oldVelocity:previous.velocity,velocity:current.velocity,oldRotation:previous.rotation,rotation:current.rotation,range});
+    }
+    const pose=migrateCompactPose(s.pos,s.vel,s.time,LEGACY_BODY_DEFS,BODY_DEFS,anchors);
+    s.pos.copy(pose.position);s.vel.copy(pose.velocity);
+    if(pose.orientationDelta)s.quat.premultiply(pose.orientationDelta).normalize();
+    if(s.landed){
+      const body=BODY_BY_ID[s.landed.bodyId],local=s.pos.clone().sub(table[body.id]).normalize().applyQuaternion(bodyRotation(body,s.time,new Quaternion()).invert());
+      s.landed.normal=[local.x,local.y,local.z];
+      if(body.surface?.program==='terran'&&terrainHeight(body,local)<1)s.landed=null;
+    }
+    // Terrain did not exist in compact saves. Lift nearby free ships above it.
+    if(pose.reference&&BODY_BY_ID[pose.reference]){
+      const body=BODY_BY_ID[pose.reference],clearance=surfaceAltitude(body,s.pos,table[body.id],s.time);
+      if(clearance<12)s.pos.addScaledVector(s.pos.clone().sub(table[body.id]).normalize(),12-clearance);
+    }
+  }
   return s;
 }
 
@@ -154,6 +189,8 @@ export class SaveManager {
   save(s: GameState): boolean {
     if (!this.storage) return false;
     try {
+      const existing=this.storage.getItem(SAVE_KEY);
+      if(existing&&JSON.parse(existing).version<5&&!this.storage.getItem(SAVE_BACKUP_KEY))this.storage.setItem(SAVE_BACKUP_KEY,existing);
       this.storage.setItem(SAVE_KEY, JSON.stringify(serialize(s)));
       return true;
     } catch {

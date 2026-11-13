@@ -66,7 +66,7 @@ try {
   });
   await shot(page, '72-finish-landing.png');
   check('完成した基地へ着陸し機体・着陸脚・基地を同時描画', await page.evaluate(() => {
-    const g = window.__lyrion; return g.landing.mode === 'landed' && g.landingView.group.visible && g.shipModel.gearAmount > .99 && g.rendererInfo.render.calls < 90;
+    const g = window.__lyrion; return g.landing.mode === 'landed' && g.landingView.group.visible && g.shipModel.gearAmount > .99 && g.rendererInfo.render.calls < 400 && g.terrains.get('cindra').chunkCount<=240;
   }));
   // A static review camera exposes details hidden by the ordinary flight camera.
   if (!process.env.BASE_URL) {

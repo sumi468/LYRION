@@ -1,0 +1,31 @@
+{
+  "results": [
+    {
+      "name": "新規ゲームの軌道位置から実推進だけで雲を通過しPRIMEへ着陸",
+      "ok": true,
+      "stats": {
+        "altitude": 3.6500000096857548,
+        "mode": "landed",
+        "time": 105.49999999999615,
+        "hull": 100,
+        "cloud": false,
+        "step": 2,
+        "position": [
+          82528470.62985203,
+          -879801.3359057083,
+          69503413.15689826
+        ],
+        "backend": {
+          "requested": "webgpu",
+          "backend": "webgpu",
+          "reason": null,
+          "adapter": "nvidia / lovelace",
+          "hardware": true
+        }
+      },
+      "cloud": true,
+      "driver": "QA attitude steering only; boost above 1200m, alternate thrust/brake below 1000m to respect brake priority"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,1773 @@
+{
+  "time": "2026-11-13T04:20:07.985Z",
+  "build": {
+    "version": "0.9.0-dev.2",
+    "sourceRevision": "2cf1b25982db69e12db64df73d7961590688f950",
+    "sourceHash": "875ca202fb3b9f5d356d85b7f4d9e0c08ee73c874576d5826420a6b49dffc3c9",
+    "uncommittedChanges": true,
+    "builtAt": "2026-11-13T04:07:47.706Z"
+  },
+  "browser": "157.0.8103.51",
+  "headless": true,
+  "viewport": [
+    1280,
+    720
+  ],
+  "quality": "medium",
+  "warmupMs": 1500,
+  "sampleMs": 3000,
+  "results": [
+    {
+      "name": "webgl2 実GPUで起動",
+      "ok": true,
+      "data": {
+        "requested": "webgl2",
+        "backend": "webgl2",
+        "reason": null,
+        "adapter": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgl2 PAD 01に案内を一本化し高度・速度・着陸可否を表示",
+      "ok": true,
+      "data": {
+        "site": "PAD 01 / PORT LYRA",
+        "ready": true,
+        "altitude": 400.00000002468005,
+        "relativeSpeed": 6.015005430625165e-8,
+        "padDistance": 2.831622321878757e-8,
+        "terrain": "clear",
+        "reason": "PAD 01に着陸できます"
+      }
+    },
+    {
+      "name": "webgl2 approach 描画予算と有限FPS",
+      "ok": true,
+      "data": {
+        "requested": "webgl2",
+        "backend": "webgl2",
+        "reason": null,
+        "adapter": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgl2 高度条件の未達を表示して拒否",
+      "ok": true
+    },
+    {
+      "name": "webgl2 建物上はHUDとGの両方で着陸不可",
+      "ok": true
+    },
+    {
+      "name": "webgl2 市街地の道路も着陸場所として案内しない",
+      "ok": true
+    },
+    {
+      "name": "webgl2 海面を明示して着陸を拒否",
+      "ok": true
+    },
+    {
+      "name": "webgl2 自由探索の平坦な野外着陸を維持",
+      "ok": true
+    },
+    {
+      "name": "webgl2 PAD 01に実際に接地",
+      "ok": true
+    },
+    {
+      "name": "webgl2 基地の地形境界にスカート由来の暗い法線がない",
+      "ok": true,
+      "data": {
+        "count": 864,
+        "minDot": 0.9999999592698883
+      }
+    },
+    {
+      "name": "webgl2 port 描画予算と有限FPS",
+      "ok": true,
+      "data": {
+        "requested": "webgl2",
+        "backend": "webgl2",
+        "reason": null,
+        "adapter": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgl2 徒歩で港から市街地へ -12,-20",
+      "ok": true,
+      "data": {
+        "distance": 0.8280154209499163,
+        "local": [
+          -11.72373175075259,
+          0.9049999940487927,
+          -19.219432647500142
+        ],
+        "ticks": 105,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgl2 徒歩で港から市街地へ -12,-80",
+      "ok": true,
+      "data": {
+        "distance": 0.7780108824169505,
+        "local": [
+          -11.996465117368382,
+          0.9550000000964758,
+          -79.22199714797182
+        ],
+        "ticks": 345,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgl2 徒歩で港から市街地へ 0,-110",
+      "ok": true,
+      "data": {
+        "distance": 0.8161671669426622,
+        "local": [
+          -0.29640395093760574,
+          0.9649999969424847,
+          -109.23955700919544
+        ],
+        "ticks": 186,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgl2 徒歩で港から市街地へ 0,-250",
+      "ok": true,
+      "data": {
+        "distance": 0.780269850204353,
+        "local": [
+          -0.0016423982680962013,
+          0.965000000515829,
+          -249.2197318783483
+        ],
+        "ticks": 802,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgl2 道路を突き抜けず接地",
+      "ok": true,
+      "data": 0.965000000515829
+    },
+    {
+      "name": "webgl2 street 描画予算と有限FPS",
+      "ok": true,
+      "data": {
+        "requested": "webgl2",
+        "backend": "webgl2",
+        "reason": null,
+        "adapter": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgl2 地上の速歩は3.5m/sで消費なしと表示",
+      "ok": true,
+      "data": {
+        "speed": 3.4999999999999996,
+        "title": "速歩 / 3.5 m/s",
+        "mode": "fast-walk",
+        "consumed": 0
+      }
+    },
+    {
+      "name": "webgl2 市街地の建物まで歩ける",
+      "ok": true,
+      "data": {
+        "distance": 0.78498021948999,
+        "local": [
+          -49.384534516755224,
+          0.8849999965240158,
+          -307.5127668074476
+        ],
+        "ticks": 362,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgl2 徒歩でも市街地の外壁を通り抜けない",
+      "ok": true
+    },
+    {
+      "name": "webgl2 市街地で保存しても調査進行を保ち駐機した船で再開",
+      "ok": true
+    },
+    {
+      "name": "webgl2 FとX同時押しは加速せず制動を優先",
+      "ok": true,
+      "data": {
+        "speed": 3.3263437723153196e-8,
+        "mode": "braking",
+        "energy": 100
+      }
+    },
+    {
+      "name": "webgl2 近距離ブーストの消費と残り秒数を表示",
+      "ok": true
+    },
+    {
+      "name": "webgl2 遠方では巡航倍率と低消費を表示",
+      "ok": true
+    },
+    {
+      "name": "webgl2 低空飛行で基地外壁をすり抜けない",
+      "ok": true,
+      "data": {
+        "minZ": 36.01363542007719,
+        "hull": 94.08000001751955
+      }
+    },
+    {
+      "name": "webgl2 地上と軌道を4往復してリソースが増え続けない",
+      "ok": true,
+      "data": [
+        {
+          "released": 0,
+          "geometries": 246,
+          "textures": 23
+        },
+        {
+          "released": 0,
+          "geometries": 246,
+          "textures": 23
+        },
+        {
+          "released": 0,
+          "geometries": 246,
+          "textures": 23
+        },
+        {
+          "released": 0,
+          "geometries": 246,
+          "textures": 23
+        }
+      ]
+    },
+    {
+      "name": "webgpu 実GPUで起動",
+      "ok": true,
+      "data": {
+        "requested": "webgpu",
+        "backend": "webgpu",
+        "reason": null,
+        "adapter": "nvidia / lovelace",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgpu PAD 01に案内を一本化し高度・速度・着陸可否を表示",
+      "ok": true,
+      "data": {
+        "site": "PAD 01 / PORT LYRA",
+        "ready": true,
+        "altitude": 400.00000002468005,
+        "relativeSpeed": 6.015005430625165e-8,
+        "padDistance": 2.831622321878757e-8,
+        "terrain": "clear",
+        "reason": "PAD 01に着陸できます"
+      }
+    },
+    {
+      "name": "webgpu approach 描画予算と有限FPS",
+      "ok": true,
+      "data": {
+        "requested": "webgpu",
+        "backend": "webgpu",
+        "reason": null,
+        "adapter": "nvidia / lovelace",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgpu 高度条件の未達を表示して拒否",
+      "ok": true
+    },
+    {
+      "name": "webgpu 建物上はHUDとGの両方で着陸不可",
+      "ok": true
+    },
+    {
+      "name": "webgpu 市街地の道路も着陸場所として案内しない",
+      "ok": true
+    },
+    {
+      "name": "webgpu 海面を明示して着陸を拒否",
+      "ok": true
+    },
+    {
+      "name": "webgpu 自由探索の平坦な野外着陸を維持",
+      "ok": true
+    },
+    {
+      "name": "webgpu PAD 01に実際に接地",
+      "ok": true
+    },
+    {
+      "name": "webgpu 基地の地形境界にスカート由来の暗い法線がない",
+      "ok": true,
+      "data": {
+        "count": 864,
+        "minDot": 0.9999999592698883
+      }
+    },
+    {
+      "name": "webgpu port 描画予算と有限FPS",
+      "ok": true,
+      "data": {
+        "requested": "webgpu",
+        "backend": "webgpu",
+        "reason": null,
+        "adapter": "nvidia / lovelace",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgpu 徒歩で港から市街地へ -12,-20",
+      "ok": true,
+      "data": {
+        "distance": 0.8280154288287843,
+        "local": [
+          -11.723731742563622,
+          0.9050000028755614,
+          -19.219432642040687
+        ],
+        "ticks": 105,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgpu 徒歩で港から市街地へ -12,-80",
+      "ok": true,
+      "data": {
+        "distance": 0.7780108767662991,
+        "local": [
+          -11.99646504338112,
+          0.9549999997837979,
+          -79.2219971539587
+        ],
+        "ticks": 345,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgpu 徒歩で港から市街地へ 0,-110",
+      "ok": true,
+      "data": {
+        "distance": 0.8161671134999087,
+        "local": [
+          -0.29640391388947407,
+          0.9649999965847194,
+          -109.23955705211385
+        ],
+        "ticks": 186,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgpu 徒歩で港から市街地へ 0,-250",
+      "ok": true,
+      "data": {
+        "distance": 0.7802698340416844,
+        "local": [
+          -0.0016424069555043275,
+          0.9649999927914976,
+          -249.2197318945293
+        ],
+        "ticks": 802,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgpu 道路を突き抜けず接地",
+      "ok": true,
+      "data": 0.9649999927914976
+    },
+    {
+      "name": "webgpu street 描画予算と有限FPS",
+      "ok": true,
+      "data": {
+        "requested": "webgpu",
+        "backend": "webgpu",
+        "reason": null,
+        "adapter": "nvidia / lovelace",
+        "hardware": true
+      }
+    },
+    {
+      "name": "webgpu 地上の速歩は3.5m/sで消費なしと表示",
+      "ok": true,
+      "data": {
+        "speed": 3.4999999999999996,
+        "title": "速歩 / 3.5 m/s",
+        "mode": "fast-walk",
+        "consumed": 0
+      }
+    },
+    {
+      "name": "webgpu 市街地の建物まで歩ける",
+      "ok": true,
+      "data": {
+        "distance": 0.8497394316222768,
+        "local": [
+          -49.333299330108176,
+          0.884999995909169,
+          -307.4731534204158
+        ],
+        "ticks": 361,
+        "grounded": true
+      }
+    },
+    {
+      "name": "webgpu 徒歩でも市街地の外壁を通り抜けない",
+      "ok": true
+    },
+    {
+      "name": "webgpu 市街地で保存しても調査進行を保ち駐機した船で再開",
+      "ok": true
+    },
+    {
+      "name": "webgpu FとX同時押しは加速せず制動を優先",
+      "ok": true,
+      "data": {
+        "speed": 3.950923090384175e-8,
+        "mode": "braking",
+        "energy": 100
+      }
+    },
+    {
+      "name": "webgpu 近距離ブーストの消費と残り秒数を表示",
+      "ok": true
+    },
+    {
+      "name": "webgpu 遠方では巡航倍率と低消費を表示",
+      "ok": true
+    },
+    {
+      "name": "webgpu 低空飛行で基地外壁をすり抜けない",
+      "ok": true,
+      "data": {
+        "minZ": 36.01363541934043,
+        "hull": 94.08000001733211
+      }
+    },
+    {
+      "name": "webgpu 地上と軌道を4往復してリソースが増え続けない",
+      "ok": true,
+      "data": [
+        {
+          "released": 0,
+          "geometries": 247,
+          "textures": 25
+        },
+        {
+          "released": 0,
+          "geometries": 247,
+          "textures": 25
+        },
+        {
+          "released": 0,
+          "geometries": 247,
+          "textures": 25
+        },
+        {
+          "released": 0,
+          "geometries": 247,
+          "textures": 25
+        }
+      ]
+    },
+    {
+      "name": "タッチ縦画面で着陸案内が収まり操作ボタンと重ならない",
+      "ok": true,
+      "data": {
+        "guide": {
+          "x": 12,
+          "y": 530.5,
+          "width": 190,
+          "height": 108.5
+        },
+        "width": 390,
+        "height": 844,
+        "overlaps": false
+      }
+    },
+    {
+      "name": "タッチ縦 LANDで実際に着陸",
+      "ok": true
+    },
+    {
+      "name": "タッチ横画面で着陸案内が収まり操作ボタンと重ならない",
+      "ok": true,
+      "data": {
+        "guide": {
+          "x": 24,
+          "y": 122.5,
+          "width": 235,
+          "height": 113.5
+        },
+        "width": 844,
+        "height": 390,
+        "overlaps": false
+      }
+    },
+    {
+      "name": "タッチ横 LANDで実際に着陸",
+      "ok": true
+    },
+    {
+      "name": "ページ・描画エラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "performanceSamples": [
+    {
+      "backend": "webgl2",
+      "scene": "approach",
+      "moving": false,
+      "fps": 200.18652987729453,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "maxMs": 5.199999999999818,
+      "durationMs": 3002.2000000119206,
+      "frames": 601,
+      "gpuMs": null,
+      "info": {
+        "memory": {
+          "geometries": 129,
+          "textures": 21
+        },
+        "render": {
+          "frame": 952,
+          "calls": 122,
+          "triangles": 479264,
+          "points": 5000,
+          "lines": 220
+        },
+        "programs": [
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 0,
+            "cacheKey": "0,1,PROGRAM,10,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 1,
+            "cacheKey": "0,1,PROGRAM,0,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 2,
+            "cacheKey": "0,1,PROGRAM,1,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 3,
+            "cacheKey": "0,1,PROGRAM,6,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 4,
+            "cacheKey": "0,1,PROGRAM,4,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 5,
+            "cacheKey": "0,1,PROGRAM,3,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 6,
+            "cacheKey": "0,1,PROGRAM,5,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 7,
+            "cacheKey": "0,1,PROGRAM,2,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 8,
+            "cacheKey": "2,3,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8523785,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 9,
+            "cacheKey": "4,5,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,8519689,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 10,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 20,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 11,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388609,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 12,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 3,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 13,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 14,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 15,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 16,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519695,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 17,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 18,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388611,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 19,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388609,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 20,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388611,8519695,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 21,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8389632,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 22,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388672,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 23,
+            "cacheKey": "6,7,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8392713,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 24,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388609,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 25,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388611,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 26,
+            "cacheKey": "basic,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 27,
+            "cacheKey": "8,9,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,8388617,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 28,
+            "cacheKey": "10,11,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8390665,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 29,
+            "cacheKey": "12,13,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8390665,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 30,
+            "cacheKey": "14,15,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8392713,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          }
+        ],
+        "autoReset": true
+      },
+      "status": {
+        "requested": "webgl2",
+        "backend": "webgl2",
+        "reason": null,
+        "adapter": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardware": true
+      }
+    },
+    {
+      "backend": "webgl2",
+      "scene": "port",
+      "moving": false,
+      "fps": 200.2865997925859,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "maxMs": 5.200000000000728,
+      "durationMs": 3000.7000000119206,
+      "frames": 601,
+      "gpuMs": null,
+      "info": {
+        "memory": {
+          "geometries": 278,
+          "textures": 22
+        },
+        "render": {
+          "frame": 2098,
+          "calls": 208,
+          "triangles": 531586,
+          "points": 5000,
+          "lines": 220
+        },
+        "programs": [
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 0,
+            "cacheKey": "0,1,PROGRAM,10,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 1,
+            "cacheKey": "0,1,PROGRAM,0,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 2,
+            "cacheKey": "0,1,PROGRAM,1,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 3,
+            "cacheKey": "0,1,PROGRAM,6,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 4,
+            "cacheKey": "0,1,PROGRAM,4,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 5,
+            "cacheKey": "0,1,PROGRAM,3,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 6,
+            "cacheKey": "0,1,PROGRAM,5,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 7,
+            "cacheKey": "0,1,PROGRAM,2,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 8,
+            "cacheKey": "2,3,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8523785,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 9,
+            "cacheKey": "4,5,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,8519689,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 10,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 20,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 11,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388609,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 12,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 3,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 13,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 14,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 15,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 16,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519695,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 17,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 18,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388611,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 19,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388609,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 20,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388611,8519695,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 21,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8389632,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 22,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388672,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 23,
+            "cacheKey": "6,7,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8392713,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 24,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388609,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 25,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388611,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 26,
+            "cacheKey": "basic,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 27,
+            "cacheKey": "8,9,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,8388617,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 28,
+            "cacheKey": "10,11,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8390665,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 29,
+            "cacheKey": "12,13,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8390665,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 30,
+            "cacheKey": "14,15,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8392713,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 31,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "SpriteMaterial",
+            "name": "",
+            "id": 32,
+            "cacheKey": "sprite,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,true,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,0,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          }
+        ],
+        "autoReset": true
+      },
+      "status": {
+        "requested": "webgl2",
+        "backend": "webgl2",
+        "reason": null,
+        "adapter": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardware": true
+      }
+    },
+    {
+      "backend": "webgl2",
+      "scene": "street",
+      "moving": true,
+      "fps": 200.18652988047415,
+      "p95Ms": 5.100000000002183,
+      "p99Ms": 5.100000000002183,
+      "maxMs": 5.100000000002183,
+      "durationMs": 3002.1999999642358,
+      "frames": 601,
+      "gpuMs": null,
+      "info": {
+        "memory": {
+          "geometries": 344,
+          "textures": 27
+        },
+        "render": {
+          "frame": 4525,
+          "calls": 215,
+          "triangles": 561162,
+          "points": 5000,
+          "lines": 220
+        },
+        "programs": [
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 0,
+            "cacheKey": "0,1,PROGRAM,10,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 1,
+            "cacheKey": "0,1,PROGRAM,0,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 2,
+            "cacheKey": "0,1,PROGRAM,1,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 3,
+            "cacheKey": "0,1,PROGRAM,6,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 4,
+            "cacheKey": "0,1,PROGRAM,4,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 5,
+            "cacheKey": "0,1,PROGRAM,3,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 6,
+            "cacheKey": "0,1,PROGRAM,5,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 7,
+            "cacheKey": "0,1,PROGRAM,2,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 8,
+            "cacheKey": "2,3,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8523785,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 9,
+            "cacheKey": "4,5,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,8519689,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 10,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 23,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 11,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388609,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 12,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 3,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 13,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 14,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 15,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 16,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,uv,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519695,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 17,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 18,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388611,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 19,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388609,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 20,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388611,8519695,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 21,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8389632,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 22,
+            "cacheKey": "physical,STANDARD,,highp,srgb,false,,false,false,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388672,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 23,
+            "cacheKey": "6,7,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,8388608,8392713,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 24,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388609,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 25,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388611,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 26,
+            "cacheKey": "basic,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 27,
+            "cacheKey": "8,9,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,8388617,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 28,
+            "cacheKey": "10,11,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8390665,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 29,
+            "cacheKey": "12,13,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8390665,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "",
+            "id": 30,
+            "cacheKey": "14,15,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8392713,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshBasicMaterial",
+            "name": "",
+            "id": 31,
+            "cacheKey": "basic,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,0,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388608,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 2,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "SpriteMaterial",
+            "name": "",
+            "id": 32,
+            "cacheKey": "sprite,highp,srgb,false,,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,true,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,0,8388619,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshPhysicalMaterial",
+            "name": "",
+            "id": 33,
+            "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,false,false,false,false,false,uv,false,false,false,uv,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388672,8585227,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "EquirectangularToCubeUV",
+            "id": 34,
+            "cacheKey": "16,17,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "ShaderMaterial",
+            "name": "PMREMGGXConvolution",
+            "id": 35,
+            "cacheKey": "16,18,GGX_SAMPLES,256,CUBEUV_TEXEL_WIDTH,0.002976190476190476,CUBEUV_TEXEL_HEIGHT,0.0078125,CUBEUV_MAX_MIP,5.0,highp,srgb-linear,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,false,false,0,,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,8388616,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {},
+            "diagnostics": {
+              "runnable": true,
+              "programLog": "(210,91-147): warning X4122: sum of 0.996094 and -2.98545e-017 cannot be represented accurately in double precision\n(209,41-69): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision\n(210,92-120): warning X4122: sum of 1 and -1.49272e-017 cannot be represented accurately in double precision\n(209,41-69): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision\n(210,92-120): warning X4122: sum of 1 and -1.66644e-018 cannot be represented accurately in double precision",
+              "vertexShader": {
+                "log": "",
+                "prefix": "\n#define attribute in\n#define varying out\n#define texture2D texture\nprecision highp float;\n\tprecision highp int;\n\tprecision highp sampler2D;\n\tprecision highp samplerCube;\n\tprecision highp sampler3D;\n\tprecision highp sampler2DArray;\n\tprecision highp sampler2DShadow;\n\tprecision highp samplerCubeShadow;\n\tprecision highp sampler2DArrayShadow;\n\tprecision highp isampler2D;\n\tprecision highp isampler3D;\n\tprecision highp isamplerCube;\n\tprecision highp isampler2DArray;\n\tprecision highp usampler2D;\n\tprecision highp usampler3D;\n\tprecision highp usamplerCube;\n\tprecision highp usampler2DArray;\n\t\n#define HIGH_PRECISION\n#define SHADER_TYPE ShaderMaterial\n#define SHADER_NAME PMREMGGXConvolution\n#define GGX_SAMPLES 256\n#define CUBEUV_TEXEL_WIDTH 0.002976190476190476\n#define CUBEUV_TEXEL_HEIGHT 0.0078125\n#define CUBEUV_MAX_MIP 5.0\n#define USE_LOGARITHMIC_DEPTH_BUFFER\nuniform mat4 modelMatrix;\nuniform mat4 modelViewMatrix;\nuniform mat4 projectionMatrix;\nuniform mat4 viewMatrix;\nuniform mat3 normalMatrix;\nuniform vec3 cameraPosition;\nuniform bool isOrthographic;\n#ifdef USE_INSTANCING\n\tattribute mat4 instanceMatrix;\n#endif\n#ifdef USE_INSTANCING_COLOR\n\tattribute vec3 instanceColor;\n#endif\n#ifdef USE_INSTANCING_MORPH\n\tuniform sampler2D morphTexture;\n#endif\nattribute vec3 position;\nattribute vec3 normal;\nattribute vec2 uv;\n#ifdef USE_UV1\n\tattribute vec2 uv1;\n#endif\n#ifdef USE_UV2\n\tattribute vec2 uv2;\n#endif\n#ifdef USE_UV3\n\tattribute vec2 uv3;\n#endif\n#ifdef USE_TANGENT\n\tattribute vec4 tangent;\n#endif\n#if defined( USE_COLOR_ALPHA )\n\tattribute vec4 color;\n#elif defined( USE_COLOR )\n\tattribute vec3 color;\n#endif\n#ifdef USE_SKINNING\n\tattribute vec4 skinIndex;\n\tattribute vec4 skinWeight;\n#endif\n\n"
+              },
+              "fragmentShader": {
+                "log": "",
+                "prefix": "#define varying in\nlayout(location = 0) out highp vec4 pc_fragColor;\n#define gl_FragColor pc_fragColor\n#define gl_FragDepthEXT gl_FragDepth\n#define texture2D texture\n#define textureCube texture\n#define texture2DProj textureProj\n#define texture2DLodEXT textureLod\n#define texture2DProjLodEXT textureProjLod\n#define textureCubeLodEXT textureLod\n#define texture2DGradEXT textureGrad\n#define texture2DProjGradEXT textureProjGrad\n#define textureCubeGradEXT textureGrad\nprecision highp float;\n\tprecision highp int;\n\tprecision highp sampler2D;\n\tprecision highp samplerCube;\n\tprecision highp sampler3D;\n\tprecision highp sampler2DArray;\n\tprecision highp sampler2DShadow;\n\tprecision highp samplerCubeShadow;\n\tprecision highp sampler2DArrayShadow;\n\tprecision highp isampler2D;\n\tprecision highp isampler3D;\n\tprecision highp isamplerCube;\n\tprecision highp isampler2DArray;\n\tprecision highp usampler2D;\n\tprecision highp usampler3D;\n\tprecision highp usamplerCube;\n\tprecision highp usampler2DArray;\n\t\n#define HIGH_PRECISION\n#define SHADER_TYPE ShaderMaterial\n#define SHADER_NAME PMREMGGXConvolution\n#define GGX_SAMPLES 256\n#define CUBEUV_TEXEL_WIDTH 0.002976190476190476\n#define CUBEUV_TEXEL_HEIGHT 0.0078125\n#define CUBEUV_MAX_MIP 5.0\n#define USE_LOGARITHMIC_DEPTH_BUFFER\nuniform mat4 viewMatrix;\nuniform vec3 cameraPosition;\nuniform bool isOrthographic;\nvec4 LinearTransferOETF( in vec4 value ) {\n\treturn value;\n}\nvec4 sRGBTransferEOTF( in vec4 value ) {\n\treturn vec4( mix( pow( value.rgb * 0.9478672986 + vec3( 0.0521327014 ), vec3( 2.4 ) ), value.rgb * 0.0773993808, vec3( lessThanEqual( value.rgb, vec3( 0.04045 ) ) ) ), value.a );\n}\nvec4 sRGBTransferOETF( in vec4 value ) {\n\treturn vec4( mix( pow( value.rgb, vec3( 0.41666 ) ) * 1.055 - vec3( 0.055 ), value.rgb * 12.92, vec3( lessThanEqual( value.rgb, vec3( 0.0031308 ) ) ) ), value.a );\n}\nvec4 linearToOutputTexel( vec4 value ) {\n\treturn LinearTransferOETF( vec4( value.rgb * mat3( 1.0000,-0.0000,-0.0000,-0.0000,1.0000,0.0000,0.0000,0.0000,1.0000 ), value.a ) );\n}\nfloat luminance( const in vec3 rgb ) {\n\tconst vec3 weights = vec3( 0.2126, 0.7152, 0.0722 );\n\treturn dot( weights, rgb );\n}\n\n"
+              }
+            }
+          },
+          {
+            "type": "MeshStandardMaterial",
+            "name": "",
+            "id": 36,
+            "cacheKey": "physical,STANDARD,,highp,srgb,306,128,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388624,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshPhysicalMaterial",
+            "name": "",
+            "id": 37,
+            "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,false,,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388736,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          },
+          {
+            "type": "MeshPhysicalMaterial",
+            "name": "",
+            "id": 38,
+            "cacheKey": "physical,STANDARD,,PHYSICAL,,highp,srgb,306,128,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,,true,false,0,,0,2,0,0,0,1,0,0,0,0,0,0,0,1,4,0,0,0,8388752,8519691,srgb,onBeforeCompile(){}",
+            "usedTimes": 1,
+            "program": {},
+            "vertexShader": {},
+            "fragmentShader": {}
+          }
+        ],
+        "autoReset": true
+      },
+      "status": {
+        "requested": "webgl2",
+        "backend": "webgl2",
+        "reason": null,
+        "adapter": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4060 (0x00002882) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "hardware": true
+      }
+    },
+    {
+      "backend": "webgpu",
+      "scene": "approach",
+      "moving": false,
+      "fps": 200.31997866729287,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "maxMs": 5.200000000000728,
+      "durationMs": 3000.2000000119206,
+      "frames": 601,
+      "gpuMs": 0.458752,
+      "info": {
+        "render": {
+          "calls": 125,
+          "triangles": 505777,
+          "points": 0,
+          "lines": 220
+        },
+        "memory": {
+          "geometries": 140,
+          "textures": 24
+        }
+      },
+      "status": {
+        "requested": "webgpu",
+        "backend": "webgpu",
+        "reason": null,
+        "adapter": "nvidia / lovelace",
+        "hardware": true
+      }
+    },
+    {
+      "backend": "webgpu",
+      "scene": "port",
+      "moving": false,
+      "fps": 200.23321672576614,
+      "p95Ms": 5.100000000000364,
+      "p99Ms": 5.100000000000364,
+      "maxMs": 5.200000000000728,
+      "durationMs": 3001.4999999880783,
+      "frames": 601,
+      "gpuMs": 0.458752,
+      "info": {
+        "render": {
+          "calls": 211,
+          "triangles": 558099,
+          "points": 0,
+          "lines": 220
+        },
+        "memory": {
+          "geometries": 289,
+          "textures": 25
+        }
+      },
+      "status": {
+        "requested": "webgpu",
+        "backend": "webgpu",
+        "reason": null,
+        "adapter": "nvidia / lovelace",
+        "hardware": true
+      }
+    },
+    {
+      "backend": "webgpu",
+      "scene": "street",
+      "moving": true,
+      "fps": 199.9266935457,
+      "p95Ms": 5.100000000002183,
+      "p99Ms": 5.100000000002183,
+      "maxMs": 10,
+      "durationMs": 3001.0999999999985,
+      "frames": 600,
+      "gpuMs": 0.589824,
+      "info": {
+        "render": {
+          "calls": 218,
+          "triangles": 587675,
+          "points": 0,
+          "lines": 220
+        },
+        "memory": {
+          "geometries": 355,
+          "textures": 30
+        }
+      },
+      "status": {
+        "requested": "webgpu",
+        "backend": "webgpu",
+        "reason": null,
+        "adapter": "nvidia / lovelace",
+        "hardware": true
+      }
+    }
+  ]
+}

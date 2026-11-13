@@ -50,6 +50,9 @@ export interface HudSnapshot {
   hit: number;
   landingText: string;
   landingMode: 'flight'|'approach'|'landed';
+  landingGuide: {site:string;ready:boolean;altitude:number;relativeSpeed:number;padDistance:number;terrain:string;reason:string}|null;
+  baseTarget: {name:string;distance:number}|null;
+  propulsion: {mode:string;title:string;detail:string};
   speed: number;
   speedFrac: number;
   boosting: boolean;

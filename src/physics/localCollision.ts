@@ -5,6 +5,7 @@ import type { ReferenceFrame } from './frames';
 const point = new Vector3(), velocity = new Vector3(), start = new Vector3(), end = new Vector3();
 const candidate = new Vector3(), bestPoint = new Vector3();
 const contactNormal = new Vector3(), capsuleAxis = new Vector3(), capsulePoint = new Vector3(), capsuleBefore = new Vector3();
+const sweepNormal=new Vector3();
 /** Hips-centred suit envelope: boots, torso, and helmet, rotated with the astronaut. */
 export const EVA_CAPSULE_SAMPLES = [
   { y: -.70, radius: .65 }, { y: 0, radius: 1.02 }, { y: .72, radius: .38 },
@@ -35,6 +36,36 @@ export function collideLocalBoxes(frame: ReferenceFrame, worldPos: Vector3, worl
     if(inward<0)worldVel.addScaledVector(contactNormal,-inward);
   }
   return hit;
+}
+
+/** Swept ship envelope against a moving surface frame. Returns inward impact
+ * speed, or -1 for no contact; a full-frame leap cannot tunnel through a wall. */
+export function sweepLocalBoxes(frame:ReferenceFrame,worldFrom:Vector3,worldPos:Vector3,worldVel:Vector3,radius:number,boxes:readonly SolidBox[]):number{
+  frame.toLocal(worldFrom,start);frame.toLocal(worldPos,end);
+  let first=Infinity;
+  for(const box of boxes){
+    let enter=0,exit=1,hitAxis=-1,hitSign=0;
+    for(let axis=0;axis<3;axis++){
+      const a=start.getComponent(axis),delta=end.getComponent(axis)-a,min=box.min[axis]-radius,max=box.max[axis]+radius;
+      if(Math.abs(delta)<1e-9){if(a<min||a>max){exit=-1;break;}}
+      else{
+        const t1=(min-a)/delta,t2=(max-a)/delta,near=Math.min(t1,t2);
+        if(near>enter){enter=near;hitAxis=axis;hitSign=delta>0?-1:1;}
+        exit=Math.min(exit,Math.max(t1,t2));
+      }
+    }
+    if(hitAxis>=0&&enter<=exit&&enter>=0&&enter<=1&&enter<first){first=enter;sweepNormal.set(0,0,0).setComponent(hitAxis,hitSign);}
+  }
+  if(first===Infinity){
+    // Old saves or a frame change can begin inside a volume; depenetrate using
+    // the existing union-aware solver rather than trapping the player.
+    const speed=worldVel.length();return collideLocalBoxes(frame,worldPos,worldVel,radius,boxes)?Math.max(0,speed-worldVel.length()):-1;
+  }
+  end.lerpVectors(start,end,Math.max(0,first-.02/Math.max(.02,start.distanceTo(end))));
+  frame.toWorld(end,worldPos);frame.pointVelocity(end,velocity);sweepNormal.applyQuaternion(frame.rotation);
+  const inward=(worldVel.x-velocity.x)*sweepNormal.x+(worldVel.y-velocity.y)*sweepNormal.y+(worldVel.z-velocity.z)*sweepNormal.z;
+  if(inward<0)worldVel.addScaledVector(sweepNormal,-inward);
+  return Math.max(0,-inward);
 }
 
 /** Lightweight oriented capsule. Repeated passes keep all three suit sections outside joined hulls. */

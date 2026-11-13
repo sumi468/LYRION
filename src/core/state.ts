@@ -6,6 +6,7 @@ import { createHomecomingProgress, type HomecomingProgress } from '../systems/ex
 import { createUpgradeLevels, type UpgradeLevels } from '../systems/upgrades';
 
 import type { LandingRecord } from '../systems/landing';
+import {createSurfaceProgress,type SurfaceProgress} from '../systems/surfaceCampaign';
 
 export type CameraMode = 'third' | 'first';
 
@@ -34,6 +35,7 @@ export interface GameState {
   assist: boolean;
   cameraMode: CameraMode;
   homecoming: HomecomingProgress;
+  surfaceProgress:SurfaceProgress;
 }
 
 export const HULL_MAX = 100;
@@ -73,5 +75,6 @@ export function createNewState(): GameState {
     assist: true,
     cameraMode: 'third',
     homecoming: createHomecomingProgress(),
+    surfaceProgress:createSurfaceProgress(),
   };
 }

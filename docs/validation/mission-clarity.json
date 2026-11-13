@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-29T07:24:07.556Z",
+  "timestamp": "2026-11-13T04:13:30.881Z",
   "results": [
     {
       "name": "6任務の一覧と1つの詳細を分けて表示",
@@ -31,13 +31,13 @@
           "completed": 0,
           "objectiveTotal": 6,
           "destination": "ASTERION STATION",
-          "distance": 78.7200308440636,
+          "distance": 78.72001018859542,
           "action": "Tで接岸。ASTERIONは任務・補給・帰還の拠点です"
         },
         "code": "MISSION 01 — FIRST DEPARTURE",
         "progress": "進行状況 0 / 6",
         "destination": "目的地 ASTERION STATION",
-        "distance": "残り距離 79 u",
+        "distance": "残り距離 79 m",
         "action": "Tで接岸。ASTERIONは任務・補給・帰還の拠点です"
       }
     },
@@ -116,7 +116,7 @@
           "bottom": 257
         },
         "fps": {
-          "x": 312.421875,
+          "x": 265.34375,
           "y": 90,
           "right": 380,
           "bottom": 107
@@ -125,7 +125,7 @@
         "toastOverlap": false,
         "progressVisible": true,
         "action": "DOCKで接岸。ASTERIONは任務・補給・帰還の拠点です",
-        "distance": "残り距離 79 u"
+        "distance": "残り距離 79 m"
       }
     },
     {
@@ -169,7 +169,7 @@
           "bottom": 176
         },
         "fps": {
-          "x": 722.421875,
+          "x": 675.34375,
           "y": 90,
           "right": 790,
           "bottom": 107
@@ -178,7 +178,7 @@
         "toastOverlap": false,
         "progressVisible": true,
         "action": "DOCKで接岸。ASTERIONは任務・補給・帰還の拠点です",
-        "distance": "残り距離 79 u"
+        "distance": "残り距離 79 m"
       }
     },
     {
@@ -197,10 +197,10 @@
   ],
   "errors": [],
   "build": {
-    "version": "0.8.0",
-    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
-    "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+    "version": "0.9.0-dev.2",
+    "sourceRevision": "2cf1b25982db69e12db64df73d7961590688f950",
+    "sourceHash": "875ca202fb3b9f5d356d85b7f4d9e0c08ee73c874576d5826420a6b49dffc3c9",
     "uncommittedChanges": true,
-    "builtAt": "2026-10-29T07:21:49.682Z"
+    "builtAt": "2026-11-13T04:07:47.706Z"
   }
 }

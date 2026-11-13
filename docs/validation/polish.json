@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-29T07:23:01.263Z",
-  "url": "http://127.0.0.1:4188/?debug",
+  "timestamp": "2026-11-13T04:12:07.535Z",
+  "url": "http://127.0.0.1:4188/?debug&renderer=webgl2",
   "results": [
     {
       "name": "旧設定からもFPS・フレーム時間・画質を初期表示",
@@ -8,7 +8,7 @@
       "data": {
         "enabled": true,
         "visible": true,
-        "text": "200 FPS5.0 msHIGH",
+        "text": "200 FPS5.0 msHIGH · WebGL 2",
         "fps": 200,
         "frameMs": 5
       }
@@ -60,7 +60,7 @@
       "ok": true,
       "data": {
         "fps": {
-          "left": 305.109375,
+          "left": 258.03125,
           "top": 90,
           "right": 380,
           "bottom": 105
@@ -98,7 +98,7 @@
       "ok": true,
       "data": {
         "fps": {
-          "left": 715.109375,
+          "left": 668.03125,
           "top": 90,
           "right": 790,
           "bottom": 105

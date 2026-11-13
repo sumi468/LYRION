@@ -1,0 +1,21 @@
+{
+  "build": {
+    "version": "0.9.0-dev.2",
+    "sourceRevision": "2cf1b25982db69e12db64df73d7961590688f950",
+    "sourceHash": "875ca202fb3b9f5d356d85b7f4d9e0c08ee73c874576d5826420a6b49dffc3c9",
+    "uncommittedChanges": true,
+    "builtAt": "2026-11-13T04:07:47.706Z"
+  },
+  "phase": "playing",
+  "target": "prime-base",
+  "marker": "PAD 01 / PORT LYRA",
+  "renderer": {
+    "requested": "auto",
+    "backend": "webgpu",
+    "reason": null,
+    "adapter": "nvidia / lovelace",
+    "hardware": true
+  },
+  "errors": [],
+  "ok": true
+}

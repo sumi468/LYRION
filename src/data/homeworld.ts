@@ -1,4 +1,5 @@
 import type { BodyDef, OrbitDef } from './types';
+import {metricOrbit} from '../physics/worldScale';
 
 export const HOMEWORLD_ID = 'lyrion-prime';
 export const STATION_ID = 'asterion';
@@ -18,9 +19,12 @@ export const HOMEWORLD: BodyDef = {
   scanReward: 25, scanTime: 3, scanRangeMul: 1.2, detectRange: 1e9,
 };
 
-export const STATION_ORBIT: OrbitDef = { parent: HOMEWORLD_ID, radius: 720, period: 1800, phase: 4, inclination: .06, node: .16 };
-export const SATELLITE_ORBIT: OrbitDef = { parent: HOMEWORLD_ID, radius: 1040, period: 2450, phase: 2.2, inclination: .12, node: .4 };
-export const DEEP_ORBIT: OrbitDef = { parent: 'lyrion', radius: 43000, period: 52000, phase: 1.8, inclination: .12, node: .8 };
+export const LEGACY_STATION_ORBIT: OrbitDef = { parent: HOMEWORLD_ID, radius: 720, period: 1800, phase: 4, inclination: .06, node: .16 };
+export const STATION_ORBIT=metricOrbit(LEGACY_STATION_ORBIT);
+export const LEGACY_SATELLITE_ORBIT:OrbitDef={ parent: HOMEWORLD_ID, radius: 1040, period: 2450, phase: 2.2, inclination: .12, node: .4 };
+export const LEGACY_DEEP_ORBIT:OrbitDef={ parent: 'lyrion', radius: 43000, period: 52000, phase: 1.8, inclination: .12, node: .8 };
+export const SATELLITE_ORBIT=metricOrbit(LEGACY_SATELLITE_ORBIT);
+export const DEEP_ORBIT=metricOrbit(LEGACY_DEEP_ORBIT);
 export const DOCK_PORT = [0, 0, 24] as const;
 export const DOCK_SHIP = [0, 0, 32.2] as const;
 export const SHIP_HATCH = [-3.3, 1.25, -2.2] as const;

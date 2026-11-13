@@ -463,3 +463,34 @@ body.touch .toast-title { display:-webkit-box; -webkit-box-orient:vertical; -web
   body.touch .hud-operations { left:285px; bottom:150px; width:250px; }
 }
 .operations-guidance-reason { grid-column:1/-1; margin:0; color:#88a8b5; font-size:10px; line-height:1.6; }.mission-selection-help { color:#88a8b5; font-size:10px; margin:4px 0 12px; }
+
+/* Landing and propulsion expose the same limits used by the simulation. */
+.hud-landing-guide { left:24px; bottom:26px; width:min(310px,31vw); padding:12px 14px; border-left:2px solid var(--warn); background:rgba(5,16,25,.88); line-height:1.5; }
+.landing-site { font-size:14px; letter-spacing:.05em; margin:4px 0 7px; color:#e0eeee; }
+.landing-checks { display:flex; flex-wrap:wrap; gap:3px 12px; font-size:10px; color:#f0b57e; }
+.landing-checks span:last-child { flex-basis:100%; }
+.landing-checks .ok { color:#9adac6; }
+.landing-offset { margin-top:7px; color:#a9bac6; font-size:10px; }
+.landing-reason { margin-top:5px; font-size:11px; color:#edc58d; }
+.hud-landing-guide.ready { border-color:#8bf0c8; }.ready .landing-reason { color:#9de9ce; }
+.hud-landing-guide.blocked { border-color:#f29479; }.blocked .landing-reason { color:#f4ac91; }
+.hud-drive { margin:5px -40px 6px; line-height:1.45; }
+.drive-title { color:#bbd8dd; font-size:11px; letter-spacing:.04em; }
+.drive-detail { margin-top:2px; color:#9aacba; font-size:9px; }
+.hud-drive[data-mode="cruise"] .drive-title { color:#8be2ed; }
+.hud-drive[data-mode="charging"] .drive-title,.hud-drive[data-mode="braking"] .drive-title { color:var(--warn); }
+.hud-operations { bottom:195px; }
+.landing-label { bottom:166px; }
+@media(max-width:800px) { .hud-drive { margin-left:0; margin-right:0; }.hud-landing-guide { left:10px; width:240px; padding:8px 10px; } }
+@media(max-width:560px) and (orientation:portrait) {
+ body.touch .hud-landing-guide { bottom:205px; left:12px; width:190px; padding:7px 8px; }
+ body.touch .landing-site { font-size:10px; margin:3px 0; }.landing-checks { gap:2px 6px; font-size:8px; }
+ body.touch .landing-offset { font-size:8px; margin-top:4px; }body.touch .landing-reason { font-size:9px; margin-top:3px; }
+ body.touch .drive-title { font-size:9px; }.drive-detail { font-size:8px; }body.touch .hud-drive { margin:3px 0; }
+ body.touch .hud-operations { bottom:auto; }
+}
+@media(max-height:520px) {
+ .hud-landing-guide { bottom:10px; width:230px; padding:6px 8px; }.landing-site { font-size:11px; margin:2px 0; }.landing-offset,.landing-reason { margin-top:3px; font-size:9px; }
+ .hud-drive { margin-top:2px; margin-bottom:2px; }.drive-title { font-size:9px; }.drive-detail { font-size:8px; }
+ body.touch .hud-landing-guide { bottom:154px; width:235px; }.hud-operations { bottom:169px; }.landing-label { bottom:142px; }
+}

@@ -1,3 +1,4 @@
+import {sceneShader} from './shaderRegistry';
 import {
   Color,
   DataTexture,
@@ -18,7 +19,8 @@ import {
   CanvasTexture,
   SRGBColorSpace,
   type Texture,
-  type WebGLRenderer,
+  type RenderTarget,
+  type Camera,
 } from 'three';
 import type { SurfaceProgram } from '../data/types';
 import { BAKE_FRAG, BAKE_VERT } from './shaders';
@@ -47,6 +49,13 @@ export interface BakedTexture {
   dispose(): void;
 }
 
+/** Render-target contract shared by classic WebGL and native WebGPU. */
+export interface BakeRenderer {
+ capabilities:{getMaxAnisotropy():number};autoClear:boolean;
+ getRenderTarget():RenderTarget|null;setRenderTarget(target:RenderTarget|null):void;
+ render(scene:Scene,camera:Camera):void;
+}
+
 /**
  * 手続き的な地表・雲・背景を、GPU で等距円筒テクスチャへ 1 度だけ描画する。
  * 実行時は単純なテクスチャ参照になるため、高品質な見た目を軽い負荷で得られる。
@@ -57,7 +66,9 @@ export class TextureBaker {
   private quad: Mesh;
   private materials = new Map<number, ShaderMaterial>();
 
-  constructor(private renderer: WebGLRenderer) {
+  constructor(private renderer: BakeRenderer) {
+    // This tiny scene reassigns cached source materials between bake slices.
+    this.scene.userData.dynamicShaders = true;
     this.quad = new Mesh(new PlaneGeometry(2, 2));
     this.quad.frustumCulled = false;
     this.scene.add(this.quad);
@@ -66,7 +77,7 @@ export class TextureBaker {
   private material(program: number): ShaderMaterial {
     let m = this.materials.get(program);
     if (!m) {
-      m = new ShaderMaterial({
+      m = sceneShader('bake',{
         vertexShader: BAKE_VERT,
         fragmentShader: BAKE_FRAG,
         defines: { PROGRAM: program },

@@ -6,11 +6,13 @@ import { BODY_BY_ID,BODY_DEFS } from '../src/data/starSystem';
 import { createPositionTable,updateBodyPositions,updateBodyVelocities } from '../src/physics/orbits';
 import { HomecomingSystem } from '../src/systems/homecoming';
 import { emptyEvaInput } from '../src/systems/eva';
+import {surfaceAltitude} from '../src/physics/terrain';
 
 function fixture(){
   const state=createNewState(),home=new HomecomingSystem(),positions=createPositionTable(BODY_DEFS),velocities=createPositionTable(BODY_DEFS),future=createPositionTable(BODY_DEFS);
   const refresh=()=>{updateBodyPositions(BODY_DEFS,state.time,positions);updateBodyVelocities(BODY_DEFS,state.time,positions,future,velocities);home.update(state.time,positions,velocities);};
-  refresh();const radius=BODY_BY_ID.cindra.radius;
+  refresh();const nominal=BODY_BY_ID.cindra.radius;
+  const radius=nominal-surfaceAltitude(BODY_BY_ID.cindra,positions.cindra.clone().add(new Vector3(0,nominal,0)),positions.cindra,state.time);
   state.pos.copy(positions.cindra).add(new Vector3(0,radius+50,0));state.vel.copy(velocities.cindra);state.quat.identity();home.measure(state);home.toggleEva(state);
   const place=(y:number)=>{const e=home.eva,f=home.frames.get(e.frameId);e.position.copy(positions.cindra).add(new Vector3(0,y,0));f.toLocal(e.position,e.localPosition);e.localVelocity.set(0,0,0);e.sync(state,f);home.measure(state);};
   return {state,home,positions,refresh,radius,place};
@@ -31,7 +33,9 @@ describe('Planet-obstructed EVA return',()=>{
     const {state,home,radius,place}=fixture();place(-(radius+2));const e=home.eva,before=e.position.clone();
     expect(home.requestReturn()).toContain('シンドラが帰還経路を遮っています');expect(e.returning).toBe(false);expect(e.routeBlocked).toBe(true);expect(e.returnRoute.length).toBe(0);expect(e.position.equals(before)).toBe(true);
     const input=emptyEvaInput();input.side=1;for(let i=0;i<10;i++)home.step(.05,state,input);
-    expect(e.active).toBe(true);expect(e.localVelocity.x).toBeGreaterThan(.1);
+    // A metric planet's far side is millions of metres outside the suit tether
+    // range; its independent emergency recovery must still engage safely.
+    expect(e.active).toBe(true);expect(e.emergency).toBeGreaterThan(0);
   });
   it('completes an unobstructed near-side route and keeps ordinary Y cancellation',()=>{
     const {state,home,refresh,radius,place}=fixture();place(radius+10);
@@ -41,8 +45,9 @@ describe('Planet-obstructed EVA return',()=>{
     expect(home.eva.active).toBe(false);expect(hatchDistance).toBeLessThan(1.4);
   });
   it('cancels once if a moving planet or later movement obstructs an active assist',()=>{
-    const {state,home,radius,place}=fixture();place(radius+10);expect(home.requestReturn()).toContain('開始');
-    place(radius+.5);const first=home.step(0,state,emptyEvaInput());expect(first?.message).toContain('シンドラが帰還経路を遮っています');expect(home.eva.returning).toBe(false);expect(home.eva.routeBlocked).toBe(true);
+    const {state,home,radius,positions,place}=fixture();place(radius+10);expect(home.requestReturn()).toContain('開始');
+    const ground=home.eva.position.distanceTo(positions.cindra)-surfaceAltitude(BODY_BY_ID.cindra,home.eva.position,positions.cindra,state.time);
+    place(ground+.5);const first=home.step(0,state,emptyEvaInput());expect(first?.message).toContain('シンドラが帰還経路を遮っています');expect(home.eva.returning).toBe(false);expect(home.eva.routeBlocked).toBe(true);
     expect(home.step(0,state,emptyEvaInput())).toBeNull();expect(home.eva.active).toBe(true);
   });
   it('retains the three-second emergency recovery even behind a planet',()=>{

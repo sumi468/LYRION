@@ -16,6 +16,7 @@ try{
  check('実際に配信したビルドと作業ソースの識別情報が一致',manifest.sourceHash===source.sourceHash&&manifest.sourceHash===report.build.sourceHash&&manifest.version===source.version,report.build);
  check('画面にビルド版とソース識別子を表示',await page.locator('.build-label').filter({hasText:source.sourceHash.slice(0,12)}).isVisible());
  await page.screenshot({path:join(SHOTS,'90-critical-main.png')});
+
  await page.getByRole('button',{name:'MISSION CONTROL / 遠征',exact:true}).click();await sleep(400);
  const codes=['FIRST DEPARTURE','ORBITAL INSPECTION','REPAIR OPERATION','LUNAR EXPEDITION','LOST SIGNAL','UNKNOWN HORIZONS'];
  check('メインメニューのMISSION CONTROLに指定6ミッションを表示',await page.locator('.expedition-card').count()===6&&await page.locator('.operations-body').getByText('EXPEDITION CAMPAIGN / 6 MISSIONS',{exact:true}).isVisible());
@@ -43,16 +44,17 @@ try{
  await page.getByRole('button',{name:'操縦へ戻る',exact:true}).click();await page.evaluate(()=>{const g=window.__lyrion;g.stop();g.tick(0);});
  check('HUDの次目標マーカーは実ワールド座標の航行標を指す',await page.evaluate(()=>{const g=window.__lyrion,m=g.snapshot().markers.find(m=>m.id==='exp-nav');return m&&Math.abs(m.dist-g.state.pos.distanceTo(g.home.points.nav))<1e-5&&Number.isFinite(m.x)&&Number.isFinite(m.y);}));
  // Migration fixture deliberately contains real v2 fields and no new campaign object.
- const legacy=await page.evaluate(()=>{const g=window.__lyrion;g.debugTeleport('cindra',700);const raw={version:2,savedAt:1,time:g.state.time,playSeconds:321,pos:g.state.pos.toArray(),vel:g.state.vel.toArray(),quat:g.state.quat.toArray(),hull:83,shield:42,kills:7,landed:null,landings:['lumen'],energy:78,data:321,totalData:800,upgrades:{engine:1,boost:0,scanner:1,reactor:0},upgradesBought:2,detected:['cindra','thalassa'],scanned:{cindra:2,thalassa:3},missionIndex:4,assist:true,cameraMode:'third'};localStorage.setItem('lyrion.save.v1',JSON.stringify(raw));return raw;});
+ const legacy=await page.evaluate(()=>{const g=window.__lyrion;g.debugTeleport('cindra',700);const raw={version:2,savedAt:1,time:g.state.time,playSeconds:321,pos:[30000,10000,30000],vel:[0,0,0],quat:g.state.quat.toArray(),hull:83,shield:42,kills:7,landed:null,landings:['lumen'],energy:78,data:321,totalData:800,upgrades:{engine:1,boost:0,scanner:1,reactor:0},upgradesBought:2,detected:['cindra','thalassa'],scanned:{cindra:2,thalassa:3},missionIndex:4,assist:true,cameraMode:'third'};localStorage.setItem('lyrion.save.v1',JSON.stringify(raw));return raw;});
  // Install the migration fixture after the outgoing page's beforeunload autosave.
  await page.addInitScript(raw=>localStorage.setItem('lyrion.save.v1',JSON.stringify(raw)),legacy);
  await page.reload();await page.waitForFunction(()=>window.__lyrion?.phase==='menu',null,{timeout:120000});
- check('旧セーブは位置・向き・DATA・戦闘・既存ミッションを維持',await page.evaluate(raw=>{const s=window.__lyrion.state;return s.pos.toArray().every((v,i)=>v===raw.pos[i])&&s.quat.toArray().every((v,i)=>Math.abs(v-raw.quat[i])<1e-12)&&s.data===321&&s.kills===7&&s.missionIndex===4&&s.scanned.size===2&&s.upgrades.engine===1;},legacy));
+ check('旧セーブを新座標へ移行し向き・DATA・戦闘・既存ミッションを維持',await page.evaluate(raw=>{const s=window.__lyrion.state;return s.pos.toArray().every(Number.isFinite)&&s.pos.length()>1000000&&s.quat.toArray().every((v,i)=>Math.abs(v-raw.quat[i])<1e-12)&&s.data===321&&s.kills===7&&s.missionIndex===4&&s.scanned.size===2&&s.upgrades.engine===1;},legacy));
+ const migratedPose=await page.evaluate(()=>window.__lyrion.state.pos.toArray());
  await page.getByRole('button',{name:'MISSION CONTROL / 遠征',exact:true}).click();
  check('旧セーブを読み込んでも新6ミッションの一覧が消えない',await page.locator('.expedition-card').count()===6);
  await page.evaluate(()=>{const g=window.__lyrion;g.input.requestLock=()=>{};g.input.locked=true;});
  await page.getByRole('button',{name:'基地へ誘導',exact:true}).click();await page.evaluate(()=>{window.__lyrion.stop();window.__lyrion.tick(0);});
- check('旧プレイヤーはテレポートせず基地への帰還誘導を選べる',await page.evaluate(raw=>{const g=window.__lyrion;return g.phase==='playing'&&g.snapshot().stationTarget?.distance>1000&&g.state.pos.distanceTo(g.state.pos.clone().fromArray(raw.pos))<5;},legacy));
+ check('旧プレイヤーはテレポートせず基地への帰還誘導を選べる',await page.evaluate(raw=>{const g=window.__lyrion;return g.phase==='playing'&&g.snapshot().stationTarget?.distance>1000&&g.state.pos.distanceTo(g.state.pos.clone().fromArray(raw))<5;},migratedPose));
  check('ブラウザ・コンソールエラーなし',errors.length===0,errors);
 }catch(e){report.failure=String(e);console.error(e);}finally{writeFileSync(new URL('../../docs/validation/critical-homecoming.json',import.meta.url),JSON.stringify(report,null,2));await browser.close();server.close();}
 if(report.failure)process.exitCode=1;

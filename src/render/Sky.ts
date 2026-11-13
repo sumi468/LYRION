@@ -1,3 +1,4 @@
+import {sceneShader} from './shaderRegistry';
 import {
   BackSide,
   BufferAttribute,
@@ -52,7 +53,7 @@ export class Sky {
   private starGeo: BufferGeometry;
 
   constructor() {
-    this.skyMat = new ShaderMaterial({
+    this.skyMat = sceneShader('sky',{
       vertexShader: SKY_VERT,
       fragmentShader: SKY_FRAG,
       side: BackSide,
@@ -110,7 +111,7 @@ export class Sky {
     this.starGeo.setAttribute('position', new BufferAttribute(pos2, 3));
     this.starGeo.setAttribute('aMag', new BufferAttribute(mag2, 1));
     this.starGeo.setAttribute('aColor', new BufferAttribute(col2, 3));
-    this.starMat = new ShaderMaterial({
+    this.starMat = sceneShader('stars',{
       vertexShader: STAR_VERT,
       fragmentShader: STAR_FRAG,
       depthTest: false,

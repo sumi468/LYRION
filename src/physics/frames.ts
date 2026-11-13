@@ -24,7 +24,7 @@ export class ReferenceFrame {
   }
 }
 
-function orbitalFrame(frame: ReferenceFrame, orbit: OrbitDef, time: number, positions: PositionTable, velocities: PositionTable): void {
+export function orbitalFrame(frame: ReferenceFrame, orbit: OrbitDef, time: number, positions: PositionTable, velocities: PositionTable): void {
   orbitLocalPosition(orbit, time, local);
   orbitLocalPosition(orbit, time + H, future);
   frame.position.copy(positions[orbit.parent]).add(local);

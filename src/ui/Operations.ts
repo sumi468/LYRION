@@ -4,10 +4,11 @@ import { INVESTIGATIONS } from '../data/homeworld';
 import { expeditionAvailable } from '../systems/expeditions';
 import { destinationLabel, missionProgress, missionStartReason } from '../systems/missionPresentation';
 import { clear, h, setText } from './dom';
+import {FIRST_STEPS,FIRST_STEPS_REWARD} from '../data/surfaceCampaign';
 
 /** One compact mission list, one focused briefing, and explicit reasons for unavailable actions. */
 export function operationsPanel(game: Game, refresh: () => void, resume: () => void, upgrades: () => void): HTMLElement {
-  const progress = game.state.homecoming, docked = game.home.mode === 'docked';
+  const progress = game.state.homecoming, docked = game.missionControlAvailable;
   const previewOnly = game.phase === 'menu' && !game.menuHasSave;
   const eva = game.home.mode === 'eva';
   const resumeLabel = game.phase === 'menu' ? 'メニューへ戻る' : eva ? '船外活動へ戻る' : '操縦へ戻る';
@@ -86,10 +87,13 @@ export function operationsPanel(game: Game, refresh: () => void, resume: () => v
       h('div', { class: 'operations-actions' }, action(resumeLabel, resume), action('基地へ誘導', () => game.navigateHome(), previewOnly || eva, 'home-guidance-reason'), action('機体アップグレード', upgrades)),
       h('p', { class: 'operations-guidance-reason', id: 'home-guidance-reason' }, previewOnly ? '開始前は一覧の確認のみです。「メニューへ戻る」から「新しい探査を開始」を選んでください。' : eva ? '船外活動中です。帰還支援でLX-07へ戻り、再搭乗してから船を操縦してください。' : docked ? '母星LYRION PRIMEの軌道基地です。受注と補給を済ませたら、操縦へ戻って出発できます。' : '「基地へ誘導」は帰還先を選択します。船を操縦して接近し、接岸してください。')),
     h('div', { class: 'homecoming-flow', 'aria-label': '遠征の流れ' }, ...['基地で受注', '出航・目標へ', '必要ならEVA調査', '船に戻る', '基地で報告'].map((label, index) => h('span', {}, h('b', {}, index + 1), label))),
+    h('section',{class:'station-services','aria-label':'地上探査キャンペーン'},
+      h('div',{},h('h2',{},'FIRST STEPS / 最初の一歩'),h('p',{},'母星の港町PORT LYRAへ。着陸先は青いPAD 01マーカーです。住居・研究区の上や海には降りず、港のパッドまたは平坦で開けた陸地を選びます。'),h('p',{},'港の西側：MISSION CONTROLで受注・報告。北西：SURFACE LABで記録。東側：SERVICE BAYで補給、COMMS ARRAYで機体強化。市街地へは北へ延びる道路を歩けます。建物は外観・外壁のみです。'),h('p',{},'F / BOOST長押しで加速。周囲5 km外・非交戦時は長距離巡航へ移行。接近時はFを離してX / BRAKEで制動し、高度450 m以下・地表速度100 m/s以下で着陸案内が緑になったらG / LAND。地上の速歩はShift長押しで、エネルギーを消費しません。'),h('p',{},`進行 ${game.state.surfaceProgress.step} / ${FIRST_STEPS.length} · 報酬 ${FIRST_STEPS_REWARD} DATA · ${game.state.surfaceProgress.rewarded?'受取済み':'未受取'}`),h('p',{},FIRST_STEPS[game.state.surfaceProgress.step]?.text??'地上探査と軌道への帰還を完了')),
+      h('div',{class:'station-service-actions'},action('FIRST STEPSを開始・追跡',()=>{game.startFirstSteps();refresh();},previewOnly),action('PRIME地上基地へ誘導',()=>{game.navigateSurfaceBase();resume();},previewOnly||eva))),
     h('div', { class: 'mission-browser' }, h('section', { class: 'mission-overview' }, h('h2', {}, '遠征一覧'), selectedHeading, h('p', { class: 'mission-selection-help' }, '任務名を選ぶと、目的と手順を確認できます。'), cards), detail),
     stationServices,
-    h('details', { class: 'operations-help' }, h('summary', {}, '接岸・船外活動の操作を確認'), h('p', { class: 'operations-controls' }, game.input.touchMode ? 'DOCK：接岸・離脱 / EVA：船外・搭乗 / 調査：設備で作業 / 帰還：機体へ戻る。左スティックで移動し、空いた画面をドラッグして向きを変えます。' : 'T：接岸・離脱 / H：船外・搭乗 / E：船外調査 / Y：帰還支援 / B：MISSION CONTROL。船外はWASDで移動、Space / Shiftで上下、マウス・矢印で向き、Xで制動します。'), h('p', {}, '接岸は惑星と反対側の誘導灯から150u以内・相対速度18u/s以下。船外に出るときは相対速度10u/s以下。宇宙服の酸素は6分、活動範囲は船から600uです。')),
+    h('details', { class: 'operations-help' }, h('summary', {}, '接岸・船外活動の操作を確認'), h('p', { class: 'operations-controls' }, game.input.touchMode ? 'DOCK：接岸・離脱 / EVA：船外・搭乗 / 調査：設備で作業 / 帰還：機体へ戻る。左スティックで移動し、空いた画面をドラッグして向きを変えます。' : 'T：接岸・離脱 / H：船外・搭乗 / E：船外調査 / Y：帰還支援 / B：MISSION CONTROL。船外はWASDで移動、Space / Shiftで上下、マウス・矢印で向き、Xで制動します。'), h('p', {}, '接岸は惑星と反対側の誘導灯から150 m以内・相対速度18 m/s以下。船外に出るときは相対速度10 m/s以下。宇宙服の酸素は6分、活動範囲は船から600 mです。')),
     h('details', { class: 'operations-archive' }, h('summary', {}, `調査アーカイブ / ${Object.keys(progress.investigated).length}件`), research),
-    h('div', { class: 'operations-tracking' }, action(progress.tracked ? '従来の探査目標を表示' : '遠征の目標を表示', () => { progress.tracked = !progress.tracked; game.saveNow(); refresh(); })),
+    h('div', { class: 'operations-tracking' }, action(progress.tracked ? '従来の探査目標を表示' : '遠征の目標を表示', () => { game.trackExpeditionMissions(!progress.tracked);refresh(); })),
   );
 }

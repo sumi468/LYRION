@@ -1,0 +1,29 @@
+{
+  "build": {
+    "version": "0.9.0-dev.2",
+    "sourceRevision": "2cf1b25982db69e12db64df73d7961590688f950",
+    "sourceHash": "875ca202fb3b9f5d356d85b7f4d9e0c08ee73c874576d5826420a6b49dffc3c9",
+    "uncommittedChanges": true,
+    "builtAt": "2026-11-13T04:07:47.706Z"
+  },
+  "results": [
+    {
+      "name": "旧v5の着陸位置が新しい建物と重なる場合、安全な上空へ復帰し進捗を維持",
+      "ok": true,
+      "data": {
+        "mode": "flight",
+        "local": [
+          -50.00005295788086,
+          62.79999999106562,
+          -332.00035146233
+        ],
+        "data": 237,
+        "hull": 88.02,
+        "progressPreserved": true,
+        "landingHistory": true,
+        "message": "新しい天体を探知ハルシオン小惑星帯 — 小惑星帯保存位置と街の設備が重なったため、安全な上空に復帰しました。探査進捗・所持データは維持しています"
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-29T07:23:59.188Z",
+  "timestamp": "2026-11-13T04:13:20.702Z",
   "source": "Integrated stabilization build",
   "cases": [
     {
@@ -7,7 +7,7 @@
       "reproduced": false,
       "recoveredAt": {
         "afterSeconds": 13.4,
-        "preBoardHatchDistance": 1.2668063665690648
+        "preBoardHatchDistance": 1.2668063584687979
       },
       "finalMode": "docked",
       "ok": true
@@ -29,9 +29,9 @@
         "landed": {
           "bodyId": "cindra",
           "normal": [
-            -0.8602448614602828,
-            0.09599555129129883,
-            -0.5007630502178236
+            -0.8543720014796696,
+            0.1388699053940977,
+            -0.5007630502178229
           ]
         },
         "oxygen": 346.59999999999695
@@ -52,13 +52,13 @@
       "reproduced": false,
       "recovered": {
         "seconds": 4.2,
-        "preBoardHatchDistance": 1.2624216889491278
+        "preBoardHatchDistance": 1.2624216945416236
       },
       "frame": "asterion",
       "parkedLocal": [
-        99.99999999999983,
-        8.999999999999982,
-        -79.99999999999963
+        99.99999999620354,
+        9.000000000228818,
+        -80.00000000609003
       ],
       "ok": true
     },
@@ -78,16 +78,16 @@
       "id": "camera-clip-minimum-retains-wall-intersection",
       "reproduced": false,
       "focusLocal": [
-        4.1199999999999335,
-        -2.6617597015388128e-14,
-        8.000000000000568
+        4.120000000517444,
+        1.4057260910860236e-10,
+        7.999999997912166
       ],
       "cameraLocal": [
-        3.4296049784078044,
-        0.7445473785454364,
-        8.110463203455266
+        3.4296049778127724,
+        0.7445473788682925,
+        8.110463201002998
       ],
-      "hullClearance": 0.32960497840780434,
+      "hullClearance": 0.3296049778127723,
       "cameraRequiredRadius": 0.3,
       "nearPlane": 0.06,
       "ok": true
@@ -95,11 +95,11 @@
     {
       "id": "suit-sphere-allows-boots-through-hull",
       "reproduced": false,
-      "avatarCentreY": 4.450000000000008,
-      "suitMinY": 3.350537921994269,
-      "suitMaxY": 5.420118190412442,
+      "avatarCentreY": 4.450000000169245,
+      "suitMinY": 3.350537922250596,
+      "suitMaxY": 5.420118190587103,
       "hullTopY": 3.1,
-      "penetration": -0.25053792199426894,
+      "penetration": -0.2505379222505959,
       "ok": true
     },
     {
@@ -108,14 +108,14 @@
       "requestedInwardSpeed": -3,
       "requestedTangentialSpeed": 2,
       "resultLocalVelocity": [
-        -1.5439038936193583e-16,
-        0.00011885947621498305,
-        1.9973840210253373
+        -1.3239192728220495e-15,
+        1.1883790378836023e-8,
+        1.999999738402185
       ],
       "resultLocalPosition": [
-        4.119999999999821,
-        1.3433698597964394e-14,
-        8.099999999999659
+        4.11999999483881,
+        3.9427139331138505e-10,
+        8.099999991737304
       ],
       "ok": true
     },
@@ -123,14 +123,14 @@
       "id": "completed-target-steals-nearby-repair-interaction",
       "reproduced": false,
       "diagnosisCompleted": true,
-      "diagnosisDistance": 4.067408781946104e-12,
-      "repairDistance": 2.5612496949727377,
+      "diagnosisDistance": 6.706745190864022e-8,
+      "repairDistance": 2.561249663229739,
       "active": "antenna-repair",
       "message": "破損した通信増幅器の作業を開始",
       "localPosition": [
-        -6.99999999999576,
-        4.60000000000006,
-        -11.000000000001032
+        -6.999999949265847,
+        4.600000000612688,
+        -11.000000040489992
       ],
       "ok": true
     },
@@ -140,14 +140,14 @@
       "initiated": {
         "returning": false,
         "routeLength": 0,
-        "hatchDistance": 88.65771993711995
+        "hatchDistance": 76.50143070327324
       },
       "after": {
         "returning": false,
         "routeLength": 0,
-        "hatchDistance": 88.65771993711995,
-        "displacement": 0.2908882076400838,
-        "towardHatch": -0.10344639002062472,
+        "hatchDistance": 76.50143070327324,
+        "displacement": 0.4106458202904455,
+        "towardHatch": -0.10961313297328085,
         "localVelocity": [
           0,
           0,
@@ -164,46 +164,46 @@
           "name": "side",
           "yaw": 0,
           "pitch": 0,
-          "centreX": 4.1199999999999335,
-          "meshMinX": 3.525686709998804,
+          "centreX": 4.120000000517444,
+          "meshMinX": 3.5256867099166973,
           "hullFaceX": 3.1,
-          "clearance": 0.425686709998804
+          "clearance": 0.4256867099166972
         },
         {
           "name": "backpack",
           "yaw": -1.5707963267948966,
           "pitch": 0,
-          "centreX": 4.1199999999999335,
-          "meshMinX": 3.4190337006885443,
+          "centreX": 4.120000000517444,
+          "meshMinX": 3.41903370014152,
           "hullFaceX": 3.1,
-          "clearance": 0.3190337006885442
+          "clearance": 0.31903370014152
         },
         {
           "name": "diagonal",
           "yaw": 0.8,
           "pitch": 0,
-          "centreX": 4.1199999999999335,
-          "meshMinX": 3.2510802913513235,
+          "centreX": 4.120000000517444,
+          "meshMinX": 3.251080288246322,
           "hullFaceX": 3.1,
-          "clearance": 0.1510802913513234
+          "clearance": 0.1510802882463218
         },
         {
           "name": "pitched-boot",
           "yaw": 0.8,
           "pitch": 1.1,
-          "centreX": 4.197519119596441,
-          "meshMinX": 3.231793756158047,
+          "centreX": 4.197519116827446,
+          "meshMinX": 3.2317937551757265,
           "hullFaceX": 3.1,
-          "clearance": 0.1317937561580469
+          "clearance": 0.13179375517572645
         },
         {
           "name": "pitched-workhand",
           "yaw": 0.8,
           "pitch": -1.1,
-          "centreX": 4.1199999999999335,
-          "meshMinX": 3.264003387421046,
+          "centreX": 4.120000000517444,
+          "meshMinX": 3.26400339016459,
           "hullFaceX": 3.1,
-          "clearance": 0.16400338742104603
+          "clearance": 0.1640033901645901
         }
       ],
       "ok": true
@@ -218,7 +218,7 @@
         "distance": 0
       },
       "message": "WAYFARER-3 データレコーダーの作業を開始",
-      "maxDistance": 1.5010537766555936e-11,
+      "maxDistance": 7.452908539676128e-8,
       "completed": true,
       "returning": false,
       "routeLength": 0,
@@ -231,13 +231,13 @@
         "returning": false,
         "routeBlocked": true,
         "message": "シンドラが帰還経路を遮っています。支援を中止しました。手動で回り込み、船が見える位置でY / 帰還を再試行してください。4u以内ならH / 搭乗。",
-        "hatchDistance": 331.98621922285594
+        "hatchDistance": 2400208.5530756596
       },
-      "manualMovement": 2.519999999999693,
+      "manualMovement": 8.999999973701193,
       "nearSideAccepted": true,
       "recovered": {
-        "seconds": 9.8,
-        "preBoardHatchDistance": 1.3730234564060777
+        "seconds": 3,
+        "preBoardHatchDistance": 1.3549614772316145
       },
       "ok": true
     }
@@ -250,10 +250,10 @@
     "hardware": true
   },
   "build": {
-    "version": "0.8.0",
-    "sourceRevision": "dad11ef4a5521365d567714e1eb69151e8d1689c",
-    "sourceHash": "5d247534d06035d31d9d749b0e8c46d4fc80fb6049bf44b89807f2ddb30eddd1",
+    "version": "0.9.0-dev.2",
+    "sourceRevision": "2cf1b25982db69e12db64df73d7961590688f950",
+    "sourceHash": "875ca202fb3b9f5d356d85b7f4d9e0c08ee73c874576d5826420a6b49dffc3c9",
     "uncommittedChanges": true,
-    "builtAt": "2026-10-29T07:21:49.682Z"
+    "builtAt": "2026-11-13T04:07:47.706Z"
   }
 }

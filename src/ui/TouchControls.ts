@@ -106,7 +106,9 @@ export class TouchControls {
   private sync(): void {
     const show = this.game.input.touchMode && this.game.phase === 'playing';
     this.root.hidden = !show;
-    this.root.dataset.mode=this.game.home.mode;
+    this.root.dataset.mode=this.game.surface.active?'eva':this.game.home.mode;
+    const up=this.root.querySelector('.tc-eva button:nth-child(1)'),down=this.root.querySelector('.tc-eva button:nth-child(2)');
+    if(up){up.textContent=this.game.surface.active?'跳ぶ':'上昇';up.setAttribute('aria-label',up.textContent);}if(down){down.textContent=this.game.surface.active?'速歩':'下降';down.setAttribute('aria-label',down.textContent);}
     if (!show) this.releaseAll();
   }
 

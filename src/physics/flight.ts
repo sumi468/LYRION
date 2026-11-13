@@ -62,8 +62,8 @@ export function stepFlight(
   // --- 姿勢(ローカル軸まわりに回す) ---
   stepAttitude(ship.quat, attitude, input.yaw, input.pitch, input.roll, dt);
 
-  const boosting = input.boost && boostAllowed;
-  const fwdIn = boosting ? 1 : input.thrust;
+  const boosting = input.boost && boostAllowed && !input.brake;
+  const fwdIn = input.brake ? 0 : boosting ? 1 : input.thrust;
 
   // --- 推力 ---
   const fwdAccel = fwdIn >= 0 ? stats.thrust * (boosting ? stats.boostAccelMul : 1) : stats.thrust * 0.6;

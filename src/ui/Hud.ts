@@ -39,6 +39,16 @@ export class Hud {
   private speedBar = h('div', { class: 'speed-fill' });
   private flags = h('div', { class: 'speed-flags' });
   private nearest = h('div', { class: 'speed-near' });
+  private driveTitle=h('div',{class:'drive-title'});
+  private driveDetail=h('div',{class:'drive-detail'});
+  private drive=h('div',{class:'hud-drive'},this.driveTitle,this.driveDetail);
+  private landingSite=h('div',{class:'landing-site'});
+  private landingAlt=h('span');
+  private landingSpeed=h('span');
+  private landingTerrain=h('span');
+  private landingOffset=h('div',{class:'landing-offset'});
+  private landingReason=h('div',{class:'landing-reason'});
+  private landingGuide=h('div',{class:'hud-landing-guide',hidden:true},h('div',{class:'label'},'LANDING GUIDANCE'),this.landingSite,h('div',{class:'landing-checks'},this.landingAlt,this.landingSpeed,this.landingTerrain),this.landingOffset,this.landingReason);
 
   private target = h('div', { class: 'hud-target' });
   private tName = h('div', { class: 't-name' });
@@ -96,8 +106,9 @@ export class Hud {
       'div',
       { class: 'hud-speed' },
       this.nearest,
-      h('div', { class: 'speed-main' }, this.speedVal, h('span', { class: 'unit' }, 'u/s')),
+      h('div', { class: 'speed-main' }, this.speedVal, h('span', { class: 'unit' }, 'm/s')),
       h('div', { class: 'speed-track' }, this.speedBar),
+      this.drive,
       this.flags,
     );
 
@@ -126,6 +137,7 @@ export class Hud {
       this.heading,
       speed,
       this.target,
+      this.landingGuide,
       this.warning,
       this.toasts,
       this.fpsEl,
@@ -165,7 +177,7 @@ export class Hud {
     this.opsFill.style.transform=`scaleX(${s.operations.progress})`;
     this.ops.classList.toggle('eva',s.operations.mode==='eva');
     this.ops.classList.toggle('critical',s.operations.mode==='eva'&&(s.operations.oxygen<60||s.operations.distance>350));
-    setText(this.keys,s.operations.mode==='eva'?'WASD 移動 / Space・Shift 上下 / E 調査 / H 搭乗 / Y 帰還 / Z 姿勢安定 / B 遠征':'W/S 推進 / A/D 旋回 / F ブースト / J 射撃 / T 接岸 / H 船外 / B 遠征 / Esc メニュー');
+    setText(this.keys,s.operations.mode==='surface'?'WASD 歩行 / Space 跳ぶ / Shift 速歩 / E 調査 / H 搭乗 / B 任務':s.operations.mode==='eva'?'WASD 移動 / Space・Shift 上下 / E 調査 / H 搭乗 / Y 帰還 / Z 姿勢安定 / B 遠征':'W/S 推進 / A/D 旋回 / F 巡航・ブースト / J 射撃 / T 接岸 / H 船外 / B 遠征 / Esc メニュー');
     this.shieldBar.style.transform=`scaleX(${Math.max(0,Math.min(1,s.shield/s.shieldMax))})`;
     setText(this.shieldVal,`${Math.round(s.shield)}/${s.shieldMax}`);
     setText(this.hullVal,`${Math.ceil(s.hull)}/${s.hullMax}`);
@@ -181,6 +193,18 @@ export class Hud {
     this.cockpit.classList.toggle('on',s.camera==='first');
     setText(this.landingLabel,s.landingText);
     this.landingLabel.classList.toggle('active',s.landingMode!=='flight');
+    const guide=s.landingGuide;this.landingGuide.hidden=!guide;this.target.hidden=!!guide;
+    if(guide){
+      this.landingGuide.classList.toggle('ready',guide.ready);this.landingGuide.classList.toggle('blocked',guide.terrain!=='clear');
+      setText(this.landingSite,guide.site);
+      setText(this.landingAlt,`高度 ${fmtDist(Math.max(0,guide.altitude))} / 450 m`);
+      setText(this.landingSpeed,`地表速度 ${guide.relativeSpeed.toFixed(0)} / 100 m/s`);
+      setText(this.landingTerrain,guide.terrain==='clear'?'✓ 平坦・障害物なし':guide.terrain==='water'?'× 海面':guide.terrain==='slope'?'× 急斜面':'× 建物・設備');
+      this.landingAlt.classList.toggle('ok',guide.altitude<=450);this.landingSpeed.classList.toggle('ok',guide.relativeSpeed<=100);this.landingTerrain.classList.toggle('ok',guide.terrain==='clear');
+      setText(this.landingOffset,Number.isFinite(guide.padDistance)?`PAD 01 中心まで水平 ${fmtDist(guide.padDistance)} · 中央8 mが目安`:'平坦な陸地の真上でG / LAND');
+      setText(this.landingReason,s.landingMode==='approach'?'自動降下中 / Gで中止':s.landingMode==='landed'?'着陸完了 / Hで降機 · Gで離陸':`${guide.ready?'G / LAND → ':''}${guide.reason}`);
+    }
+    this.drive.dataset.mode=s.propulsion.mode;setText(this.driveTitle,s.propulsion.title);setText(this.driveDetail,s.propulsion.detail);
     for(let i=0;i<this.enemyLabels.length;i++){
       const el=this.enemyLabels[i],enemy=s.enemies.find(e=>e.id===i);el.hidden=!enemy;if(!enemy)continue;
       el.style.transform=`translate(${enemy.x.toFixed(1)}px,${enemy.y.toFixed(1)}px)`;
@@ -203,7 +227,7 @@ export class Hud {
       setText(this.missionStep, progress !== undefined && total !== undefined ? `進行状況 ${progress} / ${total}` : `探査 ${s.mission.index + 1} / ${s.mission.total}`);
       this.missionFill.style.transform = `scaleX(${progress !== undefined && total ? Math.max(0, Math.min(1, progress / total)) : 0})`;
       setText(this.missionDestination, s.mission.destination ? `目的地 ${s.mission.destination}` : '');
-      setText(this.missionDistance, s.mission.distance !== undefined && Number.isFinite(s.mission.distance) ? `残り距離 ${fmtDist(Math.max(0, s.mission.distance))} u` : '');
+      setText(this.missionDistance, s.mission.distance !== undefined && Number.isFinite(s.mission.distance) ? `残り距離 ${fmtDist(Math.max(0, s.mission.distance))}` : '');
       setText(this.missionAction, s.mission.action ?? '');
       this.missionAction.hidden = !s.mission.action;
       this.missionDestination.hidden = !s.mission.destination;
@@ -231,37 +255,39 @@ export class Hud {
     setText(this.energyVal, `${Math.round(ep * 100)}%`);
 
     // 速度・方位
-    setText(this.speedVal, fmtNum(s.speed));
+    setText(this.speedVal, s.speed>0&&s.speed<10?s.speed.toFixed(1):fmtNum(s.speed));
     this.setStyle(this.speedBar, 'transform', `scaleX(${Math.max(0, Math.min(1, s.speedFrac / 4)).toFixed(3)})`);
     this.speedBar.classList.toggle('boost', s.boosting);
     setText(this.heading, `HDG ${String(Math.round(s.heading)).padStart(3, '0')}°   PIT ${s.pitch >= 0 ? '+' : ''}${Math.round(s.pitch)}°`);
     setText(
       this.flags,
-      `${s.assist ? 'ASSIST ON' : 'ASSIST OFF'}  ·  ${s.camera === 'third' ? '3RD' : 'COCKPIT'}${s.boosting ? '  ·  BOOST' : ''}`,
+      `${s.assist ? 'ASSIST ON' : 'ASSIST OFF'}  ·  ${s.camera === 'third' ? '3RD' : s.operations.mode==='surface'||s.operations.mode==='eva'?'HELMET':'COCKPIT'}${s.boosting ? '  ·  BOOST' : ''}`,
     );
-    setText(this.nearest, s.nearest ? `${s.nearest.name}  高度 ${fmtDist(s.nearest.altitude)} u` : '');
+    setText(this.nearest, s.nearest ? `${s.nearest.name}  高度 ${fmtDist(s.nearest.altitude)}` : '');
 
     // ターゲット
-    this.target.classList.toggle('empty', !s.target&&!s.stationTarget);
-    if(s.stationTarget){
+    this.target.classList.toggle('empty', !s.target&&!s.stationTarget&&!s.baseTarget);
+    if(s.baseTarget){
+      setText(this.tName,s.baseTarget.name);setText(this.tClass,'PRIMEの港町 / 着陸・補給・地上任務');setText(this.tDist,fmtDist(s.baseTarget.distance));setText(this.tState,s.operations.mode==='surface'?'E 端末 / H 搭乗':'PAD 01 / G LAND');this.tState.className='t-state';this.setStyle(this.tScanBar,'transform','scaleX(0)');
+    }else if(s.stationTarget){
       const t=s.stationTarget;
       setText(this.tName,t.name);setText(this.tClass,'LYRION PRIME / HOME STATION');
-      setText(this.tDist,`${fmtDist(t.distance)} u`);setText(this.tState,t.mode==='docked'?'係留中 / B MISSION CONTROL':`${t.relativeSpeed.toFixed(1)} u/s / T DOCK`);
+      setText(this.tDist,`${fmtDist(t.distance)}`);setText(this.tState,t.mode==='docked'?'係留中 / B MISSION CONTROL':`${t.relativeSpeed.toFixed(1)} m/s / T DOCK`);
       this.tState.className='t-state ready';this.setStyle(this.tScanBar,'transform',`scaleX(${t.mode==='docked'?1:Math.max(0,1-t.distance/200)})`);
     } else if (s.target) {
       const t = s.target;
       setText(this.tName, t.def.nameJa);
       setText(this.tClass, `${t.def.name}  ·  ${t.def.classLabel}`);
-      setText(this.tDist, `${fmtDist(t.dist)} u`);
+      setText(this.tDist, `${fmtDist(t.dist)}`);
       let st = '';
       if (t.scanned) st = 'SCANNED';
       else if (t.scanning) st = `SCANNING ${Math.round(t.progress * 100)}%`;
       else if (t.inRange) st = '[R] スキャン可能';
-      else st = `スキャン範囲 ${fmtDist(t.range)} u`;
+      else st = `スキャン範囲 ${fmtDist(t.range)}`;
       setText(this.tState, st);
       this.tState.className = `t-state ${t.scanned ? 'done' : t.scanning ? 'busy' : t.inRange ? 'ready' : ''}`;
       this.setStyle(this.tScanBar, 'transform', `scaleX(${t.scanned ? 1 : t.progress.toFixed(3)})`);
-    }
+    }else{setText(this.tName,'Tab / TGTで目的地を選択');setText(this.tClass,'');setText(this.tDist,'');setText(this.tState,'');this.setStyle(this.tScanBar,'transform','scaleX(0)');}
 
     this.updateMarkers(s.markers);
 
@@ -313,7 +339,7 @@ export class Hud {
       const shape = el.firstElementChild as HTMLElement;
       shape.style.transform = m.onScreen ? '' : `rotate(${((m.angle * 180) / Math.PI).toFixed(1)}deg)`;
       setText(el.children[1] as HTMLElement, m.label);
-      setText(el.children[2] as HTMLElement, `${fmtDist(m.dist)} u`);
+      setText(el.children[2] as HTMLElement, `${fmtDist(m.dist)}`);
     }
     for (const [k, el] of this.markers) {
       if (!seen.has(k)) {

@@ -261,6 +261,20 @@ export class AstronautModel {
     this.lastActive=eva.active;
   }
   /** Suitable for deterministic visual inspection without advancing physics. */
+  updateSurface(pose:EvaSystem,working:boolean,time:number,profile:QualityProfile):void{
+    this.update(pose,working,time,profile);
+    const speed=Math.min(1,Math.hypot(pose.localVelocity.x,pose.localVelocity.z)/2.3),phase=time*6.2;
+    for(let i=0;i<2;i++){
+      const swing=Math.sin(phase+i*Math.PI)*speed;
+      this.thighs[i].rotation.set(swing*.40,(i===0?-.02:.02),(i===0?-.025:.025));
+      this.shins[i].rotation.x=-Math.max(0,-swing)*.64;
+      this.upperArms[i].rotation.x=working?.75:-swing*.22+.07;
+      this.forearms[i].rotation.x=working?.65:.19;
+    }
+    this.rig.position.y=Math.abs(Math.sin(phase))*.018*speed;this.rig.rotation.x=0;
+    for(const jet of this.jets)jet.visible=false;
+  }
+
   resetPose():void {
     this.age=1;this.poseWork=0;for(let i=0;i<8;i++)this.setPose(.1,0,0,false,0);
   }
