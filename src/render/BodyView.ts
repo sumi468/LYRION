@@ -34,7 +34,7 @@ import {
 import { PROGRAM_CLOUD, PROGRAM_ID, createGlowTexture, createRingTexture, type BakedTexture, type TextureBaker } from './bake';
 import type { QualityProfile } from './quality';
 import { ProbeModel } from './ProbeModel';
-import {CELESTIAL_SCALE} from '../physics/worldScale';
+import {GAMEPLAY_SCALE as CELESTIAL_SCALE} from '../physics/worldScale';
 import {terrainTexture} from './terrainTexture';
 
 export interface ViewContext {
@@ -385,7 +385,7 @@ export class BodyView {
     (pu.uSunColor.value as Color).setRGB(sunCol.x, sunCol.y, sunCol.z);
 
     if (this.cloudMat && this.cloudMesh && d.clouds) {
-      const visible = ctx.profile.clouds && this.distance < d.radius * 500;
+      const visible = ctx.profile.clouds && this.distance < d.radius * 500 && !!this.cloudMat.uniforms.uMap.value;
       this.cloudMesh.visible = visible;
       const off = (d.clouds.drift * ctx.time) / (Math.PI * 2);
       pu.uCloudOffset.value = off;
@@ -401,7 +401,7 @@ export class BodyView {
       const au = this.atmoMat.uniforms;
       // The ground sky owns the inner column; avoid double scattering and
       // cancellation when subtracting squared planet-scale ray distances.
-      const groundBlend=d.homeworld?Math.max(0,Math.min(1,(this.distance-d.radius-20000)/60000)):1;
+      const groundBlend=d.homeworld?Math.max(0,Math.min(1,(this.distance-d.radius-d.radius*.12)/(d.radius*.24))):1;
       au.uStrength.value=d.atmosphere!.density*groundBlend;
       au.uCenter.value.copy(this.group.position);
       au.uSunDirW.value.copy(_sunDirW);

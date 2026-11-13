@@ -1,5 +1,7 @@
 # AGENTS.md — LYRION 作業ガイド（Codex / 他のコーディングエージェント向け）
 
+**v0.9.0-dev.4:** ユーザーが惑星・航路の縮小を明示的に依頼したため、現在の`BODY_DEFS`は遊びやすい小型星系です。1 u=1 mを維持し、`GAMEPLAY_SCALE=10`、PRIME半径5 km。旧v5の巨大星系は`METRIC_V5_BODY_DEFS`と`CELESTIAL_SCALE=10000`で移行専用に保持します。再度一律スケール変換しないこと。セーブv6は旧座標と回転・点速度を移行し、`lyrion.save.before-compact-v6`に旧原文を一度だけ退避します。現在の検証と街の仕様は`docs/CITY-COMPACT.md`。街の変更後は`npm run test:city`、`node tests/e2e/settlement-quality.mjs`、`npm run test:surface`を追加実行してください。
+
 開発版v0.9の引き継ぎは `docs/NEXTGEN-VALIDATION.md` と `docs/NEXT-GENERATION-PLAN.md` を確認してください。`BODY_DEFS` は既にメートル系です。再度スケール変換しないでください。`LEGACY_BODY_DEFS` と旧軌道はセーブ移行専用です。着陸・地上・EVAの高度には共通の `physics/terrain.ts` と表面基準系を使い、PRIMEの地上モードを無重力EVAと混ぜないでください。2026-11-13にユーザーからv0.9.0-dev.2の公開指示を受けています。開発版の実装範囲と未完了項目は最新の検証記録を参照してください。
 
 v0.9.0-dev.2の街・着陸・加速の記録は `docs/SETTLEMENT-QUALITY.md`。市街地の定義・外壁・道路の接地高さは `data/settlement.ts` を共有します。着陸HUDとGの許可条件は `LandingSystem.assess()` に一本化し、描画だけで許可を推測しないでください。`systems/propulsion.ts` がF・Xの優先順位と巡航・再充電条件を管理します。関連変更は既存E2Eに加え `node tests/e2e/settlement-quality.mjs` と `npm run test:surface` で、実際の判定・歩行・保存と両APIの画面を再確認してください。

@@ -1,0 +1,416 @@
+{
+  "time": "2026-11-13T10:12:05.291Z",
+  "build": {
+    "version": "0.9.0-dev.4",
+    "sourceRevision": "ae78eb645fc35abe084a746754e84b98d4b55998",
+    "sourceHash": "301b5cf1629db869f50e8ca9e61e5a6dade786aa4bad93fd68830bf49acfebb5",
+    "uncommittedChanges": true,
+    "builtAt": "2026-11-13T10:11:56.819Z"
+  },
+  "browser": "157.0.8103.51",
+  "headless": true,
+  "results": [
+    {
+      "name": "webgl2 実GPUで動作",
+      "ok": true
+    },
+    {
+      "name": "webgl2 未生成の雲テクスチャで白い殻を描画しない",
+      "ok": true
+    },
+    {
+      "name": "webgl2 小さな惑星と短い航路を実配信",
+      "ok": true,
+      "data": {
+        "prime": 5000,
+        "cindra": 1200,
+        "route": 50000
+      }
+    },
+    {
+      "name": "webgl2 CINDRAからTHALASSAへテレポートなしの通常推進で2分以内",
+      "ok": true,
+      "data": {
+        "arrived": true,
+        "seconds": 38.25,
+        "travelled": 83102.61849080278,
+        "hull": 100
+      }
+    },
+    {
+      "name": "webgl2 縮小後もPAD着陸・降機が成立",
+      "ok": true
+    },
+    {
+      "name": "webgl2 市内の6区画と用途が分かる",
+      "ok": true
+    },
+    {
+      "name": "webgl2 portへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          -21.999999999988834,
+          0.9049999999978056,
+          -74.00000000000256
+        ],
+        "distance": 77.20634057511005,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgl2 civicへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          -18.000000000015717,
+          0.9650000000046646,
+          -504.99999999999727
+        ],
+        "distance": 505.32161167418684,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgl2 marketへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          17.999999999982464,
+          0.9049999999980116,
+          -1000.0000000000025
+        ],
+        "distance": 1000.1623963262186,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgl2 habitatへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          618.0000000000819,
+          0.9649999999928554,
+          -905.0000000000223
+        ],
+        "distance": 1095.878611537401,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgl2 researchへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          -582.0000000000502,
+          0.9650000000067962,
+          -904.9999999999872
+        ],
+        "distance": 1075.9878861887967,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgl2 industryへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          -981.9999999999714,
+          0.9649999999963939,
+          -1305.0000000000168
+        ],
+        "distance": 1633.2023546471476,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgl2 シャトルは機体・DATA・歩行の任務進捗を移動しない",
+      "ok": true
+    },
+    {
+      "name": "webgl2 researchの端末を徒歩とEで利用",
+      "ok": true
+    },
+    {
+      "name": "webgl2 civicの端末を徒歩とEで利用",
+      "ok": true
+    },
+    {
+      "name": "webgl2 industryの端末を徒歩とEで利用",
+      "ok": true
+    },
+    {
+      "name": "webgl2 拡張都市で実時間FPSと描画予算を確認",
+      "ok": true,
+      "data": {
+        "fps": 176.09267334712524,
+        "p95": 6.099999999998545,
+        "gpuMs": null,
+        "calls": 174,
+        "triangles": 842270
+      }
+    },
+    {
+      "name": "webgl2 街に交通・歩行者があり現在地の区画を表示",
+      "ok": true,
+      "data": {
+        "instances": 306,
+        "text": "PORT LYRA / 行政・商業センター"
+      }
+    },
+    {
+      "name": "webgl2 市内からの保存再開は安全に駐機船へ戻る",
+      "ok": true
+    },
+    {
+      "name": "webgpu 実GPUで動作",
+      "ok": true
+    },
+    {
+      "name": "webgpu 未生成の雲テクスチャで白い殻を描画しない",
+      "ok": true
+    },
+    {
+      "name": "WebGPUの雲量40%が不透明な全球の殻にならない",
+      "ok": true,
+      "data": {
+        "mean": 0.18828952265720741,
+        "low": 0,
+        "high": 255
+      }
+    },
+    {
+      "name": "webgpu 小さな惑星と短い航路を実配信",
+      "ok": true,
+      "data": {
+        "prime": 5000,
+        "cindra": 1200,
+        "route": 50000
+      }
+    },
+    {
+      "name": "webgpu CINDRAからTHALASSAへテレポートなしの通常推進で2分以内",
+      "ok": true,
+      "data": {
+        "arrived": true,
+        "seconds": 38.25,
+        "travelled": 83102.61849080278,
+        "hull": 100
+      }
+    },
+    {
+      "name": "webgpu 縮小後もPAD着陸・降機が成立",
+      "ok": true
+    },
+    {
+      "name": "webgpu 市内の6区画と用途が分かる",
+      "ok": true
+    },
+    {
+      "name": "webgpu portへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          -21.999999999988834,
+          0.9049999999978056,
+          -74.00000000000256
+        ],
+        "distance": 77.20634057511005,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgpu civicへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          -18.000000000015717,
+          0.9650000000046646,
+          -504.99999999999727
+        ],
+        "distance": 505.32161167418684,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgpu marketへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          17.999999999982464,
+          0.9049999999980116,
+          -1000.0000000000025
+        ],
+        "distance": 1000.1623963262186,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgpu habitatへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          618.0000000000819,
+          0.9649999999928554,
+          -905.0000000000223
+        ],
+        "distance": 1095.878611537401,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgpu researchへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          -582.0000000000502,
+          0.9650000000067962,
+          -904.9999999999872
+        ],
+        "distance": 1075.9878861887967,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgpu industryへシャトルで移動し接地を維持",
+      "ok": true,
+      "data": {
+        "finite": true,
+        "grounded": true,
+        "local": [
+          -981.9999999999714,
+          0.9649999999963939,
+          -1305.0000000000168
+        ],
+        "distance": 1633.2023546471476,
+        "phase": "playing"
+      }
+    },
+    {
+      "name": "webgpu シャトルは機体・DATA・歩行の任務進捗を移動しない",
+      "ok": true
+    },
+    {
+      "name": "webgpu researchの端末を徒歩とEで利用",
+      "ok": true
+    },
+    {
+      "name": "webgpu civicの端末を徒歩とEで利用",
+      "ok": true
+    },
+    {
+      "name": "webgpu industryの端末を徒歩とEで利用",
+      "ok": true
+    },
+    {
+      "name": "webgpu 拡張都市で実時間FPSと描画予算を確認",
+      "ok": true,
+      "data": {
+        "fps": 168.0924008933886,
+        "p95": 6.100000000002183,
+        "gpuMs": 0.65536,
+        "calls": 177,
+        "triangles": 868783
+      }
+    },
+    {
+      "name": "webgpu 街に交通・歩行者があり現在地の区画を表示",
+      "ok": true,
+      "data": {
+        "instances": 306,
+        "text": "PORT LYRA / 行政・商業センター"
+      }
+    },
+    {
+      "name": "webgpu 市内からの保存再開は安全に駐機船へ戻る",
+      "ok": true
+    },
+    {
+      "name": "現行公開版v5の実セーブを移行しDATA・調査・ミッション・着陸を維持",
+      "ok": true,
+      "data": {
+        "version": 6,
+        "backup": "{\"version\":5,\"savedAt\":1794563408446,\"time\":19.000000000000135,\"playSeconds\":19.000000000000135,\"pos\":[82528821.61364329,-879807.6527628356,69502996.7906139],\"vel\":[-4.0342018437210685,-0.3423085190776219,4.787902956352486],\"quat\":[0.3765978621164321,-0.6725924507761882,0.5998665964212997,0.214367702572331],\"hull\":100,\"shield\":60,\"kills\":0,\"landed\":{\"bodyId\":\"lyrion-prime\",\"normal\":[-0.7105242049730839,0.2802067287217796,-0.645476214376956]},\"landings\":[\"lyrion-prime\"],\"energy\":100,\"data\":55,\"totalData\":55,\"upgrades\":{\"engine\":0,\"boost\":0,\"scan\":0,\"energy\":0},\"upgradesBought\":0,\"detected\":[\"lyrion\",\"cindra\",\"thalassa\",\"aurelion\",\"lyrion-prime\",\"halcyon\"],\"scanned\":{\"cindra\":3.5499999999999954},\"missionIndex\":1,\"assist\":true,\"cameraMode\":\"third\",\"homecoming\":{\"activeId\":\"first-departure\",\"tracked\":true,\"accepted\":[],\"completed\":{},\"objectives\":[],\"investigated\":{},\"stabilizeSeconds\":0,\"docked\":false,\"wasEva\":false},\"surfaceProgress\":{\"active\":false,\"step\":0,\"walked\":0,\"inspected\":false,\"sampled\":false,\"reported\":false,\"rewarded\":false}}",
+        "data": 55,
+        "total": 55,
+        "mission": 1,
+        "scanned": [
+          [
+            "cindra",
+            3.5499999999999954
+          ]
+        ],
+        "landed": "landed",
+        "position": [
+          80967.78868804465,
+          -896.375370127054,
+          68358.06101064396
+        ]
+      }
+    },
+    {
+      "name": "タッチMAPから住宅街へ移動可能",
+      "ok": true
+    },
+    {
+      "name": "ページ・描画エラーなし",
+      "ok": true,
+      "data": []
+    }
+  ],
+  "errors": [],
+  "performanceSamples": [
+    {
+      "backend": "webgl2",
+      "viewport": [
+        1280,
+        800
+      ],
+      "quality": "medium",
+      "scene": "expanded city street",
+      "sampleMs": 3000,
+      "fps": 176.09267334712524,
+      "p95": 6.099999999998545,
+      "gpuMs": null,
+      "calls": 174,
+      "triangles": 842270
+    },
+    {
+      "backend": "webgpu",
+      "viewport": [
+        1280,
+        800
+      ],
+      "quality": "medium",
+      "scene": "expanded city street",
+      "sampleMs": 3000,
+      "fps": 168.0924008933886,
+      "p95": 6.100000000002183,
+      "gpuMs": 0.65536,
+      "calls": 177,
+      "triangles": 868783
+    }
+  ]
+}

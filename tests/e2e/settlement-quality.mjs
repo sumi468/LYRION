@@ -47,7 +47,7 @@ try{
   await page.screenshot({path:`docs/screenshots/settlement-${backend}-blocked.png`});
   await page.evaluate(()=>window.__lyrion.debugSurface(200,0,-250));await tick(page);await page.evaluate(()=>window.__lyrion.toggleLanding());
   check(`${backend} 市街地の道路も着陸場所として案内しない`,await page.evaluate(()=>window.__lyrion.landing.mode==='flight'&&window.__lyrion.snapshot().landingGuide.reason.includes('市街地')));
-  await page.evaluate(()=>window.__lyrion.debugSurface(120,2500,0));await tick(page);await page.evaluate(()=>window.__lyrion.toggleLanding());
+  await page.evaluate(()=>window.__lyrion.debugSurface(120,4000,0));await tick(page);await page.evaluate(()=>window.__lyrion.toggleLanding());
   check(`${backend} 海面を明示して着陸を拒否`,await page.evaluate(()=>window.__lyrion.snapshot().landingGuide.terrain==='water'&&window.__lyrion.landing.mode==='flight'));
   await page.evaluate(()=>window.__lyrion.debugSurface(120,400,50));await tick(page);
   check(`${backend} 自由探索の平坦な野外着陸を維持`,await page.evaluate(()=>window.__lyrion.snapshot().landingGuide.ready&&!window.__lyrion.landing.assess(window.__lyrion.state,window.__lyrion.positions,window.__lyrion.velocities).onPad));
@@ -57,7 +57,7 @@ try{
    const g=window.__lyrion,t=g.terrains.get('lyrion-prime');let count=0,minDot=1;
    for(const chunk of t.chunks.values())if(chunk.mesh.visible){const geo=chunk.mesh.geometry,p=geo.getAttribute('position'),n=geo.getAttribute('normal'),stride=t.grid+1;
     for(let y=0;y<stride;y++)for(let x=0;x<stride;x++)if(x===0||y===0||x===stride-1||y===stride-1){const i=x+y*stride,point=chunk.anchor.clone().set(p.getX(i)+chunk.anchor.x,p.getY(i)+chunk.anchor.y,p.getZ(i)+chunk.anchor.z),world=point.clone().applyQuaternion(t.rotation).add(g.positions['lyrion-prime']);g.baseFrame.toLocal(world,world);
-     if(Math.hypot(world.x,world.z)<500){point.normalize();const dot=point.x*n.getX(i)+point.y*n.getY(i)+point.z*n.getZ(i);minDot=Math.min(minDot,dot);count++;}
+     if(Math.hypot(world.x,world.z)<500&&Math.abs(world.y)<1){point.set(n.getX(i),n.getY(i),n.getZ(i)).applyQuaternion(t.rotation).applyQuaternion(g.baseFrame.rotation.clone().invert());const dot=point.y;minDot=Math.min(minDot,dot);count++;}
     }
    }return{count,minDot};
   });check(`${backend} 基地の地形境界にスカート由来の暗い法線がない`,seamNormals.count>0&&seamNormals.minDot>.9999,seamNormals);

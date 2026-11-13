@@ -1,6 +1,6 @@
 {
   "name": "lyrion-beyond-the-stars",
-  "version": "0.9.0-dev.3",
+  "version": "0.9.0-dev.4",
   "private": true,
   "type": "module",
   "engines": {
@@ -30,7 +30,8 @@
     "test:combat": "node tests/e2e/combat-landing.mjs",
     "test:gpu": "node tests/e2e/gpu.mjs",
     "test:soak": "node tests/e2e/soak.mjs",
-    "test:launcher": "node tests/e2e/launcher.mjs"
+    "test:launcher": "node tests/e2e/launcher.mjs",
+    "test:city": "node tests/e2e/city-scale.mjs"
   },
   "dependencies": {
     "three": "0.186.0"

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-13T08:59:44.925Z",
+  "timestamp": "2026-11-13T10:15:33.480Z",
   "url": "http://127.0.0.1:4187/?debug&renderer=webgl2",
   "results": [
     {
@@ -70,10 +70,10 @@
       "name": "ブースト逃走後も追撃機が消えず、高速の自機へ追いつく",
       "ok": true,
       "data": {
-        "speed": 354.033026829056,
+        "speed": 354.03302485218535,
         "count": 3,
         "rear": 1,
-        "minDistance": 197.5231297469983
+        "minDistance": 197.50341573382252
       }
     },
     {
@@ -84,7 +84,7 @@
       "name": "追撃戦を実GPU・1080pの通常ループで描画",
       "ok": true,
       "data": {
-        "fps": 172.293248103303,
+        "fps": 174.34309121790395,
         "p95Ms": 6.100000000000364,
         "minimumEnemies": 4
       }
@@ -107,12 +107,12 @@
       "ok": true,
       "data": {
         "before": {
-          "geometries": 39,
-          "textures": 20
+          "geometries": 60,
+          "textures": 22
         },
         "after": {
-          "geometries": 39,
-          "textures": 20
+          "geometries": 60,
+          "textures": 22
         }
       }
     },
@@ -130,7 +130,7 @@
     "hardware": true
   },
   "frames": {
-    "fps": 172.293248103303,
+    "fps": 174.34309121790395,
     "p95Ms": 6.100000000000364,
     "minimumEnemies": 4
   }

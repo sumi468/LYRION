@@ -4,6 +4,9 @@ import { createPositionTable, updateBodyPositions, updateBodyVelocities } from '
 
 /** World/local distances are metres. Celestial data from saves1–4 used the old compact system. */
 export const CELESTIAL_SCALE = 10_000;
+/** Compact game world: 1 u stays 1 metre; only celestial content is smaller.
+ * CELESTIAL_SCALE remains the historical v5 scale for lossless save migration. */
+export const GAMEPLAY_SCALE = 10;
 export const METRES_PER_WORLD_UNIT = 1;
 export const SURFACE_EYE_HEIGHT = 1.72;
 const axisY = new Vector3(0,1,0),axisZ = new Vector3(0,0,1),spinRotation = new Quaternion();
@@ -32,6 +35,14 @@ export function metricBodies(legacy: readonly BodyDef[], scale = CELESTIAL_SCALE
   });
 }
 
+export function playableBodies(legacy:readonly BodyDef[]):BodyDef[]{
+  return metricBodies(legacy,GAMEPLAY_SCALE).map(body=>({...body,
+    radius:body.homeworld?5000:body.radius,
+    clouds:body.clouds?{...body.clouds,height:Math.max(body.clouds.height,(body.homeworld?850:350)/(body.homeworld?5000:body.radius))}:undefined,
+    atmosphere:body.atmosphere?{...body.atmosphere,height:Math.max(body.atmosphere.height,Math.min(.3,900/(body.homeworld?5000:body.radius)))}:undefined,
+  }));
+}
+
 /** Match the same axial-tilt/spin order as BodyView. No integrated rotation state. */
 export function bodyRotation(body: Pick<BodyDef,'axialTilt'|'rotationPeriod'>, time: number, out: Quaternion): Quaternion {
   return out.setFromAxisAngle(axisZ,body.axialTilt).multiply(spinRotation.setFromAxisAngle(axisY,time*Math.PI*2/body.rotationPeriod));
@@ -51,13 +62,14 @@ export function formatDistance(metres: number): string {
 export interface MigrationAnchor {
   id:string;oldPosition:Vector3;position:Vector3;oldVelocity:Vector3;velocity:Vector3;range:number;
   oldRotation?:Quaternion;rotation?:Quaternion;
+  oldAngularVelocity?:Vector3;angularVelocity?:Vector3;
 }
 export interface MigratedPose {position:Vector3;velocity:Vector3;reference:string|null;orientationDelta:Quaternion|null}
 
 /** Migration-time allocation is intentional; ordinary frame updates use preallocated frame data.
  * Preserve metre-scale clearances near surfaces/hardware and normalized orbital position farther away.
  */
-export function migrateCompactPose(position:Vector3,velocity:Vector3,time:number,legacy:readonly BodyDef[],metric:readonly BodyDef[],anchors:readonly MigrationAnchor[]=[]):MigratedPose {
+export function migrateCompactPose(position:Vector3,velocity:Vector3,time:number,legacy:readonly BodyDef[],metric:readonly BodyDef[],anchors:readonly MigrationAnchor[]=[],scale=CELESTIAL_SCALE,nearSurfaceRange=450):MigratedPose {
   const oldPositions=createPositionTable(legacy),newPositions=createPositionTable(metric);
   const oldVelocities=createPositionTable(legacy),newVelocities=createPositionTable(metric);
   updateBodyPositions(legacy,time,oldPositions);updateBodyPositions(metric,time,newPositions);
@@ -65,22 +77,28 @@ export function migrateCompactPose(position:Vector3,velocity:Vector3,time:number
   updateBodyVelocities(metric,time,newPositions,createPositionTable(metric),newVelocities);
   let nearest:BodyDef|null=null,surfaceDistance=Infinity;
   for(const body of legacy){if(body.radius<=0)continue;const d=position.distanceTo(oldPositions[body.id])-body.radius;if(d<surfaceDistance){nearest=body;surfaceDistance=d;}}
-  const result={position:position.clone().multiplyScalar(CELESTIAL_SCALE),velocity:velocity.clone().multiplyScalar(CELESTIAL_SCALE),reference:null as string|null,orientationDelta:null as Quaternion|null};
+  const result={position:position.clone().multiplyScalar(scale),velocity:velocity.clone(),reference:null as string|null,orientationDelta:null as Quaternion|null};
   let anchor:MigrationAnchor|null=null,anchorDistance=Infinity;
-  for(const candidate of anchors){const d=position.distanceTo(candidate.oldPosition);if(d<=candidate.range&&d<anchorDistance&&d<surfaceDistance){anchor=candidate;anchorDistance=d;}}
+  for(const candidate of anchors){const d=position.distanceTo(candidate.oldPosition);if(d<=candidate.range&&d<anchorDistance&&(d<surfaceDistance||candidate.id==='prime-base')){anchor=candidate;anchorDistance=d;}}
   if(anchor){
     result.position.copy(position).sub(anchor.oldPosition);result.velocity.copy(velocity).sub(anchor.oldVelocity);
+    if(anchor.oldAngularVelocity)result.velocity.sub(new Vector3().crossVectors(anchor.oldAngularVelocity,result.position));
     if(anchor.oldRotation&&anchor.rotation){result.orientationDelta=anchor.rotation.clone().multiply(anchor.oldRotation.clone().invert());result.position.applyQuaternion(result.orientationDelta);result.velocity.applyQuaternion(result.orientationDelta);}
+    if(anchor.angularVelocity)result.velocity.add(new Vector3().crossVectors(anchor.angularVelocity,result.position));
     result.position.add(anchor.position);result.velocity.add(anchor.velocity);result.reference=anchor.id;return result;
   }
-  if(nearest&&(surfaceDistance<=450||nearest.kind==='anomaly')){
+  if(nearest&&(surfaceDistance<=nearSurfaceRange||nearest.kind==='anomaly')){
     const next=metric.find(body=>body.id===nearest!.id)!;
     const direction=position.clone().sub(oldPositions[nearest.id]);if(direction.lengthSq()<1e-10)direction.set(0,1,0);direction.normalize();
     result.orientationDelta=bodyRotation(next,time,new Quaternion()).multiply(bodyRotation(nearest,time,new Quaternion()).invert());direction.applyQuaternion(result.orientationDelta);
     result.position.copy(newPositions[nearest.id]).addScaledVector(direction,next.radius+Math.max(8,surfaceDistance));
-    result.velocity.copy(velocity).sub(oldVelocities[nearest.id]).add(newVelocities[nearest.id]);result.reference=nearest.id;
+    if(scale<1){
+      const previousPointVelocity=bodyPointVelocity(nearest,position,oldPositions[nearest.id],oldVelocities[nearest.id],new Vector3());
+      const currentPointVelocity=bodyPointVelocity(next,result.position,newPositions[nearest.id],newVelocities[nearest.id],new Vector3());
+      result.velocity.copy(velocity).sub(previousPointVelocity).applyQuaternion(result.orientationDelta).add(currentPointVelocity);
+    }else result.velocity.copy(velocity).sub(oldVelocities[nearest.id]).add(newVelocities[nearest.id]);result.reference=nearest.id;
   }else if(nearest){
-    result.position.copy(position).sub(oldPositions[nearest.id]).multiplyScalar(CELESTIAL_SCALE).add(newPositions[nearest.id]);
+    result.position.copy(position).sub(oldPositions[nearest.id]).multiplyScalar(scale).add(newPositions[nearest.id]);
     result.velocity.copy(velocity).sub(oldVelocities[nearest.id]).add(newVelocities[nearest.id]);
   }
   return result;

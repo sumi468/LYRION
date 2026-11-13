@@ -1,6 +1,7 @@
 import type {Game} from '../core/Game';
 import {BODY_DEFS,BODY_BY_ID} from '../data/starSystem';
 import {TRAVEL_DESTINATIONS} from '../systems/travel';
+import {CITY_STOPS,SETTLEMENT_BUILDINGS} from '../data/settlement';
 import {fmtDist,h} from './dom';
 
 export function starMap(game:Game,selectedId:string,select:(id:string)=>void,arrive:()=>void):HTMLElement{
@@ -18,6 +19,13 @@ export function starMap(game:Game,selectedId:string,select:(id:string)=>void,arr
  const reason=game.travelBlockReason(selected.id),p=game.travelPosition(selected.id)!;
  const def=BODY_BY_ID[selected.id];
  return h('div',{class:'map-body'},
+  game.surface.active?h('section',{class:'city-transit'},
+   h('div',{class:'label'},'PORT LYRA / CITY TRANSIT'),h('h2',{},'市内シャトル・区画案内'),
+   h('p',{},`約2 kmに広がる${SETTLEMENT_BUILDINGS.length}棟の街。区画を選ぶと無料で移動します。LX-07は宇宙港に駐機したままです。`),
+   h('div',{class:'city-stop-list'},...CITY_STOPS.map((stop,i)=>h('button',{class:'city-stop','data-city-stop':stop.id,disabled:!game.cityTravelAvailable(),onclick:()=>{if(game.cityTravelTo(stop.id))game.resume();}},
+    h('strong',{},`${String(i+1).padStart(2,'0')} / ${stop.name}`),h('span',{},stop.detail),h('small',{},'シャトルで移動 →'),
+   ))),h('p',{class:'dim small'},'街の外では利用できません。惑星間の移動は宇宙港へ戻り、Hで搭乗・Gで離陸してから。'),
+  ):null,
   h('p',{class:'map-intro'},'移動先を選んでテレポート。料金・クールダウンなし。調査・採取・報告は到着後に行います。'),
   h('div',{class:'map-layout'},h('div',{class:'map-overview'},chart,list),h('section',{class:'map-detail'},
    h('div',{class:'label'},'DESTINATION'),h('h2',{},selected.name),h('p',{},selected.detail),

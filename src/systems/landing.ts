@@ -7,7 +7,7 @@ import {terrainHeight,surfaceAltitude} from '../physics/terrain';
 import {ReferenceFrame} from '../physics/frames';
 import {updateSurfaceFrame} from '../physics/surfaceFrame';
 import {BASE_SOLIDS} from '../data/surfaceCampaign';
-import {PAD_LANDING_RADIUS,cityLandingRestricted} from '../data/settlement';
+import {PAD_LANDING_RADIUS,CITY_COLLISION_RANGE,cityLandingRestricted} from '../data/settlement';
 import {PRIME_BASE_NORMAL} from '../physics/terrain';
 
 export interface LandingRecord { bodyId: string; normal: [number,number,number] }
@@ -77,7 +77,7 @@ export class LandingSystem {
       updateSurfaceFrame(def,PRIME_BASE_NORMAL,s.time,positions[def.id],velocities[def.id],this.baseFrame);
       this.baseFrame.toLocal(s.pos,local);a.padDistance=Math.hypot(local.x,local.z);a.onPad=a.padDistance<=PAD_LANDING_RADIUS;
       inCity=cityLandingRestricted(local.x,local.z);if(inCity)a.terrain='obstacle';
-      if(a.padDistance<800)for(const solid of BASE_SOLIDS){
+      if(a.padDistance<CITY_COLLISION_RANGE)for(const solid of BASE_SOLIDS){
         const dx=Math.max(solid.min[0]-local.x,0,local.x-solid.max[0]),dz=Math.max(solid.min[2]-local.z,0,local.z-solid.max[2]);
         if(dx*dx+dz*dz<LANDING_FOOTPRINT**2){a.terrain='obstacle';break;}
       }

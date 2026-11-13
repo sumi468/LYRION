@@ -1,12 +1,17 @@
 import type {SolidBox} from './homeworld';
 import {SETTLEMENT_SOLIDS} from './settlement';
 export const PRIME_BASE_ID='prime-base';
+export const SURFACE_ENTRY_ALTITUDE=2000,ORBIT_RETURN_ALTITUDE=3500;
 export const BASE_FACILITIES=[
  {id:'control',name:'MISSION CONTROL',description:'任務の受注・成果報告',position:[-35,0,22]},
  {id:'research',name:'SURFACE LAB',description:'地上観測記録・探査アーカイブ',position:[-34,0,-24]},
  {id:'repair',name:'SERVICE BAY',description:'LX-07の修理・燃料と電力の補給',position:[28,0,8]},
  {id:'comms',name:'COMMS ARRAY',description:'軌道基地との通信・機体アップグレード',position:[35,0,-32]},
  {id:'geology',name:'COASTAL OUTCROP',description:'地質調査・岩石試料の採取',position:[23,0,-38]},
+ {id:'city-control',service:'control',name:'CIVIC MISSION CONTROL',description:'市庁舎の任務受付・成果報告',position:[-25,0,-505]},
+ {id:'city-research',service:'research',name:'CITY SCIENCE ARCHIVE',description:'研究記録・探査アーカイブ',position:[-575,0,-905]},
+ {id:'city-comms',service:'comms',name:'SHIP SYSTEMS EXCHANGE',description:'機体アップグレード',position:[-575,0,-885]},
+ {id:'city-repair',service:'repair',name:'PORT LOGISTICS',description:'駐機中のLX-07へ遠隔補給',position:[-975,0,-1305]},
 ] as const;
 export const BASE_SOLIDS:readonly SolidBox[]=[
  ...SETTLEMENT_SOLIDS,
@@ -28,5 +33,5 @@ export const FIRST_STEPS=[
  {text:'露頭から岩石試料を採取する',hint:'同じ場所でもう一度E / 調査。試料を容器に密封します',target:'geology'},
  {text:'地上MISSION CONTROLで成果を報告する',hint:'コントロール端末の3.5 m以内でE / 調査',target:'control'},
  {text:'LX-07のハッチへ戻り、搭乗する',hint:'機体左側のハッチから5 m以内でH / 搭乗',target:'ship'},
- {text:'離陸し、高度120 kmから軌道を確認する',hint:'G / LANDで離陸。機首を空へ向け、W / Fで上昇します',target:'orbit'},
+ {text:'離陸し、高度3.5 kmから軌道を確認する',hint:'G / LANDで離陸。機首を空へ向け、W / Fで上昇します',target:'orbit'},
 ] as const;

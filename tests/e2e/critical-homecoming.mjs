@@ -48,7 +48,7 @@ try{
  // Install the migration fixture after the outgoing page's beforeunload autosave.
  await page.addInitScript(raw=>localStorage.setItem('lyrion.save.v1',JSON.stringify(raw)),legacy);
  await page.reload();await page.waitForFunction(()=>window.__lyrion?.phase==='menu',null,{timeout:120000});
- check('旧セーブを新座標へ移行し向き・DATA・戦闘・既存ミッションを維持',await page.evaluate(raw=>{const s=window.__lyrion.state;return s.pos.toArray().every(Number.isFinite)&&s.pos.length()>1000000&&s.quat.toArray().every((v,i)=>Math.abs(v-raw.quat[i])<1e-12)&&s.data===321&&s.kills===7&&s.missionIndex===4&&s.scanned.size===2&&s.upgrades.engine===1;},legacy));
+ check('旧セーブを新座標へ移行し向き・DATA・戦闘・既存ミッションを維持',await page.evaluate(raw=>{const s=window.__lyrion.state;return s.pos.toArray().every(Number.isFinite)&&s.pos.length()>1000&&s.pos.length()<1000000&&s.quat.toArray().every((v,i)=>Math.abs(v-raw.quat[i])<1e-12)&&s.data===321&&s.kills===7&&s.missionIndex===4&&s.scanned.size===2&&s.upgrades.engine===1;},legacy));
  const migratedPose=await page.evaluate(()=>window.__lyrion.state.pos.toArray());
  await page.getByRole('button',{name:'MISSION CONTROL / 遠征',exact:true}).click();
  check('旧セーブを読み込んでも新6ミッションの一覧が消えない',await page.locator('.expedition-card').count()===6);

@@ -60,7 +60,12 @@ export function nativeShader(kind:ShaderProgram,source:ShaderMaterial,fallback:T
   if(program===10){
    const nebula=fbm(p.mul(3.8).add(vec3(4,7,2)),5),filament=pow(max(float(0),float(.52).sub(abs(p.y.add(p.x.mul(.35)).add(p.z.mul(.18))))),3);
    color=mix(vec3(.008,.012,.024),mix(vec3(.10,.045,.14),vec3(.035,.13,.16),noise(p.mul(5))),nebula).add(filament.mul(nebula).mul(.45));
-  }else if(program===6){alpha=smoothstep(u('uSea').sub(.13),u('uSea').add(.15),h.add(noise(q.mul(4)).mul(.15)));color=vec3(.9,.94,1);}
+  }else if(program===6){
+   // Coverage is the occupied fraction, so both backends threshold at 1-sea.
+   // The former inverted threshold made PRIME's 40% cover nearly opaque.
+   const cloud=fbm(p.mul(5).add(vec3(seed.mul(.13))),5).mul(.78).add(fbm(p.mul(13).add(vec3(seed.mul(.37))),4).mul(.22));
+   alpha=smoothstep(float(1).sub(u('uSea')).sub(.14),float(1).sub(u('uSea')).add(.08),cloud);color=vec3(1);
+  }
   else if(program===3){const bands=sin(p.y.mul(38).add(fbm(p.mul(7)).mul(5))).mul(.5).add(.5);color=mix(u('uC0'),u('uC1'),bands).mul(.7).add(u('uC2').mul(pow(h,3)));alpha=h;}
   else {
    color=mix(u('uC0'),u('uC1'),smoothstep(.2,.7,h));color=mix(color,u('uC2'),smoothstep(.6,.9,h));alpha=h;
@@ -93,7 +98,7 @@ export function nativeShader(kind:ShaderProgram,source:ShaderMaterial,fallback:T
   if('USE_CITY' in source.defines){const cell=uv().mul(vec2(620,310)),district=floor(cell.div(5)),settlement=step(.9,fract(sin(dot(district,vec2(127.1,311.7))).mul(43758.5453)));const lamp=fract(cell).sub(.5),lights=exp(dot(lamp,lamp).mul(-48)).mul(settlement),land=smoothstep(u('uSea').add(.018),u('uSea').add(.05),h).mul(float(1).sub(smoothstep(.8,.88,h)));color=color.add(vec3(1,.65,.25).mul(lights).mul(land).mul(float(1).sub(smoothstep(-.25,.05,geo))).mul(.75));}
  }else if(kind==='cloud'){
   const t=tex('uMap',vec2(uv().x.add(u('uOffset')),uv().y)),lit=max(dot(n,normalize(u('uSunDirV'))),0);
-  color=t.rgb.mul(u('uSunColor').mul(lit).add(u('uAmbient')));alpha=t.a.mul(.82);
+  color=t.rgb.mul(u('uSunColor').mul(lit).add(u('uAmbient')));alpha=t.a.mul(.72);
  }else if(kind==='atmosphere'){
   const oc=cameraPosition.sub(u('uCenter')),rd=normalize(positionWorld.sub(cameraPosition)),tc=dot(oc,rd).negate(),b2=dot(oc,oc).sub(tc.mul(tc));
   const ra=u('uRa'),rp=u('uRp'),half=ra.mul(ra).sub(b2).max(0).sqrt(),start=max(tc.sub(half),0);

@@ -1,4 +1,4 @@
-import {FIRST_STEPS,FIRST_STEPS_REWARD} from '../data/surfaceCampaign';
+import {FIRST_STEPS,FIRST_STEPS_REWARD,SURFACE_ENTRY_ALTITUDE,ORBIT_RETURN_ALTITUDE} from '../data/surfaceCampaign';
 export interface SurfaceProgress{active:boolean;step:number;walked:number;inspected:boolean;sampled:boolean;reported:boolean;rewarded:boolean}
 export const createSurfaceProgress=():SurfaceProgress=>({active:false,step:0,walked:0,inspected:false,sampled:false,reported:false,rewarded:false});
 export function sanitizeSurfaceProgress(raw:unknown):SurfaceProgress{
@@ -13,7 +13,7 @@ export function sanitizeSurfaceProgress(raw:unknown):SurfaceProgress{
 export interface SurfaceContext{nearPrime:boolean;altitude:number;landedPrime:boolean;onFoot:boolean;grounded:boolean;walked:number}
 export function advanceSurfaceCampaign(s:SurfaceProgress,c:SurfaceContext):number{
  if(!s.active)return 0;s.walked=Math.max(s.walked,c.walked);
- const ready=[c.nearPrime&&c.altitude<30000,c.landedPrime,c.onFoot&&c.grounded,s.walked>=12,s.inspected,s.sampled,s.reported,!c.onFoot&&c.landedPrime,c.nearPrime&&!c.landedPrime&&!c.onFoot&&c.altitude>=120000];
+ const ready=[c.nearPrime&&c.altitude<SURFACE_ENTRY_ALTITUDE,c.landedPrime,c.onFoot&&c.grounded,s.walked>=12,s.inspected,s.sampled,s.reported,!c.onFoot&&c.landedPrime,c.nearPrime&&!c.landedPrime&&!c.onFoot&&c.altitude>=ORBIT_RETURN_ALTITUDE];
  if(s.step<FIRST_STEPS.length&&ready[s.step])s.step++;
  if(s.step===FIRST_STEPS.length&&!s.rewarded){s.rewarded=true;return FIRST_STEPS_REWARD;}return 0;
 }

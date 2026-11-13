@@ -51,9 +51,9 @@ export class PrimeBase{
   for(let i=0;i<parts.length;i++){if(!parts[i].length)continue;const geometry=mergeParts(parts[i]);this.geos.push(geometry);this.group.add(new Mesh(geometry,this.mats[i]));}
   this.group.name='PRIME / Home base';
  }
- update(frame:ReferenceFrame,origin:Vector3,viewer:Vector3,detailDistance=3500):void{
+ update(frame:ReferenceFrame,origin:Vector3,viewer:Vector3,detailDistance=3500,time=0):void{
   this.group.visible=viewer.distanceToSquared(frame.position)<180000**2;
-  if(this.group.visible){this.group.position.copy(frame.position).sub(origin);this.group.quaternion.copy(frame.rotation);this.town.update(viewer.distanceTo(frame.position),detailDistance);}
+  if(this.group.visible){this.group.position.copy(frame.position).sub(origin);this.group.quaternion.copy(frame.rotation);this.town.update(viewer.distanceTo(frame.position),detailDistance,time);}
  }
  dispose(){this.pad.dispose();this.town.dispose();for(const geometry of this.geos)geometry.dispose();for(const material of this.mats)material.dispose();this.group.clear();}
 }

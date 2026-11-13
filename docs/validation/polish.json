@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-13T08:59:54.295Z",
+  "timestamp": "2026-11-13T10:15:43.293Z",
   "url": "http://127.0.0.1:4188/?debug&renderer=webgl2",
   "results": [
     {
@@ -8,9 +8,9 @@
       "data": {
         "enabled": true,
         "visible": true,
-        "text": "176 FPS5.7 msHIGH · WebGL 2",
-        "fps": 175.99999999999997,
-        "frameMs": 5.681818181818183
+        "text": "173 FPS5.8 msHIGH · WebGL 2",
+        "fps": 173.43318880567608,
+        "frameMs": 5.765909090909088
       }
     },
     {

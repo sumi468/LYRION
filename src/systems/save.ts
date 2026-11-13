@@ -1,12 +1,14 @@
 import { Quaternion, Vector3 } from 'three';
 import { SHIELD_MAX } from '../data/combat';
 import { canLand, type LandingRecord } from './landing';
-import { BODY_BY_ID, BODY_DEFS, LEGACY_BODY_DEFS, INITIAL_DETECTED } from '../data/starSystem';
+import { BODY_BY_ID, BODY_DEFS, LEGACY_BODY_DEFS, METRIC_V5_BODY_DEFS, INITIAL_DETECTED } from '../data/starSystem';
 import {LEGACY_STATION_ORBIT,STATION_ORBIT,LEGACY_SATELLITE_ORBIT,SATELLITE_ORBIT,LEGACY_DEEP_ORBIT,DEEP_ORBIT} from '../data/homeworld';
 import {createPositionTable,updateBodyPositions,updateBodyVelocities} from '../physics/orbits';
 import {ReferenceFrame,orbitalFrame} from '../physics/frames';
-import {migrateCompactPose,bodyRotation,type MigrationAnchor} from '../physics/worldScale';
-import {surfaceAltitude,terrainHeight} from '../physics/terrain';
+import {migrateCompactPose,bodyRotation,metricOrbit,GAMEPLAY_SCALE,CELESTIAL_SCALE,type MigrationAnchor} from '../physics/worldScale';
+import {surfaceAltitude,terrainHeight,PRIME_BASE_NORMAL} from '../physics/terrain';
+import {updateSurfaceFrame} from '../physics/surfaceFrame';
+import {BASE_SOLIDS} from '../data/surfaceCampaign';
 import {sanitizeSurfaceProgress,type SurfaceProgress} from './surfaceCampaign';
 import { MISSIONS } from '../data/missions';
 import { UPGRADE_BY_ID, UPGRADE_IDS } from '../data/upgrades';
@@ -14,8 +16,9 @@ import { createNewState, HULL_MAX, type GameState } from '../core/state';
 import { sanitizeHomecoming, type HomecomingProgress } from './expeditions';
 
 export const SAVE_KEY = 'lyrion.save.v1';
-export const SAVE_VERSION = 5;
+export const SAVE_VERSION = 6;
 export const SAVE_BACKUP_KEY='lyrion.save.before-metric-v5';
+export const COMPACT_BACKUP_KEY='lyrion.save.before-compact-v6';
 
 /** localStorage 互換の最小インターフェース(テストで差し替え可能) */
 export interface StorageLike {
@@ -150,18 +153,26 @@ export function deserialize(raw: unknown): GameState | null {
   // EVA saves store the parked spacecraft pose. Recover aboard without losing research.
   s.homecoming.wasEva = false;
   s.surfaceProgress=sanitizeSurfaceProgress(d.surfaceProgress);
-  if(d.version<5){
-    const oldTable=createPositionTable(LEGACY_BODY_DEFS),table=createPositionTable(BODY_DEFS);
-    const oldVelocity=createPositionTable(LEGACY_BODY_DEFS),velocity=createPositionTable(BODY_DEFS);
-    updateBodyPositions(LEGACY_BODY_DEFS,s.time,oldTable);updateBodyPositions(BODY_DEFS,s.time,table);
-    updateBodyVelocities(LEGACY_BODY_DEFS,s.time,oldTable,createPositionTable(LEGACY_BODY_DEFS),oldVelocity);
+  if(d.version<6){
+    const oldDefs=d.version<5?LEGACY_BODY_DEFS:METRIC_V5_BODY_DEFS;
+    const oldTable=createPositionTable(oldDefs),table=createPositionTable(BODY_DEFS);
+    const oldVelocity=createPositionTable(oldDefs),velocity=createPositionTable(BODY_DEFS);
+    updateBodyPositions(oldDefs,s.time,oldTable);updateBodyPositions(BODY_DEFS,s.time,table);
+    updateBodyVelocities(oldDefs,s.time,oldTable,createPositionTable(oldDefs),oldVelocity);
     updateBodyVelocities(BODY_DEFS,s.time,table,createPositionTable(BODY_DEFS),velocity);
     const anchors:MigrationAnchor[]=[];
     for(const [id,oldOrbit,orbit,range] of [['asterion',LEGACY_STATION_ORBIT,STATION_ORBIT,1100],['satellite',LEGACY_SATELLITE_ORBIT,SATELLITE_ORBIT,250],['deep',LEGACY_DEEP_ORBIT,DEEP_ORBIT,450]] as const){
-      const previous=new ReferenceFrame(),current=new ReferenceFrame();orbitalFrame(previous,oldOrbit,s.time,oldTable,oldVelocity);orbitalFrame(current,orbit,s.time,table,velocity);
-      anchors.push({id,oldPosition:previous.position,position:current.position,oldVelocity:previous.velocity,velocity:current.velocity,oldRotation:previous.rotation,rotation:current.rotation,range});
+      const previous=new ReferenceFrame(),current=new ReferenceFrame();orbitalFrame(previous,d.version<5?oldOrbit:metricOrbit(oldOrbit),s.time,oldTable,oldVelocity);orbitalFrame(current,orbit,s.time,table,velocity);
+      anchors.push({id,oldPosition:previous.position,position:current.position,oldVelocity:previous.velocity,velocity:current.velocity,oldRotation:previous.rotation,rotation:current.rotation,oldAngularVelocity:previous.angularVelocity,angularVelocity:current.angularVelocity,range});
     }
-    const pose=migrateCompactPose(s.pos,s.vel,s.time,LEGACY_BODY_DEFS,BODY_DEFS,anchors);
+    const previousBase=new ReferenceFrame(),currentBase=new ReferenceFrame();
+    const prime=BODY_BY_ID['lyrion-prime'];
+    if(d.version===5){
+      updateSurfaceFrame(oldDefs.find(b=>b.homeworld)!,PRIME_BASE_NORMAL,s.time,oldTable[prime.id],oldVelocity[prime.id],previousBase);
+      updateSurfaceFrame(prime,PRIME_BASE_NORMAL,s.time,table[prime.id],velocity[prime.id],currentBase);
+      anchors.push({id:'prime-base',oldPosition:previousBase.position,position:currentBase.position,oldVelocity:previousBase.velocity,velocity:currentBase.velocity,oldRotation:previousBase.rotation,rotation:currentBase.rotation,oldAngularVelocity:previousBase.angularVelocity,angularVelocity:currentBase.angularVelocity,range:4000});
+    }
+    const pose=migrateCompactPose(s.pos,s.vel,s.time,oldDefs,BODY_DEFS,anchors,d.version<5?GAMEPLAY_SCALE:GAMEPLAY_SCALE/CELESTIAL_SCALE,d.version<5?450:10000);
     s.pos.copy(pose.position);s.vel.copy(pose.velocity);
     if(pose.orientationDelta)s.quat.premultiply(pose.orientationDelta).normalize();
     if(s.landed){
@@ -173,6 +184,14 @@ export function deserialize(raw: unknown): GameState | null {
     if(pose.reference&&BODY_BY_ID[pose.reference]){
       const body=BODY_BY_ID[pose.reference],clearance=surfaceAltitude(body,s.pos,table[body.id],s.time);
       if(clearance<12)s.pos.addScaledVector(s.pos.clone().sub(table[body.id]).normalize(),12-clearance);
+    }
+    // Retain a v5 port save's metre-sized walking/parking offset, while lifting
+    // a free ship out of newly constructed city roofs. Landed records use the
+    // usual LandingSystem recovery path after restoring their new normal.
+    if(d.version===5&&pose.reference==='prime-base'&&!s.landed){
+      const local=currentBase.toLocal(s.pos,new Vector3());let roof=-Infinity;
+      for(const box of BASE_SOLIDS)if(local.x>box.min[0]-9&&local.x<box.max[0]+9&&local.z>box.min[2]-9&&local.z<box.max[2]+9&&local.y<box.max[1]+10)roof=Math.max(roof,box.max[1]);
+      if(roof!==-Infinity){local.y=roof+15;currentBase.toWorld(local,s.pos);}
     }
   }
   return s;
@@ -191,6 +210,7 @@ export class SaveManager {
     try {
       const existing=this.storage.getItem(SAVE_KEY);
       if(existing&&JSON.parse(existing).version<5&&!this.storage.getItem(SAVE_BACKUP_KEY))this.storage.setItem(SAVE_BACKUP_KEY,existing);
+      if(existing&&JSON.parse(existing).version<6&&!this.storage.getItem(COMPACT_BACKUP_KEY))this.storage.setItem(COMPACT_BACKUP_KEY,existing);
       this.storage.setItem(SAVE_KEY, JSON.stringify(serialize(s)));
       return true;
     } catch {

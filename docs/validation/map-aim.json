@@ -1,11 +1,11 @@
 {
-  "time": "2026-11-13T09:03:35.173Z",
+  "time": "2026-11-13T10:14:27.845Z",
   "build": {
-    "version": "0.9.0-dev.3",
-    "sourceRevision": "9760cb5ddde76d08dba92c242394cd6e5d3a9f95",
-    "sourceHash": "6aee957644e5924a9afa5589388983645d4a0dea2724f5fa2e34cfcbb84e808f",
+    "version": "0.9.0-dev.4",
+    "sourceRevision": "ae78eb645fc35abe084a746754e84b98d4b55998",
+    "sourceHash": "301b5cf1629db869f50e8ca9e61e5a6dade786aa4bad93fd68830bf49acfebb5",
     "uncommittedChanges": true,
-    "builtAt": "2026-11-13T08:57:07.101Z"
+    "builtAt": "2026-11-13T10:11:56.819Z"
   },
   "browser": "157.0.8103.51",
   "headless": true,
@@ -38,7 +38,7 @@
       "name": "webgl2 マップの選択と実ボタンでCINDRAへ移動",
       "ok": true,
       "data": {
-        "altitude": 1499.9999999994152,
+        "altitude": 1499.9999999999998,
         "relativeSpeed": 0,
         "target": "cindra"
       }
@@ -63,169 +63,169 @@
           {
             "id": "prime-base",
             "accepted": true,
-            "minimumAltitude": 400.0000000051223,
+            "minimumAltitude": 399.99999999999727,
             "finite": true
           },
           {
             "id": "asterion",
             "accepted": true,
-            "minimumAltitude": 4100110.000009997,
+            "minimumAltitude": 5075.692309477611,
             "finite": true
           },
           {
             "id": "lyrion",
             "accepted": true,
-            "minimumAltitude": 47057123.61014932,
+            "minimumAltitude": 46955.981923739426,
             "finite": true
           },
           {
             "id": "cindra",
             "accepted": true,
-            "minimumAltitude": 1500.0000000001241,
+            "minimumAltitude": 1500.0000000000002,
             "finite": true
           },
           {
             "id": "thalassa",
             "accepted": true,
-            "minimumAltitude": 1500.0000000017235,
+            "minimumAltitude": 1499.9999999999986,
             "finite": true
           },
           {
             "id": "lumen",
             "accepted": true,
-            "minimumAltitude": 1500.000000001036,
+            "minimumAltitude": 1499.999999999999,
             "finite": true
           },
           {
             "id": "halcyon",
             "accepted": true,
-            "minimumAltitude": 88800527.19760104,
+            "minimumAltitude": 86853.08575606694,
             "finite": true
           },
           {
             "id": "aurelion",
             "accepted": true,
-            "minimumAltitude": 1499.9999999990687,
+            "minimumAltitude": 1499.9999999999982,
             "finite": true
           },
           {
             "id": "ember",
             "accepted": true,
-            "minimumAltitude": 1500.0000000027696,
+            "minimumAltitude": 1499.999999999996,
             "finite": true
           },
           {
             "id": "glacia",
             "accepted": true,
-            "minimumAltitude": 1499.9999999937322,
+            "minimumAltitude": 1500.000000000001,
             "finite": true
           },
           {
             "id": "mira",
             "accepted": true,
-            "minimumAltitude": 1499.9999999972922,
+            "minimumAltitude": 1500.0000000000043,
             "finite": true
           },
           {
             "id": "vesper",
             "accepted": true,
-            "minimumAltitude": 1500.0000000068073,
+            "minimumAltitude": 1499.9999999999936,
             "finite": true
           },
           {
             "id": "wayfarer",
             "accepted": true,
-            "minimumAltitude": 120.00000000091886,
+            "minimumAltitude": 120.00000000000024,
             "finite": true
           },
           {
             "id": "lyrion-prime",
             "accepted": true,
-            "minimumAltitude": 5000.000000005122,
+            "minimumAltitude": 5000.000000000001,
             "finite": true
           },
           {
             "id": "lyrion-prime",
             "accepted": true,
-            "minimumAltitude": 5000.000000005122,
+            "minimumAltitude": 5000.000000000001,
             "finite": true
           },
           {
             "id": "wayfarer",
             "accepted": true,
-            "minimumAltitude": 120.00000000091886,
+            "minimumAltitude": 120.00000000000024,
             "finite": true
           },
           {
             "id": "vesper",
             "accepted": true,
-            "minimumAltitude": 1500.0000000068073,
+            "minimumAltitude": 1499.9999999999936,
             "finite": true
           },
           {
             "id": "mira",
             "accepted": true,
-            "minimumAltitude": 1499.9999999972922,
+            "minimumAltitude": 1500.0000000000043,
             "finite": true
           },
           {
             "id": "glacia",
             "accepted": true,
-            "minimumAltitude": 1499.9999999937322,
+            "minimumAltitude": 1500.000000000001,
             "finite": true
           },
           {
             "id": "ember",
             "accepted": true,
-            "minimumAltitude": 1500.0000000027696,
+            "minimumAltitude": 1499.999999999996,
             "finite": true
           },
           {
             "id": "aurelion",
             "accepted": true,
-            "minimumAltitude": 1499.9999999990687,
+            "minimumAltitude": 1499.9999999999982,
             "finite": true
           },
           {
             "id": "halcyon",
             "accepted": true,
-            "minimumAltitude": 88800527.19760104,
+            "minimumAltitude": 86853.08575606694,
             "finite": true
           },
           {
             "id": "lumen",
             "accepted": true,
-            "minimumAltitude": 1500.000000001036,
+            "minimumAltitude": 1499.999999999999,
             "finite": true
           },
           {
             "id": "thalassa",
             "accepted": true,
-            "minimumAltitude": 1500.0000000017235,
+            "minimumAltitude": 1499.9999999999986,
             "finite": true
           },
           {
             "id": "cindra",
             "accepted": true,
-            "minimumAltitude": 1500.0000000001241,
+            "minimumAltitude": 1500.0000000000002,
             "finite": true
           },
           {
             "id": "lyrion",
             "accepted": true,
-            "minimumAltitude": 47057123.61014932,
+            "minimumAltitude": 46955.981923739426,
             "finite": true
           },
           {
             "id": "asterion",
             "accepted": true,
-            "minimumAltitude": 4100110.000009997,
+            "minimumAltitude": 5075.692309477611,
             "finite": true
           },
           {
             "id": "prime-base",
             "accepted": true,
-            "minimumAltitude": 400.0000000051223,
+            "minimumAltitude": 399.99999999999727,
             "finite": true
           }
         ],
@@ -298,7 +298,7 @@
         "locked": true,
         "passive": 0,
         "corrected": true,
-        "hud": "ASTERION STATION473,149 km追撃機 · 交戦中 · 160 HP · 412u▲迎撃機 · 画面外 · 144 HP · 950u▲重戦機 · 画面外 · 200 HP · 1000u▲▲▲▲LX-07 / FLIGHT SYSTEMSNormal · WAVE 1 · 敵 3 · 撃破 0TWIN PULSE · 左クリック / J · 12%AUTO AIM · LOCK 412 m / FIREで射撃V / EVADE READY · 18 ENERGYAUTO LOCK着陸案内で高度・速度・地面を確認 / GHOME → ASTERION / B 遠征ボードB 遠征・補給 / T ドッキング / H 船外活動MISSION 01 — FIRST DEPARTURE最初の出発最初の遠征ブリーフィングを受ける進行状況 0 / 6目的地 ASTERION STATION残り距離 473,149 kmTで接岸。ASTERIONは任務・補給・帰還の拠点ですT / DOCKで接岸し、B / MISSION CONTROLで「受注して追跡」を選びます。DATA0HULL100/100SHIELD60/60ENERGY98%HDG 000°   PIT +0°リリオン・プライム  高度 463,134 km0m/sF 長押し / 加速待機交戦中は近距離ブースト / X 制動ASSIST ON  ·  3RDTARGETASTERION STATIONLYRION PRIME / HOME STATION473,149 km163.9 m/s / T DOCKLANDING GUIDANCEPAD 01 / PORT LYRA高度 4 m / 450 m地表速度 0 / 100 m/s✓ 平坦・障害物なしPAD 01 中心まで水平 0 m · 中央8 mが目安着陸完了 / Hで降機 · Gで離陸後方から 2 機が追跡中20 FPS50.0 msMEDIUM · WebGL 2W/S 推進 / A/D 旋回 / F 加速 / J 射撃 / T 接岸 / H 船外 / M マップ・テレポート / B 遠征クリックして視点操作を有効化"
+        "hud": "ASTERION STATION574,357 km追撃機 · 交戦中 · 160 HP · 412u▲迎撃機 · 画面外 · 144 HP · 950u▲重戦機 · 画面外 · 200 HP · 1000u▲▲▲▲LX-07 / FLIGHT SYSTEMSNormal · WAVE 1 · 敵 3 · 撃破 0TWIN PULSE · 左クリック / J · 12%AUTO AIM · LOCK 412 m / FIREで射撃V / EVADE READY · 18 ENERGYAUTO LOCK着陸案内で高度・速度・地面を確認 / GHOME → ASTERION / B 遠征ボードB 遠征・補給 / T ドッキング / H 船外活動MISSION 01 — FIRST DEPARTURE最初の出発最初の遠征ブリーフィングを受ける進行状況 0 / 6目的地 ASTERION STATION残り距離 574,357 kmTで接岸。ASTERIONは任務・補給・帰還の拠点ですT / DOCKで接岸し、B / MISSION CONTROLで「受注して追跡」を選びます。DATA0HULL100/100SHIELD60/60ENERGY98%HDG 000°   PIT +0°リリオン・プライム  高度 574,342 km0m/sF 長押し / 加速待機交戦中は近距離ブースト / X 制動ASSIST ON  ·  3RDTARGETASTERION STATIONLYRION PRIME / HOME STATION574,357 km197534.9 m/s / T DOCKLANDING GUIDANCEPORT LYRA / 周辺の陸地高度 5.1 km / 450 m地表速度 7 / 100 m/s× 建物・設備PAD 01 中心まで水平 561 m · 中央8 mが目安市街地・建物の上には着陸できません。港のPAD 01へ移動してください後方から 2 機が追跡中20 FPS50.0 msMEDIUM · WebGL 2W/S 推進 / A/D 旋回 / F 加速 / J 射撃 / T 接岸 / H 船外 / M マップ・テレポート / B 遠征クリックして視点操作を有効化"
       }
     },
     {
@@ -357,7 +357,7 @@
       "name": "webgpu マップの選択と実ボタンでCINDRAへ移動",
       "ok": true,
       "data": {
-        "altitude": 1499.9999999994152,
+        "altitude": 1499.9999999999998,
         "relativeSpeed": 0,
         "target": "cindra"
       }
@@ -382,169 +382,169 @@
           {
             "id": "prime-base",
             "accepted": true,
-            "minimumAltitude": 400.0000000051223,
+            "minimumAltitude": 399.99999999999727,
             "finite": true
           },
           {
             "id": "asterion",
             "accepted": true,
-            "minimumAltitude": 4100110.000009997,
+            "minimumAltitude": 5075.692309477611,
             "finite": true
           },
           {
             "id": "lyrion",
             "accepted": true,
-            "minimumAltitude": 47057123.61014932,
+            "minimumAltitude": 46955.981923739426,
             "finite": true
           },
           {
             "id": "cindra",
             "accepted": true,
-            "minimumAltitude": 1500.0000000001241,
+            "minimumAltitude": 1500.0000000000002,
             "finite": true
           },
           {
             "id": "thalassa",
             "accepted": true,
-            "minimumAltitude": 1500.0000000017235,
+            "minimumAltitude": 1499.9999999999986,
             "finite": true
           },
           {
             "id": "lumen",
             "accepted": true,
-            "minimumAltitude": 1500.000000001036,
+            "minimumAltitude": 1499.999999999999,
             "finite": true
           },
           {
             "id": "halcyon",
             "accepted": true,
-            "minimumAltitude": 88800527.19760104,
+            "minimumAltitude": 86853.08575606694,
             "finite": true
           },
           {
             "id": "aurelion",
             "accepted": true,
-            "minimumAltitude": 1499.9999999990687,
+            "minimumAltitude": 1499.9999999999982,
             "finite": true
           },
           {
             "id": "ember",
             "accepted": true,
-            "minimumAltitude": 1500.0000000027696,
+            "minimumAltitude": 1499.999999999996,
             "finite": true
           },
           {
             "id": "glacia",
             "accepted": true,
-            "minimumAltitude": 1499.9999999937322,
+            "minimumAltitude": 1500.000000000001,
             "finite": true
           },
           {
             "id": "mira",
             "accepted": true,
-            "minimumAltitude": 1499.9999999972922,
+            "minimumAltitude": 1500.0000000000043,
             "finite": true
           },
           {
             "id": "vesper",
             "accepted": true,
-            "minimumAltitude": 1500.0000000068073,
+            "minimumAltitude": 1499.9999999999936,
             "finite": true
           },
           {
             "id": "wayfarer",
             "accepted": true,
-            "minimumAltitude": 120.00000000091886,
+            "minimumAltitude": 120.00000000000024,
             "finite": true
           },
           {
             "id": "lyrion-prime",
             "accepted": true,
-            "minimumAltitude": 5000.000000005122,
+            "minimumAltitude": 5000.000000000001,
             "finite": true
           },
           {
             "id": "lyrion-prime",
             "accepted": true,
-            "minimumAltitude": 5000.000000005122,
+            "minimumAltitude": 5000.000000000001,
             "finite": true
           },
           {
             "id": "wayfarer",
             "accepted": true,
-            "minimumAltitude": 120.00000000091886,
+            "minimumAltitude": 120.00000000000024,
             "finite": true
           },
           {
             "id": "vesper",
             "accepted": true,
-            "minimumAltitude": 1500.0000000068073,
+            "minimumAltitude": 1499.9999999999936,
             "finite": true
           },
           {
             "id": "mira",
             "accepted": true,
-            "minimumAltitude": 1499.9999999972922,
+            "minimumAltitude": 1500.0000000000043,
             "finite": true
           },
           {
             "id": "glacia",
             "accepted": true,
-            "minimumAltitude": 1499.9999999937322,
+            "minimumAltitude": 1500.000000000001,
             "finite": true
           },
           {
             "id": "ember",
             "accepted": true,
-            "minimumAltitude": 1500.0000000027696,
+            "minimumAltitude": 1499.999999999996,
             "finite": true
           },
           {
             "id": "aurelion",
             "accepted": true,
-            "minimumAltitude": 1499.9999999990687,
+            "minimumAltitude": 1499.9999999999982,
             "finite": true
           },
           {
             "id": "halcyon",
             "accepted": true,
-            "minimumAltitude": 88800527.19760104,
+            "minimumAltitude": 86853.08575606694,
             "finite": true
           },
           {
             "id": "lumen",
             "accepted": true,
-            "minimumAltitude": 1500.000000001036,
+            "minimumAltitude": 1499.999999999999,
             "finite": true
           },
           {
             "id": "thalassa",
             "accepted": true,
-            "minimumAltitude": 1500.0000000017235,
+            "minimumAltitude": 1499.9999999999986,
             "finite": true
           },
           {
             "id": "cindra",
             "accepted": true,
-            "minimumAltitude": 1500.0000000001241,
+            "minimumAltitude": 1500.0000000000002,
             "finite": true
           },
           {
             "id": "lyrion",
             "accepted": true,
-            "minimumAltitude": 47057123.61014932,
+            "minimumAltitude": 46955.981923739426,
             "finite": true
           },
           {
             "id": "asterion",
             "accepted": true,
-            "minimumAltitude": 4100110.000009997,
+            "minimumAltitude": 5075.692309477611,
             "finite": true
           },
           {
             "id": "prime-base",
             "accepted": true,
-            "minimumAltitude": 400.0000000051223,
+            "minimumAltitude": 399.99999999999727,
             "finite": true
           }
         ],
@@ -617,7 +617,7 @@
         "locked": true,
         "passive": 0,
         "corrected": true,
-        "hud": "ASTERION STATION473,149 km追撃機 · 交戦中 · 160 HP · 412u▲迎撃機 · 画面外 · 144 HP · 950u▲重戦機 · 画面外 · 200 HP · 1000u▲▲▲▲LX-07 / FLIGHT SYSTEMSNormal · WAVE 1 · 敵 3 · 撃破 0TWIN PULSE · 左クリック / J · 12%AUTO AIM · LOCK 412 m / FIREで射撃V / EVADE READY · 18 ENERGYAUTO LOCK着陸案内で高度・速度・地面を確認 / GHOME → ASTERION / B 遠征ボードB 遠征・補給 / T ドッキング / H 船外活動MISSION 01 — FIRST DEPARTURE最初の出発最初の遠征ブリーフィングを受ける進行状況 0 / 6目的地 ASTERION STATION残り距離 473,149 kmTで接岸。ASTERIONは任務・補給・帰還の拠点ですT / DOCKで接岸し、B / MISSION CONTROLで「受注して追跡」を選びます。DATA0HULL100/100SHIELD60/60ENERGY98%HDG 000°   PIT +0°リリオン・プライム  高度 463,134 km0m/sF 長押し / 加速待機交戦中は近距離ブースト / X 制動ASSIST ON  ·  3RDTARGETASTERION STATIONLYRION PRIME / HOME STATION473,149 km163.9 m/s / T DOCKLANDING GUIDANCEPAD 01 / PORT LYRA高度 4 m / 450 m地表速度 0 / 100 m/s✓ 平坦・障害物なしPAD 01 中心まで水平 0 m · 中央8 mが目安着陸完了 / Hで降機 · Gで離陸後方から 2 機が追跡中20 FPS50.0 msMEDIUM · WebGPUW/S 推進 / A/D 旋回 / F 加速 / J 射撃 / T 接岸 / H 船外 / M マップ・テレポート / B 遠征クリックして視点操作を有効化"
+        "hud": "ASTERION STATION574,357 km追撃機 · 交戦中 · 160 HP · 412u▲迎撃機 · 画面外 · 144 HP · 950u▲重戦機 · 画面外 · 200 HP · 1000u▲▲▲▲LX-07 / FLIGHT SYSTEMSNormal · WAVE 1 · 敵 3 · 撃破 0TWIN PULSE · 左クリック / J · 12%AUTO AIM · LOCK 412 m / FIREで射撃V / EVADE READY · 18 ENERGYAUTO LOCK着陸案内で高度・速度・地面を確認 / GHOME → ASTERION / B 遠征ボードB 遠征・補給 / T ドッキング / H 船外活動MISSION 01 — FIRST DEPARTURE最初の出発最初の遠征ブリーフィングを受ける進行状況 0 / 6目的地 ASTERION STATION残り距離 574,357 kmTで接岸。ASTERIONは任務・補給・帰還の拠点ですT / DOCKで接岸し、B / MISSION CONTROLで「受注して追跡」を選びます。DATA0HULL100/100SHIELD60/60ENERGY98%HDG 000°   PIT +0°リリオン・プライム  高度 574,342 km0m/sF 長押し / 加速待機交戦中は近距離ブースト / X 制動ASSIST ON  ·  3RDTARGETASTERION STATIONLYRION PRIME / HOME STATION574,357 km197534.9 m/s / T DOCKLANDING GUIDANCEPORT LYRA / 周辺の陸地高度 5.1 km / 450 m地表速度 7 / 100 m/s× 建物・設備PAD 01 中心まで水平 561 m · 中央8 mが目安市街地・建物の上には着陸できません。港のPAD 01へ移動してください後方から 2 機が追跡中20 FPS50.0 msMEDIUM · WebGPUW/S 推進 / A/D 旋回 / F 加速 / J 射撃 / T 接岸 / H 船外 / M マップ・テレポート / B 遠征クリックして視点操作を有効化"
       }
     },
     {

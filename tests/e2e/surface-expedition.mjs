@@ -54,13 +54,13 @@ try{
   await walkTo([-12,16]);await walkTo([-6,-2.2]);
   await page.evaluate(()=>window.__lyrion.handlePlayAction('eva'));await step(3);
   check('ハッチに歩いて戻り再搭乗',await page.evaluate(()=>!window.__lyrion.surface.active));
-  check('軌道帰還の誘導先が地表でなく上空を指す',await page.evaluate(()=>window.__lyrion.state.surfaceProgress.step===8&&window.__lyrion.surfaceGoalDistance()>100000));
+  check('軌道帰還の誘導先が地表でなく上空を指す',await page.evaluate(()=>window.__lyrion.state.surfaceProgress.step===8&&window.__lyrion.surfaceGoalDistance()>3000));
  const before=await page.evaluate(()=>window.__lyrion.state.pos.toArray());await page.evaluate(()=>window.__lyrion.handlePlayAction('land'));
  const after=await page.evaluate(()=>window.__lyrion.state.pos.toArray());check('離陸時に位置を瞬間移動しない',before.every((v,i)=>Math.abs(v-after[i])<1e-6));await step(30);
  check('離陸して操縦に復帰',await page.evaluate(()=>window.__lyrion.landing.mode==='flight'&&window.__lyrion.state.landed===null));
  await page.evaluate(()=>{const g=window.__lyrion;g.state.quat.setFromUnitVectors(g.state.pos.clone().set(0,0,-1),g.landing.up);});
  const ascent=await page.evaluate(()=>{const g=window.__lyrion,start=g.state.data;let ticks=0;for(;ticks<10000&&!g.state.surfaceProgress.rewarded;ticks++){g.input.virtual.thrust=1;g.input.virtual.boost=g.state.energy>12;g.tick(.05);}g.input.virtual.thrust=0;g.input.virtual.boost=false;return{ticks,rewarded:g.state.surfaceProgress.rewarded,data:g.state.data-start,step:g.state.surfaceProgress.step,info:g.rendererInfo.render};});
- check('実推進で高度120 kmへ戻り報酬を受け取る',ascent.rewarded&&ascent.data===150,ascent);
+ check('実推進で高度3.5 kmへ戻り報酬を受け取る',ascent.rewarded&&ascent.data===150,ascent);
  const data=await page.evaluate(()=>window.__lyrion.state.data);await step(20);check('報酬が重複しない',await page.evaluate(data=>window.__lyrion.state.data===data,data));
  await page.keyboard.press('KeyB');await page.getByRole('button',{name:'遠征の目標を表示',exact:true}).click();
  check('地上任務後に既存の遠征へ追跡を切り替えられる',await page.evaluate(()=>!window.__lyrion.state.surfaceProgress.active&&!window.__lyrion.snapshot().mission?.code?.includes('SURFACE')&&window.__lyrion.targetId==='asterion'));

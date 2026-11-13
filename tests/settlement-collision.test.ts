@@ -17,7 +17,7 @@ it('permits flight above the town and safely resolves old poses inside a wall',(
 });
 it('keeps suit contact on the pad, apron, boulevard and unpaved terrain distinct',()=>{
  expect(settlementDeckHeight(0,0)).toBe(.365);expect(settlementDeckHeight(-10,-25)).toBe(-.12);
- expect(settlementDeckHeight(0,-250)).toBe(-.06);expect(settlementDeckHeight(400,40)).toBe(-Infinity);
+ expect(settlementDeckHeight(0,-250)).toBe(-.06);expect(settlementDeckHeight(400,40)).toBe(-.35);expect(settlementDeckHeight(3000,40)).toBe(-Infinity);
  // Rotation is owned by the shared reference frame, not a local world-Y plane.
  const frame=new ReferenceFrame();frame.rotation.copy(new Quaternion().setFromAxisAngle(new Vector3(1,0,0),1));const p=new Vector3(0,.965,-250);
  expect(frame.toLocal(frame.toWorld(p,new Vector3()),new Vector3()).distanceTo(p)).toBeLessThan(1e-10);

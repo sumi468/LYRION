@@ -1,6 +1,6 @@
 import type { BodyDef } from './types';
 import { HOMEWORLD } from './homeworld';
-import {metricBodies} from '../physics/worldScale';
+import {metricBodies,playableBodies} from '../physics/worldScale';
 
 /**
  * 架空の恒星系「リリオン星系」。
@@ -297,7 +297,8 @@ export const LEGACY_BODY_DEFS: BodyDef[] = [
 
 LEGACY_BODY_DEFS.push(HOMEWORLD);
 /** Metres throughout simulation and rendering. Compact definitions remain for save migration only. */
-export const BODY_DEFS=metricBodies(LEGACY_BODY_DEFS);
+export const METRIC_V5_BODY_DEFS=metricBodies(LEGACY_BODY_DEFS);
+export const BODY_DEFS=playableBodies(LEGACY_BODY_DEFS);
 export const BODY_BY_ID: Record<string, BodyDef> = Object.fromEntries(BODY_DEFS.map((b) => [b.id, b]));
 
 /** Keep the original catalog and all eight mission indices stable across the expansion. */

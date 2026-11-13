@@ -88,7 +88,7 @@ export class PlanetTerrain{
   return {patch:p,anchor,mesh,water:sea,last:this.generation};
  }
  update(center:Vector3,viewer:Vector3,origin:Vector3,time:number,profile:QualityProfile):boolean{
-  const altitude=viewer.distanceTo(center)-this.body.radius;this.group.visible=altitude<200000;
+  const altitude=viewer.distanceTo(center)-this.body.radius;this.group.visible=altitude<Math.max(2500,this.body.radius*.6);
   if(!this.group.visible){if(this.chunks.size)this.clear();return false;}
   bodyRotation(this.body,time,this.rotation);this.inverse.copy(this.rotation).invert();this.localViewer.copy(viewer).sub(center).applyQuaternion(this.inverse);
   const quality=terrainQuality(profile),rebuild=quality.grid!==this.grid;

@@ -1,6 +1,7 @@
 import {BackSide,Color,FogExp2,Mesh,Scene,SphereGeometry,Vector3,Quaternion,type PerspectiveCamera} from 'three';
 import {sceneShader} from './shaderRegistry';
 import type {BodyDef} from '../data/types';
+import {surfaceAltitude} from '../physics/terrain';
 const direction=new Vector3();
 /** Altitude/sun-dependent sky over the actual curved world, with a continuous
  * optical-depth blend back into the orbital atmosphere and star field. */
@@ -19,8 +20,8 @@ export class SurfaceSky{
  });
  private readonly fog=new FogExp2(new Color(.48,.63,.74),.000045);
  constructor(){this.mesh=new Mesh(new SphereGeometry(800,32,16),this.material);this.mesh.renderOrder=-8;this.mesh.frustumCulled=false;}
- update(scene:Scene,camera:PerspectiveCamera,world:Vector3,center:Vector3,body:BodyDef,sun:Vector3):void{
-  const altitude=world.distanceTo(center)-body.radius,opacity=Math.max(0,Math.min(1,Math.exp(-Math.max(0,altitude)/35000)));
+ update(scene:Scene,camera:PerspectiveCamera,world:Vector3,center:Vector3,body:BodyDef,sun:Vector3,time=0):void{
+  const altitude=surfaceAltitude(body,world,center,time),opacity=Math.max(0,Math.min(1,Math.exp(-Math.max(0,altitude)/Math.min(35000,body.radius*.12))));
   this.mesh.visible=opacity>.003;this.mesh.position.copy(camera.position);this.mesh.quaternion.copy(identity);
   direction.copy(world).sub(center).normalize();this.material.uniforms.uUp.value.copy(direction);this.material.uniforms.uSun.value.copy(sun).sub(center).normalize();this.material.uniforms.uOpacity.value=opacity;
   const day=Math.max(.03,Math.min(1,direction.dot(this.material.uniforms.uSun.value)*3+.3));this.fog.color.setRGB(.48*day,.63*day,.74*day);this.fog.density=.000045*opacity;

@@ -21,6 +21,7 @@ export class SurfaceSystem{
  private yaw=0;private pitch=0;private jumpHeld=false;
  get active(){return this.pose.active;}
  reset(){this.pose.reset();this.localVelocity.set(0,0,0);this.grounded=false;this.blockReason='';}
+ face(yaw:number){this.yaw=yaw;this.pitch=0;}
  launch(ship:GameState,frame:ReferenceFrame):void{
   this.reset();this.pose.active=true;this.walked=0;this.yaw=this.pitch=0;this.frame.position.copy(frame.position);this.frame.rotation.copy(frame.rotation);
   p.fromArray(SHIP_HATCH).applyQuaternion(ship.quat).add(ship.pos);frame.toLocal(p,this.localPosition);

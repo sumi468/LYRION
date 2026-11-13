@@ -20,15 +20,25 @@ export function terrainNoise(x:number,y:number,z:number,seed:number):number{
 }
 /** Seamless body-local 3D field, shared by collision, landing, walking and meshes. */
 export function terrainHeight(body:BodyDef,direction:Vector3):number{
- if(body.radius<10000||!body.surface||body.kind==='star'||body.surface.program==='gas'||body.kind==='anomaly')return 0;
+ if(body.radius<1000||!body.surface||body.kind==='star'||body.surface.program==='gas'||body.kind==='anomaly')return 0;
  const {x,y,z}=direction,seed=body.surface.seed;
  const continental=terrainNoise(x*3.7+4,y*3.7+2,z*3.7+7,seed);
  let height=(continental-.51)*9500;
  height+=(terrainNoise(x*37,y*37,z*37,seed+3)-.5)*440;
  height+=(terrainNoise(x*310,y*310,z*310,seed+5)-.5)*65;
  height+=(terrainNoise(x*2800,y*2800,z*2800,seed+7)-.5)*5;
+ height*=Math.min(1,body.radius/100000);
  if(body.homeworld){
-  const distance=Math.acos(Math.max(-1,Math.min(1,direction.dot(PRIME_BASE_NORMAL))))*body.radius;
+  const cosine=Math.max(-1,Math.min(1,direction.dot(PRIME_BASE_NORMAL))),distance=Math.acos(cosine)*body.radius;
+  if(body.radius<100000){
+   // A true tangent plateau keeps the expanded city's roads and foundations
+   // on the same physical ground even on a deliberately small game planet.
+   const flatHeight=(body.radius+BASE_ELEVATION)/Math.max(.3,cosine)-body.radius;
+   const edge=smooth((distance-SETTLEMENT_FLAT_RADIUS)/700);
+   const coast=distance<4500?Math.min(-12,height):height;
+   height=flatHeight+(coast-flatHeight)*edge;
+   return Math.max(-body.radius*.06,Math.min(TERRAIN_MAX_HEIGHT,height));
+  }
   if(distance<10000){
    const island=BASE_ELEVATION+125*Math.sin(Math.min(distance/1500,Math.PI)) - Math.max(0,distance-1100)*.22;
    const ridge=(terrainNoise(x*2000,y*2000,z*2000,seed+9)-.5)*80*smooth((distance-180)/500);

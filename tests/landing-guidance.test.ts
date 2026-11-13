@@ -33,7 +33,7 @@ it('permits open fields while distinguishing altitude, speed and sea rejection',
  state.vel.x+=101;expect(landing.request(state,positions,velocities)).toContain('100 m/s');
  frame.toWorld(new Vector3(0,600,0),state.pos);bodyPointVelocity(BODY_BY_ID['lyrion-prime'],state.pos,positions['lyrion-prime'],velocities['lyrion-prime'],state.vel);
  expect(landing.request(state,positions,velocities)).toContain('450');
- frame.toWorld(new Vector3(2500,150,0),state.pos);expect(landing.assess(state,positions,velocities).terrain).toBe('water');expect(landing.request(state,positions,velocities)).toContain('海面');
+ frame.toWorld(new Vector3(4000,150,0),state.pos);expect(landing.assess(state,positions,velocities).terrain).toBe('water');expect(landing.request(state,positions,velocities)).toContain('海面');
 });
 it('provides real exterior collisions in the town while keeping its boulevard clear',()=>{
  const {frame}=setup(),velocity=new Vector3(),position=new Vector3(),rotation=frame.rotation;
